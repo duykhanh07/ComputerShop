@@ -110,8 +110,6 @@ public class MyCalendar extends javax.swing.JPanel implements CalendarInterface{
     }
     
     public void initDates(){
-    	System.out.println("initDates");
-    	
         this.jPanel2.removeAll();
         this.jPanel2 = new JPanel();
         this.jPanel2.setLayout(null);

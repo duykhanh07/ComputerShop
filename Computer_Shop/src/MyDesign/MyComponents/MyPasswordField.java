@@ -8,16 +8,11 @@ import java.awt.RenderingHints;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.JTextField;
+import javax.swing.JPasswordField;
 
-/**
- *
- * @author ACER
- */
-public class MyTextfield extends JTextField{
+public class MyPasswordField extends JPasswordField{
 	
-    public MyTextfield(){
+	public MyPasswordField(){
         setForeground(Color.decode("#00CCCC"));
         setFont(new Font("Segoe UI", Font.BOLD, 16));
         setOpaque(false);
@@ -38,7 +33,8 @@ public class MyTextfield extends JTextField{
 			}
 		});
     }
-   @Override
+	
+	@Override
     public void paintComponent(Graphics grphcs) {   
         Graphics2D g2 = (Graphics2D) grphcs;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

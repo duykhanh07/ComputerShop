@@ -130,8 +130,9 @@ public class MyDateChooser extends javax.swing.JPanel {
     
     
     public void init(){
-        
+        setBorder(null);
         myTextfield1 = new MyTextfield();
+        myTextfield1.setBackground(new Color(77,77,77));
         myTextfield1.setEditable(false);
         String stringFM = "dd/MM/yyyy";
         SimpleDateFormat df= new SimpleDateFormat(stringFM);
@@ -168,8 +169,8 @@ public class MyDateChooser extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(myTextfield1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(myButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, Short.MAX_VALUE))
+                .addComponent(myTextfield1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, Short.MAX_VALUE)
+                .addComponent(myButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -189,6 +190,7 @@ public class MyDateChooser extends javax.swing.JPanel {
         
         public CalendarButton(){
             setContentAreaFilled(false);
+            setOpaque(true);
                addMouseListener(new MouseAdapter(){
               @Override
                 public void mouseEntered(java.awt.event.MouseEvent evt){

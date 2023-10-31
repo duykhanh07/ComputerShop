@@ -16,6 +16,8 @@ public class MyButton extends JButton {
         setColor(color);
         setFocusPainted(false);
         setBorderPainted(false);
+        setForeground(Color.decode("#00CCCC"));
+        setFont(new Font("Segoe UI", Font.BOLD, 14));
         addMouseListener(new MouseAdapter() {
 
             @Override
@@ -37,9 +39,6 @@ public class MyButton extends JButton {
         g2.setColor(this.getBackground());
         g2.fillRoundRect(1, 1, this.getWidth() - 2, this.getHeight() - 2, this.radius, this.radius);
         super.paintComponent(grphcs);
-        setForeground(Color.decode("#00CCCC"));
-        setFont(new Font("Segoe UI", Font.BOLD, 16));
-
     }
 
     /**
