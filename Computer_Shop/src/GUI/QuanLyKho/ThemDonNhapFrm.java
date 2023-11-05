@@ -29,6 +29,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Toolkit;
+import javax.swing.ImageIcon;
 
 public class ThemDonNhapFrm extends JFrame {
 
@@ -59,7 +60,7 @@ public class ThemDonNhapFrm extends JFrame {
 	public ThemDonNhapFrm() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ThemDonNhapFrm.class.getResource("/assets/Laptop_Login.png")));
 		setTitle("Thêm phiếu nhập hàng");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(840, 609);
 		setMinimumSize(new Dimension(840, 609));
 		setLocationRelativeTo(null);
@@ -70,14 +71,6 @@ public class ThemDonNhapFrm extends JFrame {
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 
 		setContentPane(contentPane);
-		
-		JLabel lblNewLabel = new JLabel("Thêm phiếu nhập hàng");
-		lblNewLabel.setAlignmentY(0.0f);
-		lblNewLabel.setForeground(new Color(0, 204, 204));
-		lblNewLabel.setBackground(new Color(255, 255, 102));
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblNewLabel.setOpaque(true);
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JLabel maNhanVienPhieuNhapLbl = new JLabel("mã nhân viên : <<mavn>>");
 		maNhanVienPhieuNhapLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -125,6 +118,12 @@ public class ThemDonNhapFrm extends JFrame {
 		xacNhanPhieuNhapBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
 		MyButton xemTruocBtn = new MyButton();
+		xemTruocBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new XemTruocKhoFrm().setVisible(true);
+			}
+			
+		});
 		xemTruocBtn.setText("Xem trước");
 		xemTruocBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
@@ -159,18 +158,18 @@ public class ThemDonNhapFrm extends JFrame {
 		soLuongTxt.setColumns(10);
 		soLuongTxt.setBorder(null);
 		
-		MyButton congBtn = new MyButton();
-		congBtn.setFont(new Font("Segoe UI", Font.BOLD, 15));
-		congBtn.addActionListener(new ActionListener() {
+		MyButton truBtn = new MyButton();
+		truBtn.setIcon(new ImageIcon(ThemDonNhapFrm.class.getResource("/assets/remove.png")));
+		truBtn.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		truBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		congBtn.setText("+");
-		congBtn.setHorizontalTextPosition(SwingConstants.LEADING);
-		
-		MyButton truBtn = new MyButton();
-		truBtn.setText("-");
 		truBtn.setHorizontalTextPosition(SwingConstants.LEADING);
+		
+		MyButton congBtn = new MyButton();
+		congBtn.setIcon(new ImageIcon(ThemDonNhapFrm.class.getResource("/assets/add.png")));
+		congBtn.setHorizontalTextPosition(SwingConstants.CENTER);
 		
 		MyButton themPhieuNhapItemBtn = new MyButton();
 		themPhieuNhapItemBtn.setText("Thêm");
@@ -226,13 +225,14 @@ public class ThemDonNhapFrm extends JFrame {
 									.addGap(10))
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(truBtn, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+									.addComponent(congBtn, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 									.addComponent(soLuongTxt, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(congBtn, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)))
-							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE))
-						.addComponent(lblNewLabel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 824, Short.MAX_VALUE)
+									.addComponent(truBtn, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)))
+							.addGap(11)
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
+							.addGap(18))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addContainerGap()
 							.addComponent(themPhieuNhapItemBtn, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
@@ -256,8 +256,7 @@ public class ThemDonNhapFrm extends JFrame {
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-					.addGap(11)
+					.addGap(46)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -290,30 +289,27 @@ public class ThemDonNhapFrm extends JFrame {
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addGap(19)
-									.addComponent(congBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+									.addComponent(truBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addGap(18)
 									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 										.addComponent(soLuongTxt, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-										.addComponent(truBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))))
+										.addComponent(congBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))))
 						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(tongTienPhieuNhapLbl, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-									.addComponent(xemTruocBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-									.addComponent(xacNhanPhieuNhapBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-									.addComponent(huyBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-								.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-							.addContainerGap())
-						.addGroup(gl_contentPane.createSequentialGroup()
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(themPhieuNhapItemBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-								.addComponent(xoaPhieuNhapItemBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-							.addContainerGap())))
+								.addComponent(xemTruocBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+								.addComponent(xacNhanPhieuNhapBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+								.addComponent(huyBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+							.addComponent(themPhieuNhapItemBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+							.addComponent(xoaPhieuNhapItemBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap())
 		);
 		contentPane.setLayout(gl_contentPane);
 	}

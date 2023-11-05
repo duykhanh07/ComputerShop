@@ -7,7 +7,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.mysql.cj.log.Slf4JLogger;
+
+import GUI.BaoHanh.QuanLyBaoHanhFrm;
+import GUI.QuanLyBanHang.QuanLyBanHangFrm;
+import GUI.QuanLyKhachHang.QuanLyKhachHangFrm;
 import GUI.QuanLyKho.QuanLyKhoFrm;
+import GUI.QuanLySanPham.QuanLySanPhamFrm;
+import GUI.QuanLyTaiKhoan.QuanLyTaiKhoanFrm;
 import MyDesign.MyComponents.MyButton;
 import MyDesign.MyComponents.MyButton2;
 
@@ -18,17 +25,22 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.UIManager.LookAndFeelInfo;
+
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
 public class MainForm extends JFrame {
 
@@ -39,6 +51,7 @@ public class MainForm extends JFrame {
 	private JPanel menuPanel;
 
 	private JSplitPane splitPane;
+
 	/**
 	 * Launch the application.
 	 */
@@ -46,7 +59,7 @@ public class MainForm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainForm frame = new MainForm(new String[]{"","","thủ kho"});
+					MainForm frame = new MainForm(new String[]{"","","bán hàng"});
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -59,7 +72,7 @@ public class MainForm extends JFrame {
 	 * Create the frame.
 	 */
 	public MainForm() {
-		setMinimumSize(new Dimension(1280, 760));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MainForm.class.getResource("/assets/Laptop_Login.png")));
 		initComponents();
 	}
 	
@@ -69,11 +82,15 @@ public class MainForm extends JFrame {
 		this.chucvu = data[2];
 		
 		initComponents();
+		
+		splitPane.setRightComponent(new Welcome(manv, tennv, chucvu));
 	}
 	// TODO : KHỞI TẠO COMPONENTS
 	public void initComponents() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1280,720);
+		setMinimumSize(new Dimension(1280, 760));
+		setLocationRelativeTo(null);
 		setTitle(chucvu);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -111,30 +128,52 @@ public class MainForm extends JFrame {
 		menuLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JLabel bottomRect = new JLabel("hide");
+		bottomRect.setAlignmentY(0.0f);
 		bottomRect.setForeground(new Color(255, 255, 102));
 		bottomRect.setBackground(new Color(255, 255, 102));
 		bottomRect.setOpaque(true);
 		bottomRect.setBounds(new Rectangle(0, 0, 0, 20));
 		
 		JLabel auto_agile = new JLabel("");
+		
+		JButton btnNewButton = new JButton("Đăng xuất");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				try {
+					UIManager.setLookAndFeel(getClass().getName());
+				} catch (Exception e2) {}
+				new LoginForm().setVisible(true);
+			}
+		});
+		btnNewButton.setAlignmentY(0.0f);
+		btnNewButton.setFocusPainted(false);
+		btnNewButton.setBorderPainted(false);
+		btnNewButton.setForeground(new Color(0, 255, 255));
+		btnNewButton.setBackground(new Color(77, 77, 77));
+		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		GroupLayout gl_menuPanel = new GroupLayout(menuPanel);
 		gl_menuPanel.setHorizontalGroup(
 			gl_menuPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_menuPanel.createSequentialGroup()
-					.addGroup(gl_menuPanel.createParallelGroup(Alignment.TRAILING, false)
-						.addComponent(auto_agile, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+				.addGroup(Alignment.TRAILING, gl_menuPanel.createSequentialGroup()
+					.addGroup(gl_menuPanel.createParallelGroup(Alignment.TRAILING)
 						.addComponent(bottomRect, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(menuLabel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addGroup(Alignment.LEADING, gl_menuPanel.createParallelGroup(Alignment.TRAILING, false)
+							.addComponent(menuLabel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+							.addComponent(auto_agile, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE))
+						.addComponent(btnNewButton, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					.addContainerGap())
 		);
 		gl_menuPanel.setVerticalGroup(
 			gl_menuPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_menuPanel.createSequentialGroup()
 					.addComponent(menuLabel, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-					.addGap(596)
-					.addComponent(auto_agile, GroupLayout.DEFAULT_SIZE, 19, Short.MAX_VALUE)
+					.addGap(538)
+					.addComponent(auto_agile, GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
+					.addGap(35)
+					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(bottomRect))
+					.addComponent(bottomRect, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
 		);
 		menuPanel.setLayout(gl_menuPanel);
 		
@@ -216,7 +255,17 @@ public class MainForm extends JFrame {
 			
 			y_position += 32;
 			
-			MyButton2 button_2 = new MyButton2("THỐNG KÊ");
+			MyButton2 button_2 = new MyButton2("THỐNG KÊ DOANH THU");
+			button_2.addActionListener(new ActionListener() {	@Override public void actionPerformed(ActionEvent e) {
+				changeButtonColor(button_2);
+			}});
+			button_2.setBounds(0, y_position, 174, 32);
+			menuPanel.add(button_2);
+			ds_menu.add(button_2);
+			
+			y_position += 32;
+			
+			MyButton2 button_3 = new MyButton2("THỐNG KÊ DOANH SỐ");
 			button_2.addActionListener(new ActionListener() {	@Override public void actionPerformed(ActionEvent e) {
 				changeButtonColor(button_2);
 			}});
@@ -232,6 +281,16 @@ public class MainForm extends JFrame {
 			menuPanel.add(button);
 			ds_menu.add(button);
 		}
+		y_position += 32;
+		
+		MyButton2 button = new MyButton2("THÔNG TIN CÁ NHÂN");
+		button.addActionListener(new ActionListener() {	@Override public void actionPerformed(ActionEvent e) {
+			changeButtonColor(button);
+		}});
+		button.setBounds(0, y_position, 174, 32);
+		menuPanel.add(button);
+		ds_menu.add(button);
+		
 		bindingButtonFeature();
 		
 	}
@@ -251,33 +310,86 @@ public class MainForm extends JFrame {
 		for(int i = 0; i<ds_menu.size(); i++) {
 			
 			if(ds_menu.get(i).getText().equalsIgnoreCase("BÁN HÀNG")) {
-				
+				ds_menu.get(i).addActionListener(new ActionListener() {	
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if(!getTitle().equalsIgnoreCase(chucvu + " - Quản lý bán hàng")) {
+							setTitle(chucvu+" - Quản lý bán hàng");
+							splitPane.setRightComponent(new QuanLyBanHangFrm());
+							splitPane.setDividerLocation(175);
+						}
+					}
+				});
 			}else if(ds_menu.get(i).getText().equalsIgnoreCase("QUẢN LÝ KHO")){
 				ds_menu.get(i).addActionListener(new ActionListener() {					
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						splitPane.setRightComponent(new QuanLyKhoFrm());
-						splitPane.setDividerLocation(175);
+						if(!getTitle().equalsIgnoreCase(chucvu + " - Quản lý kho hàng")) {
+							setTitle(chucvu+" - Quản lý kho hàng");
+							splitPane.setRightComponent(new QuanLyKhoFrm());
+							splitPane.setDividerLocation(175);
+						}
 					}
 				});
 			}else if(ds_menu.get(i).getText().equalsIgnoreCase("QUẢN LÝ KHÁCH HÀNG")){
-				
+				ds_menu.get(i).addActionListener(new ActionListener() {					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if(!getTitle().equalsIgnoreCase(chucvu + " - Quản lý khách hàng")) {
+							setTitle(chucvu+" - Quản lý khách hàng");
+							splitPane.setRightComponent(new QuanLyKhachHangFrm());
+							splitPane.setDividerLocation(175);
+						}
+					}
+				});
 			}else if(ds_menu.get(i).getText().equalsIgnoreCase("QUẢN LÝ SẢN PHẨM")) {
-				
-			}else if(ds_menu.get(i).getText().equalsIgnoreCase("THỐNG KÊ")) {
-				
+				ds_menu.get(i).addActionListener(new ActionListener() {					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if(!getTitle().equalsIgnoreCase(chucvu + " - Quản lý danh mục sản phẩm")) {
+							setTitle(chucvu+" - Quản lý danh mục sản phẩm");
+							splitPane.setRightComponent(new QuanLySanPhamFrm());
+							splitPane.setDividerLocation(175);
+						}
+					}
+				});
 			}else if(ds_menu.get(i).getText().equalsIgnoreCase("QUẢN LÝ TÀI KHOẢN")) {
-				
-			}else if(ds_menu.get(i).getText().equalsIgnoreCase("BẢO")) {
-				
+				ds_menu.get(i).addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if(!getTitle().equalsIgnoreCase(chucvu + " - Quản lý tài khoản nhân viên")) {
+							setTitle(chucvu+" - Quản lý tài khoản nhân viên");
+							splitPane.setRightComponent(new QuanLyTaiKhoanFrm());
+							splitPane.setDividerLocation(175);
+						}	
+					}
+				});						
+			}else if(ds_menu.get(i).getText().equalsIgnoreCase("BẢO HÀNH")) {
+				ds_menu.get(i).addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if(!getTitle().equalsIgnoreCase(chucvu + " - Quản lý bảo hành")) {
+							setTitle(chucvu + " - Quản lý bảo Hành");
+							splitPane.setRightComponent(new QuanLyBaoHanhFrm());
+							splitPane.setDividerLocation(175);
+						}
+					}
+				});
+			}else if(ds_menu.get(i).getText().equalsIgnoreCase("THÔNG TIN CÁ NHÂN")) {
+				ds_menu.get(i).addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if(!getTitle().equalsIgnoreCase(chucvu + " - Thông tin cá nhân")) {
+							setTitle(chucvu + " - Thông tin cá nhân");
+							splitPane.setRightComponent(new Information());
+							splitPane.setDividerLocation(175);
+						}
+					}
+				});
 			}
-			
 		}
 	}
-
-	
-	public void initContent(JPanel content) {
-		
-	}
-	
 }

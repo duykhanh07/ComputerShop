@@ -50,6 +50,8 @@ public class MyButton2 extends JButton {
     	}
     	repaint();
     }
-    
+    public boolean getIsClicked() {
+    	return this.selected;
+    }
     
 }

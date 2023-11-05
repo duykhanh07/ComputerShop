@@ -184,6 +184,13 @@ public class MyDateChooser extends javax.swing.JPanel {
     private MyTextfield myTextfield1;
     // End of variables declaration//GEN-END:variables
    
+    public Date getDate() {
+    	return myCalendar.date;
+    }
+    
+    public void  setDate(Date date) {
+    	myCalendar.setDate(date);
+    }
     class CalendarButton extends MyButton{
         private Color calendar_color_1 = Color.decode("#FF0000");
         private Color calendar_color_2 = Color.decode("#FFFFFF");

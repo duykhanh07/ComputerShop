@@ -26,10 +26,12 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.border.LineBorder;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.ImageIcon;
 
 public class QuanLyKhoFrm extends JPanel {
 
@@ -40,10 +42,12 @@ public class QuanLyKhoFrm extends JPanel {
 	private JScrollPane scrollPane;
 	private JTable donNhapTable;
 	private JTable tonKhoTable;
+	private JTable table;
 
 	/**
 	 * Create the panel.
 	 */
+	
 	public QuanLyKhoFrm() {
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -93,7 +97,6 @@ public class QuanLyKhoFrm extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		timKiemBtn.setBounds(new Rectangle(0, 0, 44, 35));
 		
 		JComboBox sortCmbx = new JComboBox();
 		sortCmbx.setBackground(new Color(102, 102, 102));
@@ -134,12 +137,10 @@ public class QuanLyKhoFrm extends JPanel {
 		});
 		themDonNhapBtn.setText("Thêm");
 		themDonNhapBtn.setHorizontalTextPosition(SwingConstants.LEADING);
-		themDonNhapBtn.setBounds(new Rectangle(0, 0, 44, 35));
 		
 		MyButton inBtn = new MyButton();
 		inBtn.setText("In");
 		inBtn.setHorizontalTextPosition(SwingConstants.LEADING);
-		inBtn.setBounds(new Rectangle(0, 0, 44, 35));
 		
 		MyButton chiTietBtn = new MyButton();
 		chiTietBtn.addActionListener(new ActionListener() {
@@ -149,7 +150,6 @@ public class QuanLyKhoFrm extends JPanel {
 		});
 		chiTietBtn.setText("Chi tiết");
 		chiTietBtn.setHorizontalTextPosition(SwingConstants.LEADING);
-		chiTietBtn.setBounds(new Rectangle(0, 0, 44, 35));
 		
 		JLabel auto_increase_spaceLbl_2 = new JLabel("");
 		
@@ -160,89 +160,6 @@ public class QuanLyKhoFrm extends JPanel {
 		});
 		importBtn.setText("Nhập Excel");
 		importBtn.setHorizontalTextPosition(SwingConstants.LEADING);
-		importBtn.setBounds(new Rectangle(0, 0, 44, 35));
-		GroupLayout gl_donNhapPanel = new GroupLayout(donNhapPanel);
-		gl_donNhapPanel.setHorizontalGroup(
-			gl_donNhapPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_donNhapPanel.createSequentialGroup()
-					.addGap(19)
-					.addGroup(gl_donNhapPanel.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_donNhapPanel.createSequentialGroup()
-							.addGroup(gl_donNhapPanel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_donNhapPanel.createSequentialGroup()
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(timKiemDonNhapTxt, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(timKiemTypeCmbx, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_donNhapPanel.createSequentialGroup()
-									.addComponent(lblT, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(fromDateChooser, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_donNhapPanel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_donNhapPanel.createSequentialGroup()
-									.addGap(2)
-									.addComponent(timKiemBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addGap(18)
-									.addComponent(auto_increase_spaceLbl, GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-									.addGap(18)
-									.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(sortCmbx, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
-									.addGap(40))
-								.addGroup(gl_donNhapPanel.createSequentialGroup()
-									.addComponent(lbln, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(toDateChooser, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)
-									.addContainerGap())))
-						.addGroup(gl_donNhapPanel.createSequentialGroup()
-							.addGroup(gl_donNhapPanel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_donNhapPanel.createSequentialGroup()
-									.addComponent(auto_increase_spaceLbl_1, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(themDonNhapBtn, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(inBtn, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(chiTietBtn, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
-									.addGap(159)
-									.addComponent(auto_increase_spaceLbl_2, GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
-									.addGap(113)
-									.addComponent(importBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE))
-							.addGap(40))))
-		);
-		gl_donNhapPanel.setVerticalGroup(
-			gl_donNhapPanel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_donNhapPanel.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_donNhapPanel.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-						.addComponent(sortCmbx, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_donNhapPanel.createParallelGroup(Alignment.BASELINE)
-							.addComponent(timKiemDonNhapTxt, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-							.addComponent(timKiemTypeCmbx, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-							.addComponent(timKiemBtn, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
-						.addComponent(auto_increase_spaceLbl, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_donNhapPanel.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(toDateChooser, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(lblT, GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-						.addComponent(lbln, GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-						.addComponent(fromDateChooser, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_donNhapPanel.createParallelGroup(Alignment.TRAILING)
-						.addComponent(auto_increase_spaceLbl_2, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-						.addComponent(inBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-						.addComponent(importBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-						.addComponent(chiTietBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_donNhapPanel.createParallelGroup(Alignment.LEADING, false)
-							.addComponent(auto_increase_spaceLbl_1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(themDonNhapBtn, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)))
-					.addGap(17))
-		);
 		
 		donNhapTable = new JTable();
 		donNhapTable.setModel(new DefaultTableModel(
@@ -258,37 +175,124 @@ public class QuanLyKhoFrm extends JPanel {
 		donNhapTable.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
 		
 		scrollPane.setViewportView(donNhapTable);
+		
+		MyButton mbtnLmMi = new MyButton();
+		mbtnLmMi.setIcon(new ImageIcon(QuanLyKhoFrm.class.getResource("/assets/reset.png")));
+		mbtnLmMi.setText("làm mới");
+		mbtnLmMi.setHorizontalTextPosition(SwingConstants.LEADING);
+		GroupLayout gl_donNhapPanel = new GroupLayout(donNhapPanel);
+		gl_donNhapPanel.setHorizontalGroup(
+			gl_donNhapPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_donNhapPanel.createSequentialGroup()
+					.addGap(19)
+					.addGroup(gl_donNhapPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_donNhapPanel.createSequentialGroup()
+							.addComponent(timKiemDonNhapTxt, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
+							.addGap(6)
+							.addComponent(timKiemTypeCmbx, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)
+							.addGap(6)
+							.addComponent(timKiemBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(auto_increase_spaceLbl, GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+							.addGap(18)
+							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
+							.addGap(10)
+							.addComponent(sortCmbx, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_donNhapPanel.createSequentialGroup()
+							.addComponent(lblT, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
+							.addGap(4)
+							.addComponent(fromDateChooser, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)
+							.addGap(10)
+							.addComponent(lbln, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
+							.addGap(4)
+							.addComponent(toDateChooser, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 269, Short.MAX_VALUE)
+							.addComponent(mbtnLmMi, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE))
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
+						.addGroup(gl_donNhapPanel.createSequentialGroup()
+							.addComponent(auto_increase_spaceLbl_1, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+							.addGap(10)
+							.addComponent(themDonNhapBtn, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+							.addGap(10)
+							.addComponent(inBtn, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+							.addGap(6)
+							.addComponent(chiTietBtn, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
+							.addGap(159)
+							.addComponent(auto_increase_spaceLbl_2, GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
+							.addGap(113)
+							.addComponent(importBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addGap(40))
+		);
+		gl_donNhapPanel.setVerticalGroup(
+			gl_donNhapPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_donNhapPanel.createSequentialGroup()
+					.addGap(11)
+					.addGroup(gl_donNhapPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(timKiemDonNhapTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_donNhapPanel.createSequentialGroup()
+							.addGap(4)
+							.addComponent(timKiemTypeCmbx, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_donNhapPanel.createSequentialGroup()
+							.addGap(1)
+							.addComponent(timKiemBtn, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+						.addComponent(auto_increase_spaceLbl, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+						.addComponent(sortCmbx, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+					.addGap(6)
+					.addGroup(gl_donNhapPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblT, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+						.addComponent(fromDateChooser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lbln, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+						.addComponent(toDateChooser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(mbtnLmMi, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+					.addGap(6)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+					.addGap(11)
+					.addGroup(gl_donNhapPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_donNhapPanel.createSequentialGroup()
+							.addGap(7)
+							.addComponent(auto_increase_spaceLbl_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_donNhapPanel.createSequentialGroup()
+							.addGap(7)
+							.addComponent(themDonNhapBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_donNhapPanel.createSequentialGroup()
+							.addGap(7)
+							.addComponent(inBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_donNhapPanel.createSequentialGroup()
+							.addGap(7)
+							.addComponent(chiTietBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+						.addComponent(auto_increase_spaceLbl_2, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_donNhapPanel.createSequentialGroup()
+							.addGap(7)
+							.addComponent(importBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))
+					.addGap(17))
+		);
 		donNhapPanel.setLayout(gl_donNhapPanel);
 		
 		JTableHeader tableHeader = donNhapTable.getTableHeader();
 		tableHeader.setUI(new CustomTableHeaderUI());
-		tableHeader.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		tableHeader.setFont(new Font("Tahoma", Font.PLAIN, 15));
 
 		
 		JPanel tonKhoPanel = new JPanel();
 		tonKhoPanel.setBackground(new Color(102, 102, 102));
 		tabbedPane.addTab("Tồn kho", null, tonKhoPanel, null);
 		
-		JComboBox timKiemTypeCmbx_1 = new JComboBox();
-		timKiemTypeCmbx_1.setBackground(new Color(102, 102, 102));
-		timKiemTypeCmbx_1.setForeground(new Color(0, 255, 255));
-		
-		MyTextfield timKiemTonKhoBtn = new MyTextfield();
-		timKiemTonKhoBtn.setPreferredSize(new Dimension(180, 35));
-		timKiemTonKhoBtn.setColumns(10);
-		timKiemTonKhoBtn.setBorder(new EmptyBorder(0, 0, 0, 0));
-		timKiemTonKhoBtn.setBackground(new Color(77, 77, 77));
-		
-		MyButton timKiemBtn_1 = new MyButton();
-		timKiemBtn_1.setText("Lọc");
-		timKiemBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
-		
-		JLabel lblNewLabel_1 = new JLabel("Sắp xếp :");
-		lblNewLabel_1.setForeground(Color.CYAN);
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		
-		JComboBox sortCmbx_1 = new JComboBox();
-		sortCmbx_1.setBackground(new Color(102, 102, 102));
+		// TODO : LẤY DANH SÁCH TỒN KHO
+//		SELECT DSNHAP.masp,sp.tensp, DSNHAP.nhap - DSDOANHSO.doanhso AS soluongton
+//		FROM
+//		sanpham AS sp
+//		JOIN
+//		(SELECT ctdn.masp, SUM(ctdn.solg) AS nhap
+//		FROM ctdn
+//		GROUP BY ctdn.masp) AS DSNHAP
+//		ON DSNHAP.masp = sp.masp
+//		JOIN
+//		(SELECT cthd.masp, SUM(cthd.solg) AS doanhso
+//		FROM cthd
+//		GROUP BY cthd.masp) AS DSDOANHSO
+//		ON DSNHAP.masp = DSDOANHSO.masp
+//		GROUP BY DSNHAP. masp
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -301,7 +305,7 @@ public class QuanLyKhoFrm extends JPanel {
 		tonKhoTable = new JTable();
 		tonKhoTable.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
 		tonKhoTable.getTableHeader().setUI(new CustomTableHeaderUI());
-		tonKhoTable.getTableHeader().setFont(new Font("Tahoma", Font.PLAIN, 18));
+		tonKhoTable.getTableHeader().setFont(new Font("Tahoma", Font.PLAIN, 15));
 		tonKhoTable.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null},
@@ -311,26 +315,54 @@ public class QuanLyKhoFrm extends JPanel {
 			}
 		));
 		scrollPane_1.setViewportView(tonKhoTable);
+		
+		MyTextfield timKiemTonKhoTxt = new MyTextfield();
+		timKiemTonKhoTxt.setPreferredSize(new Dimension(180, 35));
+		timKiemTonKhoTxt.setColumns(10);
+		timKiemTonKhoTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
+		timKiemTonKhoTxt.setBackground(new Color(77, 77, 77));
+		
+		JComboBox timKiemTypeCmbx_1 = new JComboBox();
+		timKiemTypeCmbx_1.setForeground(Color.CYAN);
+		timKiemTypeCmbx_1.setBackground(new Color(102, 102, 102));
+		
+		MyButton timKiemBtn_1 = new MyButton();
+		timKiemBtn_1.setText("Lọc");
+		timKiemBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
+		
+		JLabel lblNewLabel_1 = new JLabel("Sắp xếp :");
+		lblNewLabel_1.setForeground(Color.CYAN);
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		JComboBox sortCmbx_1 = new JComboBox();
+		sortCmbx_1.setForeground(Color.CYAN);
+		sortCmbx_1.setBackground(new Color(102, 102, 102));
+		
+		MyButton mbtnLmMi_1 = new MyButton();
+		mbtnLmMi_1.setIcon(new ImageIcon(QuanLyKhoFrm.class.getResource("/assets/reset.png")));
+		mbtnLmMi_1.setText("làm mới");
+		mbtnLmMi_1.setHorizontalTextPosition(SwingConstants.LEADING);
 		GroupLayout gl_tonKhoPanel = new GroupLayout(tonKhoPanel);
 		gl_tonKhoPanel.setHorizontalGroup(
 			gl_tonKhoPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_tonKhoPanel.createSequentialGroup()
-					.addGap(22)
-					.addComponent(timKiemTonKhoBtn, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
-					.addGap(2)
-					.addComponent(timKiemTypeCmbx_1, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)
-					.addGap(10)
-					.addComponent(timKiemBtn_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(10)
-					.addComponent(auto_increase_spaceLbl_3, GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-					.addGap(10)
-					.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
-					.addGap(10)
-					.addComponent(sortCmbx_1, GroupLayout.PREFERRED_SIZE, 153, GroupLayout.PREFERRED_SIZE)
-					.addGap(38))
-				.addGroup(gl_tonKhoPanel.createSequentialGroup()
 					.addGap(21)
-					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
+					.addGroup(gl_tonKhoPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_tonKhoPanel.createSequentialGroup()
+							.addComponent(timKiemTonKhoTxt, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
+							.addGap(6)
+							.addComponent(timKiemTypeCmbx_1, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)
+							.addGap(6)
+							.addComponent(timKiemBtn_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(mbtnLmMi_1, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+							.addGap(6)
+							.addComponent(auto_increase_spaceLbl_3, GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+							.addGap(28)
+							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
+							.addGap(10)
+							.addComponent(sortCmbx_1, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE))
+						.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE))
 					.addGap(38))
 		);
 		gl_tonKhoPanel.setVerticalGroup(
@@ -338,25 +370,161 @@ public class QuanLyKhoFrm extends JPanel {
 				.addGroup(gl_tonKhoPanel.createSequentialGroup()
 					.addGap(8)
 					.addGroup(gl_tonKhoPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(timKiemTonKhoTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_tonKhoPanel.createSequentialGroup()
-							.addGap(3)
-							.addComponent(timKiemTonKhoBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_tonKhoPanel.createSequentialGroup()
-							.addGap(3)
+							.addGap(4)
 							.addComponent(timKiemTypeCmbx_1, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
-						.addComponent(timKiemBtn_1, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+						.addComponent(sortCmbx_1, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
 						.addComponent(auto_increase_spaceLbl_3, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_tonKhoPanel.createSequentialGroup()
-							.addGap(3)
-							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_tonKhoPanel.createSequentialGroup()
-							.addGap(6)
-							.addComponent(sortCmbx_1, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)))
-					.addGap(8)
+							.addGap(1)
+							.addGroup(gl_tonKhoPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(mbtnLmMi_1, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+								.addComponent(timKiemBtn_1, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))))
+					.addGap(12)
 					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
 					.addGap(27))
 		);
 		tonKhoPanel.setLayout(gl_tonKhoPanel);
+		
+		JPanel donNhapPanel_1 = new JPanel();
+		donNhapPanel_1.setBackground(new Color(102, 102, 102));
+		tabbedPane.addTab("nhà cung cấp", null, donNhapPanel_1, null);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.getViewport().setBackground(new Color(51,51,51));
+		scrollPane_2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane_2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		
+		MyTextfield timKiemDonNhapTxt_1 = new MyTextfield();
+		timKiemDonNhapTxt_1.setPreferredSize(new Dimension(180, 35));
+		timKiemDonNhapTxt_1.setColumns(10);
+		timKiemDonNhapTxt_1.setBorder(new EmptyBorder(0, 0, 0, 0));
+		timKiemDonNhapTxt_1.setBackground(new Color(77, 77, 77));
+		
+		JComboBox timKiemTypeCmbx_2 = new JComboBox();
+		timKiemTypeCmbx_2.setForeground(Color.CYAN);
+		timKiemTypeCmbx_2.setBackground(new Color(102, 102, 102));
+		
+		MyButton timKiemBtn_2 = new MyButton();
+		timKiemBtn_2.setText("Lọc");
+		timKiemBtn_2.setHorizontalTextPosition(SwingConstants.LEADING);
+		
+		JLabel auto_increase_spaceLbl_4 = new JLabel("");
+		
+		JLabel lblNewLabel_2 = new JLabel("Sắp xếp :");
+		lblNewLabel_2.setForeground(Color.CYAN);
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		JComboBox sortCmbx_2 = new JComboBox();
+		sortCmbx_2.setForeground(Color.CYAN);
+		sortCmbx_2.setBackground(new Color(102, 102, 102));
+		
+		JLabel auto_increase_spaceLbl_1_1 = new JLabel("");
+		
+		MyButton themDonNhapBtn_1 = new MyButton();
+		themDonNhapBtn_1.setText("Thêm");
+		themDonNhapBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
+		
+		MyButton inBtn_1 = new MyButton();
+		inBtn_1.setText("In");
+		inBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
+		
+		JLabel auto_increase_spaceLbl_2_1 = new JLabel("");
+		
+		MyButton importBtn_1 = new MyButton();
+		importBtn_1.setText("Nhập Excel");
+		importBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
+		
+		MyButton mbtnLmMi_2 = new MyButton();
+		mbtnLmMi_2.setIcon(new ImageIcon(QuanLyKhoFrm.class.getResource("/assets/reset.png")));
+		mbtnLmMi_2.setText("làm mới");
+		mbtnLmMi_2.setHorizontalTextPosition(SwingConstants.LEADING);
+		GroupLayout gl_donNhapPanel_1 = new GroupLayout(donNhapPanel_1);
+		gl_donNhapPanel_1.setHorizontalGroup(
+			gl_donNhapPanel_1.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_donNhapPanel_1.createSequentialGroup()
+					.addGap(19)
+					.addGroup(gl_donNhapPanel_1.createParallelGroup(Alignment.TRAILING)
+						.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
+						.addGroup(gl_donNhapPanel_1.createSequentialGroup()
+							.addComponent(timKiemDonNhapTxt_1, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
+							.addGap(6)
+							.addComponent(timKiemTypeCmbx_2, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)
+							.addGap(6)
+							.addComponent(timKiemBtn_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(mbtnLmMi_2, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+							.addGap(14)
+							.addComponent(auto_increase_spaceLbl_4, GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+							.addGap(18)
+							.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
+							.addGap(10)
+							.addComponent(sortCmbx_2, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_donNhapPanel_1.createSequentialGroup()
+							.addComponent(auto_increase_spaceLbl_1_1, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+							.addGap(10)
+							.addComponent(themDonNhapBtn_1, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+							.addGap(10)
+							.addComponent(inBtn_1, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+							.addGap(269)
+							.addComponent(auto_increase_spaceLbl_2_1, GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
+							.addGap(113)
+							.addComponent(importBtn_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addGap(40))
+		);
+		gl_donNhapPanel_1.setVerticalGroup(
+			gl_donNhapPanel_1.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_donNhapPanel_1.createSequentialGroup()
+					.addGap(11)
+					.addGroup(gl_donNhapPanel_1.createParallelGroup(Alignment.LEADING)
+						.addComponent(timKiemDonNhapTxt_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_donNhapPanel_1.createSequentialGroup()
+							.addGap(4)
+							.addComponent(timKiemTypeCmbx_2, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
+						.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+						.addComponent(sortCmbx_2, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+						.addComponent(auto_increase_spaceLbl_4, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_donNhapPanel_1.createSequentialGroup()
+							.addGap(1)
+							.addGroup(gl_donNhapPanel_1.createParallelGroup(Alignment.LEADING)
+								.addComponent(mbtnLmMi_2, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+								.addComponent(timKiemBtn_2, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
+					.addGap(11)
+					.addGroup(gl_donNhapPanel_1.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_donNhapPanel_1.createSequentialGroup()
+							.addGap(7)
+							.addComponent(auto_increase_spaceLbl_1_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_donNhapPanel_1.createSequentialGroup()
+							.addGap(7)
+							.addComponent(themDonNhapBtn_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_donNhapPanel_1.createSequentialGroup()
+							.addGap(7)
+							.addComponent(inBtn_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+						.addComponent(auto_increase_spaceLbl_2_1, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_donNhapPanel_1.createSequentialGroup()
+							.addGap(7)
+							.addComponent(importBtn_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))
+					.addGap(17))
+		);
+		
+		table = new JTable();
+		table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
+		table.getTableHeader().setUI(new CustomTableHeaderUI());
+		table.getTableHeader().setFont(new Font("Tahoma", Font.PLAIN, 15));
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null},
+			},
+			new String[] {
+				"m\u00E3 nh\u00E0 cung c\u1EA5p", "t\u00EAn nh\u00E0 cung c\u1EA5p", "s\u1ED1 \u0111i\u1EC7n tho\u1EA1i", "\u0111\u1ECBa ch\u1EC9"
+			}
+		));
+		scrollPane_2.setViewportView(table);
+		donNhapPanel_1.setLayout(gl_donNhapPanel_1);
 		setLayout(groupLayout);
 		
 		initComponents();

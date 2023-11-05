@@ -49,31 +49,23 @@ public class ChiTietDonNhap extends JFrame {
 	public ChiTietDonNhap() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ChiTietDonNhap.class.getResource("/assets/Laptop_Login.png")));
 		setTitle("Chi tiết phiếu nhập");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(572,596);
 		setMinimumSize(new Dimension(572,596));
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(51, 51, 51));
+		contentPane.setBackground(new Color(102, 102, 102));
 		contentPane.setForeground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 
 		setContentPane(contentPane);
 		
-		JLabel lblXemTrcKt = new JLabel("CHI TIẾT ĐƠN HÀNG  : <madh>");
-		lblXemTrcKt.setOpaque(true);
-		lblXemTrcKt.setHorizontalAlignment(SwingConstants.CENTER);
-		lblXemTrcKt.setForeground(new Color(0, 204, 204));
-		lblXemTrcKt.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblXemTrcKt.setBackground(new Color(255, 255, 102));
-		lblXemTrcKt.setAlignmentY(0.0f);
-		
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(51, 51, 51));
+		panel.setBackground(new Color(102, 102, 102));
 		panel.setLayout(null);
 		
 		JLabel maNhanVienPhieuNhapLbl = new JLabel("mã nhân viên : <<mavn>>");
-		maNhanVienPhieuNhapLbl.setBounds(10, 11, 493, 19);
+		maNhanVienPhieuNhapLbl.setBounds(10, 50, 493, 19);
 		maNhanVienPhieuNhapLbl.setForeground(Color.CYAN);
 		maNhanVienPhieuNhapLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel.add(maNhanVienPhieuNhapLbl);
@@ -81,13 +73,13 @@ public class ChiTietDonNhap extends JFrame {
 		JLabel maNhaCungCapLbl = new JLabel("mã nhà cung cấp: <<mancc>>");
 		maNhaCungCapLbl.setForeground(Color.CYAN);
 		maNhaCungCapLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		maNhaCungCapLbl.setBounds(10, 41, 493, 30);
+		maNhaCungCapLbl.setBounds(10, 80, 493, 30);
 		panel.add(maNhaCungCapLbl);
 		
 		JLabel ngayNhapLbl = new JLabel("ngày nhập: <<ngaynhap>>");
 		ngayNhapLbl.setForeground(Color.CYAN);
 		ngayNhapLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		ngayNhapLbl.setBounds(10, 82, 493, 30);
+		ngayNhapLbl.setBounds(10, 121, 493, 30);
 		panel.add(ngayNhapLbl);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -106,6 +98,7 @@ public class ChiTietDonNhap extends JFrame {
 		));
 		table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
 		table.getTableHeader().setUI(new CustomTableHeaderUI());
+		table.getTableHeader().setFont(new Font("Tahoma", Font.PLAIN, 15));
 		scrollPane.setViewportView(table);
 		
 		JLabel lblTngCng = new JLabel("tổng cộng :....................");
@@ -115,32 +108,31 @@ public class ChiTietDonNhap extends JFrame {
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addComponent(lblXemTrcKt, GroupLayout.DEFAULT_SIZE, 556, Short.MAX_VALUE)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(21)
-					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE)
-					.addGap(22))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(21)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE)
-					.addGap(22))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(21)
-					.addComponent(lblTngCng, GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE)
+						.addComponent(lblTngCng, GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE)
+						.addComponent(panel, GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE))
 					.addGap(22))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(lblXemTrcKt, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-					.addGap(11)
-					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 127, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap()
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
 					.addGap(11)
 					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
 					.addGap(11)
 					.addComponent(lblTngCng, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
 					.addGap(6))
 		);
+		
+		JLabel maPhieuNhapLbl = new JLabel("mã phiếu nhập : <madh>");
+		maPhieuNhapLbl.setForeground(Color.CYAN);
+		maPhieuNhapLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		maPhieuNhapLbl.setBounds(10, 20, 493, 19);
+		panel.add(maPhieuNhapLbl);
 		contentPane.setLayout(gl_contentPane);
 	}
 
