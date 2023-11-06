@@ -308,7 +308,7 @@ public class MainForm extends JFrame {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						if(!getTitle().equalsIgnoreCase(chucvu + " - Quản lý bảo hành")) {
-							setTitle(chucvu + " - Quản lý bảo Hành");
+							setTitle(chucvu + " - Quản lý bảo hành");
 							splitPane.setRightComponent(new QuanLyBaoHanhFrm());
 							splitPane.setDividerLocation(175);
 						}
