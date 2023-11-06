@@ -56,11 +56,11 @@ public class QuanLyBaoHanhFrm extends JPanel {
 		phieuBaoHanhPanel.setBackground(new Color(102, 102, 102));
 		tabbedPane.addTab("Phiếu bảo hành", null, phieuBaoHanhPanel, null);
 		
-		MyTextfield timKiemDonNhapTxt = new MyTextfield();
-		timKiemDonNhapTxt.setPreferredSize(new Dimension(180, 35));
-		timKiemDonNhapTxt.setColumns(10);
-		timKiemDonNhapTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
-		timKiemDonNhapTxt.setBackground(new Color(77, 77, 77));
+		MyTextfield timKiemBaoHanhTxt = new MyTextfield();
+		timKiemBaoHanhTxt.setPreferredSize(new Dimension(180, 35));
+		timKiemBaoHanhTxt.setColumns(10);
+		timKiemBaoHanhTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
+		timKiemBaoHanhTxt.setBackground(new Color(77, 77, 77));
 		
 		JComboBox timKiemTypeCmbx = new JComboBox();
 		timKiemTypeCmbx.setForeground(Color.CYAN);
@@ -141,6 +141,11 @@ public class QuanLyBaoHanhFrm extends JPanel {
 		timKiemBtn_1_1.setHorizontalTextPosition(SwingConstants.LEADING);
 		
 		JLabel auto_increase_spaceLbl_2 = new JLabel("");
+		
+		MyButton mbtnLmMi_1 = new MyButton();
+		mbtnLmMi_1.setIcon(new ImageIcon(QuanLyBaoHanhFrm.class.getResource("/assets/reset.png")));
+		mbtnLmMi_1.setText("làm mới");
+		mbtnLmMi_1.setHorizontalTextPosition(SwingConstants.LEADING);
 		GroupLayout gl_phieuBaoHanhPanel = new GroupLayout(phieuBaoHanhPanel);
 		gl_phieuBaoHanhPanel.setHorizontalGroup(
 			gl_phieuBaoHanhPanel.createParallelGroup(Alignment.LEADING)
@@ -148,16 +153,18 @@ public class QuanLyBaoHanhFrm extends JPanel {
 					.addGap(10)
 					.addGroup(gl_phieuBaoHanhPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_phieuBaoHanhPanel.createSequentialGroup()
-							.addComponent(timKiemDonNhapTxt, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
+							.addComponent(timKiemBaoHanhTxt, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
 							.addGap(10)
 							.addComponent(timKiemTypeCmbx, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)
 							.addGap(4)
 							.addComponent(timKiemBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(50)
-							.addComponent(auto_increase_spaceLbl, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(mbtnLmMi_1, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(auto_increase_spaceLbl, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
 							.addGap(18)
 							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
-							.addGap(10)
+							.addPreferredGap(ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
 							.addComponent(sortCmbx, GroupLayout.PREFERRED_SIZE, 174, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_phieuBaoHanhPanel.createSequentialGroup()
 							.addComponent(lblT, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
@@ -185,7 +192,7 @@ public class QuanLyBaoHanhFrm extends JPanel {
 					.addGroup(gl_phieuBaoHanhPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_phieuBaoHanhPanel.createSequentialGroup()
 							.addGap(3)
-							.addComponent(timKiemDonNhapTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(timKiemBaoHanhTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_phieuBaoHanhPanel.createSequentialGroup()
 							.addGap(3)
 							.addComponent(timKiemTypeCmbx, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
@@ -198,7 +205,8 @@ public class QuanLyBaoHanhFrm extends JPanel {
 							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_phieuBaoHanhPanel.createSequentialGroup()
 							.addGap(3)
-							.addComponent(sortCmbx, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(sortCmbx, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+						.addComponent(mbtnLmMi_1, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
 					.addGap(6)
 					.addGroup(gl_phieuBaoHanhPanel.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblT, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
@@ -223,11 +231,11 @@ public class QuanLyBaoHanhFrm extends JPanel {
 		LapPhieuBaoHanhPanel.setBackground(new Color(102, 102, 102));
 		tabbedPane.addTab("Lập phiếu", null, LapPhieuBaoHanhPanel, null);
 		
-		MyTextfield timKiemDonNhapTxt_1 = new MyTextfield();
-		timKiemDonNhapTxt_1.setPreferredSize(new Dimension(180, 35));
-		timKiemDonNhapTxt_1.setColumns(10);
-		timKiemDonNhapTxt_1.setBorder(new EmptyBorder(0, 0, 0, 0));
-		timKiemDonNhapTxt_1.setBackground(new Color(77, 77, 77));
+		MyTextfield timKiemChiTietHoaDon = new MyTextfield();
+		timKiemChiTietHoaDon.setPreferredSize(new Dimension(180, 35));
+		timKiemChiTietHoaDon.setColumns(10);
+		timKiemChiTietHoaDon.setBorder(new EmptyBorder(0, 0, 0, 0));
+		timKiemChiTietHoaDon.setBackground(new Color(77, 77, 77));
 		
 		JComboBox timKiemTypeCmbx_1 = new JComboBox();
 		timKiemTypeCmbx_1.setForeground(Color.CYAN);
@@ -303,11 +311,11 @@ public class QuanLyBaoHanhFrm extends JPanel {
 		themPhieuBaoHanhBtn.setText("thêm phiếu");
 		themPhieuBaoHanhBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
-		MyTextfield timKiemDonNhapTxt_1_1 = new MyTextfield();
-		timKiemDonNhapTxt_1_1.setPreferredSize(new Dimension(180, 35));
-		timKiemDonNhapTxt_1_1.setColumns(10);
-		timKiemDonNhapTxt_1_1.setBorder(new EmptyBorder(0, 0, 0, 0));
-		timKiemDonNhapTxt_1_1.setBackground(new Color(77, 77, 77));
+		MyTextfield loiTxt = new MyTextfield();
+		loiTxt.setPreferredSize(new Dimension(180, 35));
+		loiTxt.setColumns(10);
+		loiTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
+		loiTxt.setBackground(new Color(77, 77, 77));
 		
 		JLabel lblNewLabel_1_1 = new JLabel("Lỗi :");
 		lblNewLabel_1_1.setForeground(Color.CYAN);
@@ -317,11 +325,11 @@ public class QuanLyBaoHanhFrm extends JPanel {
 		lblNewLabel_1_1_1.setForeground(Color.CYAN);
 		lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		MyTextfield timKiemDonNhapTxt_1_1_1 = new MyTextfield();
-		timKiemDonNhapTxt_1_1_1.setPreferredSize(new Dimension(180, 35));
-		timKiemDonNhapTxt_1_1_1.setColumns(10);
-		timKiemDonNhapTxt_1_1_1.setBorder(new EmptyBorder(0, 0, 0, 0));
-		timKiemDonNhapTxt_1_1_1.setBackground(new Color(77, 77, 77));
+		MyTextfield HuongGiaiQuyetTxt = new MyTextfield();
+		HuongGiaiQuyetTxt.setPreferredSize(new Dimension(180, 35));
+		HuongGiaiQuyetTxt.setColumns(10);
+		HuongGiaiQuyetTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
+		HuongGiaiQuyetTxt.setBackground(new Color(77, 77, 77));
 		
 		JLabel auto_increase_spaceLbl_1 = new JLabel("");
 		
@@ -334,15 +342,15 @@ public class QuanLyBaoHanhFrm extends JPanel {
 			gl_LapPhieuBaoHanhPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_LapPhieuBaoHanhPanel.createSequentialGroup()
 					.addGap(10)
-					.addComponent(timKiemDonNhapTxt_1, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
+					.addComponent(timKiemChiTietHoaDon, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
 					.addGap(10)
 					.addComponent(timKiemTypeCmbx_1, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)
 					.addGap(5)
 					.addComponent(timkiemBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(20)
 					.addComponent(mbtnLmMi, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(auto_increase_spaceLbl_1, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+					.addGap(4)
+					.addComponent(auto_increase_spaceLbl_1, GroupLayout.DEFAULT_SIZE, 15, Short.MAX_VALUE)
 					.addGap(10)
 					.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
 					.addGap(10)
@@ -355,18 +363,19 @@ public class QuanLyBaoHanhFrm extends JPanel {
 				.addGroup(gl_LapPhieuBaoHanhPanel.createSequentialGroup()
 					.addGap(10)
 					.addGroup(gl_LapPhieuBaoHanhPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblNewLabel_1_1, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_LapPhieuBaoHanhPanel.createSequentialGroup()
 							.addGap(40)
-							.addComponent(timKiemDonNhapTxt_1_1, GroupLayout.PREFERRED_SIZE, 229, GroupLayout.PREFERRED_SIZE))
-						.addComponent(lblNewLabel_1_1, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE))
+							.addComponent(loiTxt, GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)))
 					.addGap(10)
 					.addComponent(lblNewLabel_1_1_1, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
 					.addGap(10)
-					.addComponent(timKiemDonNhapTxt_1_1_1, GroupLayout.PREFERRED_SIZE, 233, GroupLayout.PREFERRED_SIZE)
+					.addComponent(HuongGiaiQuyetTxt, GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
 					.addGap(10)
 					.addComponent(themCTHDBtn, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
 					.addGap(10)
-					.addComponent(xoaCTHDBtn, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE))
+					.addComponent(xoaCTHDBtn, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+					.addGap(9))
 				.addGroup(gl_LapPhieuBaoHanhPanel.createSequentialGroup()
 					.addGap(10)
 					.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 811, Short.MAX_VALUE)
@@ -380,26 +389,25 @@ public class QuanLyBaoHanhFrm extends JPanel {
 				.addGroup(gl_LapPhieuBaoHanhPanel.createSequentialGroup()
 					.addGap(14)
 					.addGroup(gl_LapPhieuBaoHanhPanel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_LapPhieuBaoHanhPanel.createParallelGroup(Alignment.LEADING, false)
-							.addComponent(auto_increase_spaceLbl_1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(timKiemDonNhapTxt_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(timKiemTypeCmbx_1, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-							.addComponent(timkiemBtn, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-							.addComponent(lblNewLabel_1, GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-							.addComponent(sortCmbx_1, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
-						.addComponent(mbtnLmMi, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+						.addComponent(timKiemChiTietHoaDon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(timKiemTypeCmbx_1, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+						.addComponent(timkiemBtn, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+						.addComponent(mbtnLmMi, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+						.addComponent(auto_increase_spaceLbl_1, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+						.addComponent(sortCmbx_1, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
 					.addGap(9)
 					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
 					.addGap(10)
 					.addGroup(gl_LapPhieuBaoHanhPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblNewLabel_1_1, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_LapPhieuBaoHanhPanel.createSequentialGroup()
 							.addGap(1)
-							.addComponent(timKiemDonNhapTxt_1_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addComponent(lblNewLabel_1_1, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+							.addComponent(loiTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 						.addComponent(lblNewLabel_1_1_1, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_LapPhieuBaoHanhPanel.createSequentialGroup()
 							.addGap(1)
-							.addComponent(timKiemDonNhapTxt_1_1_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(HuongGiaiQuyetTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_LapPhieuBaoHanhPanel.createSequentialGroup()
 							.addGap(1)
 							.addComponent(themCTHDBtn, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
@@ -407,7 +415,7 @@ public class QuanLyBaoHanhFrm extends JPanel {
 							.addGap(1)
 							.addComponent(xoaCTHDBtn, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)))
 					.addGap(7)
-					.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+					.addComponent(scrollPane_2, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
 					.addGap(11)
 					.addComponent(themPhieuBaoHanhBtn, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
 					.addGap(4))

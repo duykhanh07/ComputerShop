@@ -28,7 +28,7 @@ public class MyButton2 extends JButton {
     	setSelected(false);
         setFocusPainted(false);      
         setBorder(new LineBorder(Color.black, 1));
-
+        setHorizontalAlignment(JButton.LEADING);
     }
     
     public MyButton2(String text) {
@@ -36,6 +36,7 @@ public class MyButton2 extends JButton {
     	setSelected(false);
         setFocusPainted(false);
         setBorder(new LineBorder(Color.black, 1));
+        setHorizontalAlignment(JButton.LEADING);
     }
     
     

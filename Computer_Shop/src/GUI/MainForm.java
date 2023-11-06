@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.EventQueue;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -15,6 +16,8 @@ import GUI.QuanLyKhachHang.QuanLyKhachHangFrm;
 import GUI.QuanLyKho.QuanLyKhoFrm;
 import GUI.QuanLySanPham.QuanLySanPhamFrm;
 import GUI.QuanLyTaiKhoan.QuanLyTaiKhoanFrm;
+import GUI.ThongKe.ThongKeDoanhSo;
+import GUI.ThongKe.ThongKeDoanhThu;
 import MyDesign.MyComponents.MyButton;
 import MyDesign.MyComponents.MyButton2;
 
@@ -52,6 +55,8 @@ public class MainForm extends JFrame {
 
 	private JSplitPane splitPane;
 
+	private int y_position;
+
 	/**
 	 * Launch the application.
 	 */
@@ -59,7 +64,7 @@ public class MainForm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainForm frame = new MainForm(new String[]{"","","bán hàng"});
+					MainForm frame = new MainForm(new String[]{"","","tester"});
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -196,101 +201,33 @@ public class MainForm extends JFrame {
 
 	// TODO : TẠO MENU ITEM CHO MENU
 	public void initButton(String chucVu) {
-		int y_position = 34;
+		y_position = 34;
+		ArrayList<String>btnString;
 		if(chucVu.equalsIgnoreCase("thu ngân") || chucVu.equals("bán hàng")) {
-			MyButton2 button = new MyButton2("BÁN HÀNG");
-			button.addActionListener(new ActionListener() {	@Override public void actionPerformed(ActionEvent e) {
-				changeButtonColor(button);
-			}});
-			button.setBounds(0, y_position, 174, 32);
-			menuPanel.add(button);
-			ds_menu.add(button);
-			
-			y_position += 32;
-			
-			MyButton2 button_1 = new MyButton2("QUẢN LÝ KHÁCH HÀNG");
-			button_1.addActionListener(new ActionListener() {	@Override public void actionPerformed(ActionEvent e) {
-				changeButtonColor(button_1);
-			}});
-			button_1.setBounds(0, y_position, 174, 32);
-			menuPanel.add(button_1);
-			ds_menu.add(button_1);
-			
+			btnString = new ArrayList<String>(Arrays.asList("BÁN HÀNG","QUẢN LÝ KHÁCH HÀNG","THÔNG TIN CÁ NHÂN"));		
 		}else if(chucVu.equalsIgnoreCase("thủ kho")) {
-			MyButton2 button = new MyButton2("QUẢN LÝ KHO");
-			button.addActionListener(new ActionListener() {	@Override public void actionPerformed(ActionEvent e) {
-				changeButtonColor(button);
-			}});
-			button.setBounds(0, y_position, 174, 32);
-			menuPanel.add(button);
-			ds_menu.add(button);
-			
+			btnString = new ArrayList<String>(Arrays.asList("QUẢN LÝ KHO","THÔNG TIN CÁ NHÂN"));	
 		}else if(chucVu.equalsIgnoreCase("kỹ thuật")) {
-			MyButton2 button = new MyButton2("BẢO HÀNH");
-			button.addActionListener(new ActionListener() {	@Override public void actionPerformed(ActionEvent e) {
-				changeButtonColor(button);
-			}});
-			button.setBounds(0, y_position, 174, 32);
-			menuPanel.add(button);
-			ds_menu.add(button);
-			
+			btnString = new ArrayList<String>(Arrays.asList("BẢO HÀNH","THÔNG TIN CÁ NHÂN"));
 		}else if(chucVu.equalsIgnoreCase("quản lý")) {
-			MyButton2 button = new MyButton2("QUẢN LÝ SẢN PHẨM");
-			button.addActionListener(new ActionListener() {	@Override public void actionPerformed(ActionEvent e) {
-				changeButtonColor(button);
-			}});
-			button.setBounds(0, y_position, 174, 32);
-			menuPanel.add(button);
-			ds_menu.add(button);
-			
-			y_position += 32;
-			
-			MyButton2 button_1 = new MyButton2("QUẢN LÝ KHÁCH HÀNG");
-			button_1.addActionListener(new ActionListener() {	@Override public void actionPerformed(ActionEvent e) {
-				changeButtonColor(button_1);
-			}});
-			button_1.setBounds(0, y_position, 174, 32);
-			menuPanel.add(button_1);
-			ds_menu.add(button_1);
-			
-			y_position += 32;
-			
-			MyButton2 button_2 = new MyButton2("THỐNG KÊ DOANH THU");
-			button_2.addActionListener(new ActionListener() {	@Override public void actionPerformed(ActionEvent e) {
-				changeButtonColor(button_2);
-			}});
-			button_2.setBounds(0, y_position, 174, 32);
-			menuPanel.add(button_2);
-			ds_menu.add(button_2);
-			
-			y_position += 32;
-			
-			MyButton2 button_3 = new MyButton2("THỐNG KÊ DOANH SỐ");
-			button_2.addActionListener(new ActionListener() {	@Override public void actionPerformed(ActionEvent e) {
-				changeButtonColor(button_2);
-			}});
-			button_2.setBounds(0, y_position, 174, 32);
-			menuPanel.add(button_2);
-			ds_menu.add(button_2);
+			btnString = new ArrayList<String>(Arrays.asList("QUẢN LÝ SẢN PHẨM", "QUẢN LÝ KHÁCH HÀNG", "THỐNG KÊ DOANH THU", "THỐNG KÊ DOANH SỐ","THÔNG TIN CÁ NHÂN"));
+		}else if(chucVu.equalsIgnoreCase("admin")) {
+			btnString = new ArrayList<String>(Arrays.asList("QUẢN LÝ TÀI KHOẢN","THÔNG TIN CÁ NHÂN"));
 		}else {
-			MyButton2 button = new MyButton2("QUẢN LÝ TÀI KHOẢN");
+			btnString = new ArrayList<String>(Arrays.asList("BÁN HÀNG","QUẢN LÝ KHÁCH HÀNG","QUẢN LÝ KHO","BẢO HÀNH","QUẢN LÝ SẢN PHẨM", "QUẢN LÝ KHÁCH HÀNG", 
+					"THỐNG KÊ DOANH THU", "THỐNG KÊ DOANH SỐ","QUẢN LÝ TÀI KHOẢN","THÔNG TIN CÁ NHÂN"));
+		}
+		for(int i =0; i<btnString.size(); i++) {
+			MyButton2 button = new MyButton2(btnString.get(i));
 			button.addActionListener(new ActionListener() {	@Override public void actionPerformed(ActionEvent e) {
 				changeButtonColor(button);
 			}});
 			button.setBounds(0, y_position, 174, 32);
 			menuPanel.add(button);
 			ds_menu.add(button);
+			
+			y_position += 32;
 		}
-		y_position += 32;
-		
-		MyButton2 button = new MyButton2("THÔNG TIN CÁ NHÂN");
-		button.addActionListener(new ActionListener() {	@Override public void actionPerformed(ActionEvent e) {
-			changeButtonColor(button);
-		}});
-		button.setBounds(0, y_position, 174, 32);
-		menuPanel.add(button);
-		ds_menu.add(button);
-		
 		bindingButtonFeature();
 		
 	}
@@ -385,6 +322,30 @@ public class MainForm extends JFrame {
 						if(!getTitle().equalsIgnoreCase(chucvu + " - Thông tin cá nhân")) {
 							setTitle(chucvu + " - Thông tin cá nhân");
 							splitPane.setRightComponent(new Information());
+							splitPane.setDividerLocation(175);
+						}
+					}
+				});
+			}else if(ds_menu.get(i).getText().equalsIgnoreCase("THỐNG KÊ DOANH THU")) {
+				ds_menu.get(i).addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if(!getTitle().equalsIgnoreCase(chucvu + " - Thống kê doanh thu")) {
+							setTitle(chucvu + " - Thống kê doanh thu");
+							splitPane.setRightComponent(new ThongKeDoanhThu());
+							splitPane.setDividerLocation(175);
+						}
+					}
+				});
+			}else if(ds_menu.get(i).getText().equalsIgnoreCase("THỐNG KÊ DOANH SỐ")) {
+				ds_menu.get(i).addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if(!getTitle().equalsIgnoreCase(chucvu + " - Thống kê doanh số")) {
+							setTitle(chucvu + " - Thống kê doanh số");
+							splitPane.setRightComponent(new ThongKeDoanhSo());
 							splitPane.setDividerLocation(175);
 						}
 					}

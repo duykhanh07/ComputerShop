@@ -133,7 +133,11 @@ public class LoginForm extends JFrame {
 					if(kq_DangNhap == 1) {
 						dispose();
 					}else {
-						nortifyLabel.setText("Đăng nhập thất bại, vui lòng kiểm tra tài khoản, mật khẩu");
+						if(kq_DangNhap == -1) {
+							nortifyLabel.setText("Sai mật khẩu");
+						}else {
+							nortifyLabel.setText("Tài khoản không tồn tại hoặc đã khóa");
+						}	
 					}
 				}
 			}

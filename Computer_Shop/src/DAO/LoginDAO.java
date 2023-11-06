@@ -33,10 +33,14 @@ public class LoginDAO {
 			Statement sta = conn.createStatement();
 			String query = "SELECT * \r\n"
 					+ "FROM nhanvien AS nv JOIN taikhoan AS tk ON nv.manv = tk.manv\r\n"
-					+ "WHERE username='"+username+"' AND password ='"+password+"' AND tinhtrang=1";			
+					+ "WHERE username='"+username+"' AND tinhtrang=1";			
 			ResultSet rs  = sta.executeQuery(query);
 			while(rs.next()) {		
 				data[0] = rs.getString("manv");
+				if(!password.equalsIgnoreCase(rs.getString("password"))) {
+					conn.close();
+					return data;
+				}
 				data[1] = rs.getString("tennv");
 				data[2] = rs.getString("chucvu");	
 			}
