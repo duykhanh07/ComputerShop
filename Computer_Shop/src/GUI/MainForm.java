@@ -87,7 +87,7 @@ public class MainForm extends JFrame {
 		this.chucvu = data[2];
 		
 		initComponents();
-		
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MainForm.class.getResource("/assets/Laptop_Login.png")));
 		splitPane.setRightComponent(new Welcome(manv, tennv, chucvu));
 	}
 	// TODO : KHỞI TẠO COMPONENTS
