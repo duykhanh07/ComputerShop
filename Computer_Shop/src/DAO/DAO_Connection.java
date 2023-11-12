@@ -18,7 +18,7 @@ public class DAO_Connection {
 	{
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			this.conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/cuahangmaytinh", "root", "");
+			this.conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/cuahangmaytinh", "root", "123456");
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -28,16 +28,18 @@ public class DAO_Connection {
 	}
 	
 	//Check the status of Connection
-//	public static void main(String[] args) {
-//		DAL_Connection a = new DAL_Connection();
-//		if(a.Connect_mySQL() != null)
-//		{
-//			System.out.println("Successful!!!");
-//		}
-//		else
-//		{
-//			System.out.println("Failure!!!");s
-//		}
-//	}
+	/*
+	public static void main(String[] args) {
+		DAO_Connection a = new DAO_Connection();
+		if(a.Connect_mySQL() != null)
+		{
+			System.out.println("Successful!!!");
+		}
+		else
+		{
+			System.out.println("Failure!!!");
+		}
+	}
+	*/
 	
 }

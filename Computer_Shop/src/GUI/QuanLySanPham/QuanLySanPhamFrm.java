@@ -14,15 +14,29 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
+import BUS.SanPhamBUS;
+import DTO.DTO_SanPham;
+
+
 import javax.swing.JCheckBox;
 import java.awt.FlowLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager.LookAndFeelInfo;
 
@@ -31,6 +45,14 @@ public class QuanLySanPhamFrm extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTable table;
 	private JPanel panel;
+	public ArrayList<DTO_SanPham> listSP;
+	private TableRowSorter<DefaultTableModel> sort;
+	Object [][]data;
+	String col[] = {"Mã sản phẩm", "Tên sản phẩm", "Image", "CPU", "RAM", "ROM", 
+			"Card", "Màn hình", "Pin", "Hãng", "Giá", "Tình trạng"};
+	DefaultTableModel model;
+	int selectrow;
+	
 
 	/**
 	 * Create the panel.
@@ -77,19 +99,66 @@ public class QuanLySanPhamFrm extends JPanel {
 		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane_1.setBorder(new LineBorder(new Color(130, 135, 144)));
 		
-		table = new JTable();
+		//table
+		//import from database
+		listSP = SanPhamBUS.getInstance().importToTable(listSP);
+		data = new Object[listSP.size()][col.length];
+		for (int i=0;i<listSP.size();i++) {
+			data[i][0] = (listSP.get(i).getMasp()).trim();
+			data[i][1] = (listSP.get(i).getTensp()).trim();
+			data[i][2] = (listSP.get(i).getImage()).trim();
+			data[i][3] = (listSP.get(i).getCpu()).trim();
+			data[i][4] = (listSP.get(i).getRam()).trim();
+			data[i][5] = (listSP.get(i).getRom()).trim();
+			data[i][6] = (listSP.get(i).getCard()).trim();
+			data[i][7] = (listSP.get(i).getManhinh()).trim();
+			data[i][8] = (listSP.get(i).getPin()).trim();
+			data[i][9] = (listSP.get(i).getHang()).trim();
+			data[i][10] = listSP.get(i).getGia();
+			data[i][11] = listSP.get(i).getTinhtrang();
+		}
+		
+		
+		model = new DefaultTableModel(data, col);
+		sort = new TableRowSorter<DefaultTableModel>(model);
+		table = new JTable(model);
+		table.setDefaultEditor(Object.class, null);
 		table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
 		table.getTableHeader().setUI(new CustomTableHeaderUI());
 		table.getTableHeader().setFont(new Font("Tahoma", Font.PLAIN, 15));
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null},
-			},
-			new String[] {
-				"m\u00E3 s\u1EA3n ph\u1EA9m", "t\u00EAn s\u1EA3n ph\u1EA9m", "h\u00E3ng", "gi\u00E1", "t\u00ECnh tr\u1EA1ng"
-			}
-		));
+		table.setRowSorter(sort);
 		scrollPane_1.setViewportView(table);
+		
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				DefaultTableModel model = (DefaultTableModel)table.getModel();
+				selectrow = table.getSelectedRow();
+				ChiTietSanPham chiTietSanPham = new ChiTietSanPham();
+				chiTietSanPham.setVisible(true);
+				//chi la dong code de test xem khi an vao 1 dong no co nhan thong tin k
+				String sp=model.getValueAt(selectrow, 0).toString();
+				
+				chiTietSanPham.maSanPhamLbl.setText("Mã sản phẩm: "+model.getValueAt(selectrow, 0).toString());
+				chiTietSanPham.tenSanPhamLbl.setText("Tên sản phẩm: "+model.getValueAt(selectrow, 1).toString());
+				chiTietSanPham.lblHnhnh.setText("Hình ảnh: "+model.getValueAt(selectrow, 2).toString());
+				chiTietSanPham.CPULbl.setText("CPU: "+model.getValueAt(selectrow, 3).toString());
+				chiTietSanPham.ramLbl.setText("RAM: "+model.getValueAt(selectrow, 4).toString());
+				chiTietSanPham.romLbl.setText("Bộ nhớ: "+model.getValueAt(selectrow, 5).toString());
+				chiTietSanPham.cardLbl.setText("Card đồ hoạ: "+model.getValueAt(selectrow, 6).toString());
+				chiTietSanPham.manHinhLbl.setText("Màn hình: "+model.getValueAt(selectrow, 7).toString());
+				chiTietSanPham.pinLbl.setText("Pin: "+model.getValueAt(selectrow, 8).toString());
+				chiTietSanPham.hangLbl.setText("Hãng: "+model.getValueAt(selectrow, 9).toString());
+				chiTietSanPham.giaLbl.setText("Giá: "+model.getValueAt(selectrow, 10).toString());
+				chiTietSanPham.tinhTrangLbl.setText("Tình trạng: "+model.getValueAt(selectrow, 11).toString());
+				
+				chiTietSanPham.lblNewLabel.setIcon(new ImageIcon(new ImageIcon(QuanLySanPhamFrm.class.getResource(model.getValueAt(
+						selectrow, 2).toString())).getImage().getScaledInstance(168, 112, Image.SCALE_SMOOTH)));
+				System.out.println(sp);
+				
+				
+			}
+		});
 		
 		// tạo danh sách các checkbox của các hãng sãn phẩm trong kho
 		panel = new JPanel();
@@ -100,7 +169,7 @@ public class QuanLySanPhamFrm extends JPanel {
 		panel.setToolTipText("các hãng laptop");
 		
 		MyButton themSanPhamBtn = new MyButton();
-		themSanPhamBtn.setText("Thêm");
+		themSanPhamBtn.setText("Thêm"); 
 		themSanPhamBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
 		MyButton mbtnThmSnPhm = new MyButton();
@@ -188,6 +257,15 @@ public class QuanLySanPhamFrm extends JPanel {
 		chckbxNewCheckBox.setForeground(new Color(0, 255, 255));
 		chckbxNewCheckBox.setBackground(new Color(77, 77, 77));
 		panel.add(chckbxNewCheckBox);
+		chckbxNewCheckBox.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					filterByBrand(model);
+				}
+			}
+		});
 		
 		JCheckBox chckbxNewCheckBox_1 = new JCheckBox("ASUS");
 		chckbxNewCheckBox_1.setForeground(new Color(0, 255, 255));
@@ -209,4 +287,14 @@ public class QuanLySanPhamFrm extends JPanel {
 		chckbxNewCheckBox_1_3.setBackground(new Color(77, 77, 77));
 		panel.add(chckbxNewCheckBox_1_3);
 	}
+	
+	private static void filterByBrand(DefaultTableModel model) {
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String brand =  model.getValueAt(i, 9).toString();
+            if (brand.equals("Asus") || brand.equals("Acer") || brand.equals("HP") || brand.equals("Intel") || brand.equals("Lenovo")) {
+                model.removeRow(i);
+                //i--; 
+            }
+        }
+    }
 }
