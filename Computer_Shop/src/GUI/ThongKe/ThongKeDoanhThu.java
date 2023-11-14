@@ -36,6 +36,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JRadioButton;
+import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
+import javax.swing.Action;
 
 public class ThongKeDoanhThu extends JPanel {
 
@@ -57,6 +60,8 @@ public class ThongKeDoanhThu extends JPanel {
 	private JRadioButton quyOptionRad;
 	private JRadioButton thangOptionRad;
 	private BarChart barChart;
+	private JCheckBox bieuDoCotCheck;
+	private JCheckBox bieuDoTronCheck;
 	/**
 	 * Create the panel.
 	 */
@@ -87,7 +92,6 @@ public class ThongKeDoanhThu extends JPanel {
 		);
 		
 		splitPane_1 = new JSplitPane();
-		splitPane_1.setDividerSize(10);
 		splitPane_1.setBorder(null);
 		splitPane.setRightComponent(splitPane_1);
 		
@@ -173,13 +177,13 @@ public class ThongKeDoanhThu extends JPanel {
 		yearCmbx_1_1.setBackground(new Color(51, 51, 51));
 		
 		thangOptionRad = new JRadioButton("chọn tháng :");
-		thangOptionRad.setSelected(true);
 		thangOptionRad.setForeground(new Color(0, 255, 255));
 		thangOptionRad.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		thangOptionRad.setEnabled(false);
 		thangOptionRad.setHorizontalAlignment(SwingConstants.RIGHT);
 		
 		quyOptionRad = new JRadioButton("chọn quý :");
+		quyOptionRad.setSelected(true);
 		quyOptionRad.setForeground(new Color(0, 255, 255));
 		quyOptionRad.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		quyOptionRad.setEnabled(false);
@@ -222,13 +226,13 @@ public class ThongKeDoanhThu extends JPanel {
 		);
 		panel_1.setLayout(gl_panel_1);
 		
-		JCheckBox bieuDoCotCheck = new JCheckBox("Biểu đồ cột");
+		bieuDoCotCheck = new JCheckBox("Biểu đồ cột");
 		bieuDoCotCheck.setSelected(true);
 		bieuDoCotCheck.setForeground(Color.CYAN);
 		bieuDoCotCheck.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		bieuDoCotCheck.setBackground(new Color(77, 77, 77));
 		
-		JCheckBox bieuDoTronCheck = new JCheckBox("Biểu đồ tròn");
+		bieuDoTronCheck = new JCheckBox("Biểu đồ tròn");
 		bieuDoTronCheck.setSelected(true);
 		bieuDoTronCheck.setForeground(Color.CYAN);
 		bieuDoTronCheck.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -327,6 +331,20 @@ public class ThongKeDoanhThu extends JPanel {
 				thongKeTheoThang(yearCmbx.getSelectedItem().toString(), yearCmbx_1_1.getSelectedItem().toString());
 			}
 		});
+		
+		bieuDoCotCheck.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				chinhSplitPane(bieuDoCotCheck);
+			}
+		});
+		bieuDoTronCheck.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				chinhSplitPane(bieuDoTronCheck);
+			}
+		});
 	}
 	public void loadChart() {
 		// xóa dữ liệu cũ
@@ -413,7 +431,7 @@ public class ThongKeDoanhThu extends JPanel {
 	}
 		
 		// chỉnh lại divider
-		splitPane_1.setDividerLocation(500);
+		splitPane_1.setDividerLocation(440);
 	}
 	public void loadYearOption() {
 		yearCmbx.setModel(new DefaultComboBoxModel(tkdt_bus.years));
@@ -442,6 +460,8 @@ public class ThongKeDoanhThu extends JPanel {
 			tkdt_bus = new ThongKeDoanhThuBUS();
 			quyOptionRad.setEnabled(false);
 			thangOptionRad.setEnabled(false);
+			yearCmbx_1.setEnabled(false);
+			yearCmbx_1_1.setEnabled(false);
 		}
 		loadChart();
 	}
@@ -473,5 +493,22 @@ public class ThongKeDoanhThu extends JPanel {
 		quyOptionRad.setSelected(true);
 		type = 0;
 		loadChart();
+	}
+	public void chinhSplitPane(JCheckBox check) {
+		if(bieuDoCotCheck.isSelected()&&bieuDoTronCheck.isSelected()) {
+			splitPane_1.setDividerLocation(splitPane_1.getWidth()/2);
+		}else {
+			if(bieuDoCotCheck.isSelected()) {
+				splitPane_1.setDividerLocation(splitPane_1.getWidth());
+			}else if(bieuDoTronCheck.isSelected()) {
+				splitPane_1.setDividerLocation(0);
+			}else {
+				if(check == bieuDoCotCheck) {
+					bieuDoTronCheck.doClick();
+				}else {
+					bieuDoCotCheck.doClick();
+				}
+			}
+		}
 	}
 }
