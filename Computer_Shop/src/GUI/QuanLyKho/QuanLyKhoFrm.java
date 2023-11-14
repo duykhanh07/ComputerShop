@@ -19,19 +19,31 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager.LookAndFeelInfo;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableModel;
+
+import com.mysql.cj.x.protobuf.MysqlxCrud.Collection;
+
+import BUS.QuanLyTonKhoBUS;
+
 import javax.swing.border.LineBorder;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.ImageIcon;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class QuanLyKhoFrm extends JPanel {
 
@@ -44,6 +56,7 @@ public class QuanLyKhoFrm extends JPanel {
 	private JTable tonKhoTable;
 	private JTable table;
 
+	private QuanLyTonKhoBUS qltk_bus = new QuanLyTonKhoBUS();
 	/**
 	 * Create the panel.
 	 */
@@ -319,14 +332,29 @@ public class QuanLyKhoFrm extends JPanel {
 		MyTextfield timKiemTonKhoTxt = new MyTextfield();
 		timKiemTonKhoTxt.setPreferredSize(new Dimension(180, 35));
 		timKiemTonKhoTxt.setColumns(10);
-		timKiemTonKhoTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
+		timKiemTonKhoTxt.setBorder(new EmptyBorder(0, 10, 0, 0));
 		timKiemTonKhoTxt.setBackground(new Color(77, 77, 77));
 		
 		JComboBox timKiemTypeCmbx_1 = new JComboBox();
+		timKiemTypeCmbx_1.setModel(new DefaultComboBoxModel(new String[] {"----------", "theo mã sản phẩm", "theo tên sản phẩm"}));
 		timKiemTypeCmbx_1.setForeground(Color.CYAN);
 		timKiemTypeCmbx_1.setBackground(new Color(102, 102, 102));
 		
 		MyButton timKiemBtn_1 = new MyButton();
+		timKiemBtn_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				timKiemTonKho(timKiemTonKhoTxt.getText().toLowerCase(), timKiemTypeCmbx_1.getSelectedIndex());
+			}
+		});
+		
+		timKiemTonKhoTxt.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					timKiemTonKho(timKiemTonKhoTxt.getText().toLowerCase(), timKiemTypeCmbx_1.getSelectedIndex());
+				}
+			}
+		});
 		timKiemBtn_1.setText("Lọc");
 		timKiemBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
 		
@@ -335,10 +363,17 @@ public class QuanLyKhoFrm extends JPanel {
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		JComboBox sortCmbx_1 = new JComboBox();
+		sortCmbx_1.setModel(new DefaultComboBoxModel(new String[] {"----------", "tên sản phẩm(A->Z)", "tên sản phẩm(Z->A)", "số lượng (thấp -> cao)", "số lượng (cao -> thấp)"}));
 		sortCmbx_1.setForeground(Color.CYAN);
 		sortCmbx_1.setBackground(new Color(102, 102, 102));
 		
 		MyButton mbtnLmMi_1 = new MyButton();
+		mbtnLmMi_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				qltk_bus = new QuanLyTonKhoBUS();
+				loadTonKho();
+			}
+		});
 		mbtnLmMi_1.setIcon(new ImageIcon(QuanLyKhoFrm.class.getResource("/assets/reset.png")));
 		mbtnLmMi_1.setText("làm mới");
 		mbtnLmMi_1.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -372,7 +407,7 @@ public class QuanLyKhoFrm extends JPanel {
 					.addGroup(gl_tonKhoPanel.createParallelGroup(Alignment.LEADING)
 						.addComponent(timKiemTonKhoTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_tonKhoPanel.createSequentialGroup()
-							.addGap(4)
+							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(timKiemTypeCmbx_1, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
 						.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
 						.addComponent(sortCmbx_1, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
@@ -528,9 +563,38 @@ public class QuanLyKhoFrm extends JPanel {
 		setLayout(groupLayout);
 		
 		initComponents();
+		loadTonKho();
+		
+		sortCmbx_1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				sapXepTonKho(sortCmbx_1.getSelectedIndex());
+			}
+		});
 	}
 	public void initComponents() {
 		setMinimumSize(new Dimension(880, 595));
 		setSize(880,595);
+	}
+	public void loadTonKho() {
+		DefaultTableModel model = (DefaultTableModel)tonKhoTable.getModel();
+		model.setRowCount(0);
+		for(int i =0; i< qltk_bus.ds_hienThi.size(); i++) {
+			model.addRow(new Object[] {qltk_bus.ds_hienThi.get(i).getMasp(), qltk_bus.ds_hienThi.get(i).getTensp(), qltk_bus.ds_hienThi.get(i).getSoluongton()});
+		}
+	}
+	public void sapXepTonKho(int selectedIndex) {
+		qltk_bus.sapXepTonKho(selectedIndex);
+		loadTonKho();
+	}
+	public void timKiemTonKho(String timkiemStr, int selectedIndex) {
+		if(timkiemStr.equalsIgnoreCase("")) {
+			JOptionPane.showMessageDialog(null, "Bạn phải điền thông tin muốn tìm");
+		}else {
+			qltk_bus.timKiemTonKho(timkiemStr, selectedIndex);
+			loadTonKho();
+		}
 	}
 }
