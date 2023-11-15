@@ -15,18 +15,23 @@ import javax.swing.UIManager;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
+//import javax.swing.table.TableRowSorter;
 
 import BUS.SanPhamBUS;
 import DTO.DTO_SanPham;
@@ -38,21 +43,24 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.RowFilter;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.DefaultComboBoxModel;
 
 public class QuanLySanPhamFrm extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
 	private JPanel panel;
-	public ArrayList<DTO_SanPham> listSP;
-	private TableRowSorter<DefaultTableModel> sort;
+	private SanPhamBUS sp_bus;
 	Object [][]data;
 	String col[] = {"Mã sản phẩm", "Tên sản phẩm", "Image", "CPU", "RAM", "ROM", 
 			"Card", "Màn hình", "Pin", "Hãng", "Giá", "Tình trạng"};
 	DefaultTableModel model;
 	int selectrow;
-	
+	private Map<JCheckBox, String> brandCheckboxMap;
+	private ArrayList<JCheckBox> dsHangCheckBox;
+	private HashMap<Integer, String> tinhTrangMap;
 
 	/**
 	 * Create the panel.
@@ -68,17 +76,22 @@ public class QuanLySanPhamFrm extends JPanel {
 		} catch (Exception e) {}
 		setBackground(new Color(102, 102, 102));
 		
-		MyTextfield timKiemKhachHangTxt = new MyTextfield();
-		timKiemKhachHangTxt.setPreferredSize(new Dimension(180, 35));
-		timKiemKhachHangTxt.setColumns(10);
-		timKiemKhachHangTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
-		timKiemKhachHangTxt.setBackground(new Color(77, 77, 77));
+		initTinhTrangMap();
+		
+		MyTextfield timKiemSanPhamTxt = new MyTextfield();
+		timKiemSanPhamTxt.setPreferredSize(new Dimension(180, 35));
+		timKiemSanPhamTxt.setColumns(10);
+		timKiemSanPhamTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
+		timKiemSanPhamTxt.setBackground(new Color(77, 77, 77));
 		
 		JComboBox timKiemTypeCmbx_1 = new JComboBox();
+		timKiemTypeCmbx_1.setModel(new DefaultComboBoxModel(new String[] {"<Chọn loại>", "Mã sản phẩm", "Tên sản phẩm"}));
 		timKiemTypeCmbx_1.setForeground(Color.CYAN);
 		timKiemTypeCmbx_1.setBackground(new Color(102, 102, 102));
 		
+		
 		MyButton timKiemBtn_1 = new MyButton();
+		
 		timKiemBtn_1.setText("Lọc");
 		timKiemBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
 		
@@ -87,6 +100,7 @@ public class QuanLySanPhamFrm extends JPanel {
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		JComboBox sortCmbx_1 = new JComboBox();
+		sortCmbx_1.setModel(new DefaultComboBoxModel(new String[] {"---------", "Tên từ A-Z", "Tên từ Z-A", "Giá thấp đến cao", "Giá cao đến thấp"}));
 		sortCmbx_1.setForeground(Color.CYAN);
 		sortCmbx_1.setBackground(new Color(102, 102, 102));
 		
@@ -99,39 +113,27 @@ public class QuanLySanPhamFrm extends JPanel {
 		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane_1.setBorder(new LineBorder(new Color(130, 135, 144)));
 		
-		//table
-		//import from database
-		listSP = SanPhamBUS.getInstance().importToTable(listSP);
-		data = new Object[listSP.size()][col.length];
-		for (int i=0;i<listSP.size();i++) {
-			data[i][0] = (listSP.get(i).getMasp()).trim();
-			data[i][1] = (listSP.get(i).getTensp()).trim();
-			data[i][2] = (listSP.get(i).getImage()).trim();
-			data[i][3] = (listSP.get(i).getCpu()).trim();
-			data[i][4] = (listSP.get(i).getRam()).trim();
-			data[i][5] = (listSP.get(i).getRom()).trim();
-			data[i][6] = (listSP.get(i).getCard()).trim();
-			data[i][7] = (listSP.get(i).getManhinh()).trim();
-			data[i][8] = (listSP.get(i).getPin()).trim();
-			data[i][9] = (listSP.get(i).getHang()).trim();
-			data[i][10] = listSP.get(i).getGia();
-			data[i][11] = listSP.get(i).getTinhtrang();
-		}
-		
-		
-		model = new DefaultTableModel(data, col);
-		sort = new TableRowSorter<DefaultTableModel>(model);
-		table = new JTable(model);
+		sp_bus= new SanPhamBUS();
+				
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null, null, null, null, null},
+			},
+			new String[] {
+				"m\u00E3 s\u1EA3n ph\u1EA9m", "t\u00EAn s\u1EA3n ph\u1EA9m", "cpu", "ram", "rom", "card", "h\u00E3ng", "gi\u00E1", "s\u1ED1 l\u01B0\u1EE3ng", "t\u00ECnh tr\u1EA1ng"
+			}
+		));
 		table.setDefaultEditor(Object.class, null);
 		table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
 		table.getTableHeader().setUI(new CustomTableHeaderUI());
 		table.getTableHeader().setFont(new Font("Tahoma", Font.PLAIN, 15));
-		table.setRowSorter(sort);
 		scrollPane_1.setViewportView(table);
 		
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				DecimalFormat df = new DecimalFormat("#,###₫");
 				DefaultTableModel model = (DefaultTableModel)table.getModel();
 				selectrow = table.getSelectedRow();
 				ChiTietSanPham chiTietSanPham = new ChiTietSanPham();
@@ -139,21 +141,20 @@ public class QuanLySanPhamFrm extends JPanel {
 				//chi la dong code de test xem khi an vao 1 dong no co nhan thong tin k
 				String sp=model.getValueAt(selectrow, 0).toString();
 				
-				chiTietSanPham.maSanPhamLbl.setText("Mã sản phẩm: "+model.getValueAt(selectrow, 0).toString());
-				chiTietSanPham.tenSanPhamLbl.setText("Tên sản phẩm: "+model.getValueAt(selectrow, 1).toString());
-				chiTietSanPham.lblHnhnh.setText("Hình ảnh: "+model.getValueAt(selectrow, 2).toString());
-				chiTietSanPham.CPULbl.setText("CPU: "+model.getValueAt(selectrow, 3).toString());
-				chiTietSanPham.ramLbl.setText("RAM: "+model.getValueAt(selectrow, 4).toString());
-				chiTietSanPham.romLbl.setText("Bộ nhớ: "+model.getValueAt(selectrow, 5).toString());
-				chiTietSanPham.cardLbl.setText("Card đồ hoạ: "+model.getValueAt(selectrow, 6).toString());
-				chiTietSanPham.manHinhLbl.setText("Màn hình: "+model.getValueAt(selectrow, 7).toString());
-				chiTietSanPham.pinLbl.setText("Pin: "+model.getValueAt(selectrow, 8).toString());
-				chiTietSanPham.hangLbl.setText("Hãng: "+model.getValueAt(selectrow, 9).toString());
-				chiTietSanPham.giaLbl.setText("Giá: "+model.getValueAt(selectrow, 10).toString());
-				chiTietSanPham.tinhTrangLbl.setText("Tình trạng: "+model.getValueAt(selectrow, 11).toString());
+				chiTietSanPham.maSanPhamLbl.setText("Mã sản phẩm: "+sp_bus.listHT.get(selectrow).getMasp());
+				chiTietSanPham.tenSanPhamLbl.setText("Tên sản phẩm: "+sp_bus.listHT.get(selectrow).getTensp());
+				chiTietSanPham.lblHnhnh.setText("Hình ảnh: "+sp_bus.listHT.get(selectrow).getImage());
+				chiTietSanPham.CPULbl.setText("CPU: "+sp_bus.listHT.get(selectrow).getCpu());
+				chiTietSanPham.ramLbl.setText("RAM: "+sp_bus.listHT.get(selectrow).getRam());
+				chiTietSanPham.romLbl.setText("Bộ nhớ: "+sp_bus.listHT.get(selectrow).getRom());
+				chiTietSanPham.cardLbl.setText("Card đồ hoạ: "+sp_bus.listHT.get(selectrow).getCard());
+				chiTietSanPham.manHinhLbl.setText("Màn hình: "+sp_bus.listHT.get(selectrow).getManhinh());
+				chiTietSanPham.pinLbl.setText("Pin: "+sp_bus.listHT.get(selectrow).getPin());
+				chiTietSanPham.hangLbl.setText("Hãng: "+sp_bus.listHT.get(selectrow).getHang());
+				chiTietSanPham.giaLbl.setText("Giá: "+df.format(sp_bus.listHT.get(selectrow).getGia()));
+				chiTietSanPham.tinhTrangLbl.setText("Tình trạng: "+tinhTrangMap.get(sp_bus.listHT.get(selectrow).getTinhtrang()));
 				
-				chiTietSanPham.lblNewLabel.setIcon(new ImageIcon(new ImageIcon(QuanLySanPhamFrm.class.getResource(model.getValueAt(
-						selectrow, 2).toString())).getImage().getScaledInstance(168, 112, Image.SCALE_SMOOTH)));
+				chiTietSanPham.lblNewLabel.setIcon(new ImageIcon(new ImageIcon(QuanLySanPhamFrm.class.getResource(sp_bus.listHT.get(selectrow).getImage())).getImage().getScaledInstance(168, 112, Image.SCALE_SMOOTH)));
 				System.out.println(sp);
 				
 				
@@ -171,6 +172,16 @@ public class QuanLySanPhamFrm extends JPanel {
 		MyButton themSanPhamBtn = new MyButton();
 		themSanPhamBtn.setText("Thêm"); 
 		themSanPhamBtn.setHorizontalTextPosition(SwingConstants.LEADING);
+		themSanPhamBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource()==themSanPhamBtn) {
+					ThemSanPhamFrm themSanPhamFrm = new ThemSanPhamFrm();
+					themSanPhamFrm.setVisible(true);
+				}
+			}
+		});
 		
 		MyButton mbtnThmSnPhm = new MyButton();
 		mbtnThmSnPhm.setText("thêm sản phẩm với Excel");
@@ -181,6 +192,16 @@ public class QuanLySanPhamFrm extends JPanel {
 		MyButton capNhatSanPhamBtn = new MyButton();
 		capNhatSanPhamBtn.setText("cập nhật");
 		capNhatSanPhamBtn.setHorizontalTextPosition(SwingConstants.LEADING);
+		capNhatSanPhamBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == capNhatSanPhamBtn) {
+				CapNhatSanPhamFrm capNhatSanPhamFrm = new CapNhatSanPhamFrm();
+				capNhatSanPhamFrm.setVisible(true);
+				}
+			}
+		});
 		
 		MyButton mbtnLmMi = new MyButton();
 		mbtnLmMi.setText("làm mới");
@@ -192,7 +213,7 @@ public class QuanLySanPhamFrm extends JPanel {
 					.addGap(25)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(timKiemKhachHangTxt, GroupLayout.PREFERRED_SIZE, 275, GroupLayout.PREFERRED_SIZE)
+							.addComponent(timKiemSanPhamTxt, GroupLayout.PREFERRED_SIZE, 275, GroupLayout.PREFERRED_SIZE)
 							.addGap(10)
 							.addComponent(timKiemTypeCmbx_1, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)
 							.addGap(4)
@@ -222,7 +243,7 @@ public class QuanLySanPhamFrm extends JPanel {
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(26)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(timKiemKhachHangTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(timKiemSanPhamTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(timKiemTypeCmbx_1, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(1)
@@ -247,54 +268,89 @@ public class QuanLySanPhamFrm extends JPanel {
 						.addComponent(mbtnThmSnPhm, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
 					.addGap(11))
 		);
-		setLayout(groupLayout);
-		taoDanhSachHang();
-
-	}
-	public void taoDanhSachHang() {
 		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("ACER");
-		chckbxNewCheckBox.setForeground(new Color(0, 255, 255));
-		chckbxNewCheckBox.setBackground(new Color(77, 77, 77));
-		panel.add(chckbxNewCheckBox);
-		chckbxNewCheckBox.addItemListener(new ItemListener() {
+		sortCmbx_1.addActionListener(new ActionListener() {
 			
 			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) {
-					filterByBrand(model);
-				}
+			public void actionPerformed(ActionEvent e) {
+				
+				sapXepSanPham(sortCmbx_1.getSelectedIndex());
+				
 			}
 		});
 		
-		JCheckBox chckbxNewCheckBox_1 = new JCheckBox("ASUS");
-		chckbxNewCheckBox_1.setForeground(new Color(0, 255, 255));
-		chckbxNewCheckBox_1.setBackground(new Color(77, 77, 77));
-		panel.add(chckbxNewCheckBox_1);
+		timKiemBtn_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				timKiemSanPham(timKiemSanPhamTxt.getText().toLowerCase().trim(),timKiemTypeCmbx_1.getSelectedIndex());
+			}
+		});
 		
-		JCheckBox chckbxNewCheckBox_1_1 = new JCheckBox("HP");
-		chckbxNewCheckBox_1_1.setForeground(new Color(0, 255, 255));
-		chckbxNewCheckBox_1_1.setBackground(new Color(77, 77, 77));
-		panel.add(chckbxNewCheckBox_1_1);
+		setLayout(groupLayout);
+		taoDanhSachHang();
+		loadSanPhamTable();
+
+	}
+	private void initTinhTrangMap() {
+		tinhTrangMap = new HashMap<Integer, String>();
+		tinhTrangMap.put(0, "Ngưng kinh doanh");
+		tinhTrangMap.put(1, "Đang kinh doanh");
 		
-		JCheckBox chckbxNewCheckBox_1_2 = new JCheckBox("Intel");
-		chckbxNewCheckBox_1_2.setForeground(new Color(0, 255, 255));
-		chckbxNewCheckBox_1_2.setBackground(new Color(77, 77, 77));
-		panel.add(chckbxNewCheckBox_1_2);
+	}
+	public void taoDanhSachHang() {
 		
-		JCheckBox chckbxNewCheckBox_1_3 = new JCheckBox("Lenovo");
-		chckbxNewCheckBox_1_3.setForeground(new Color(0, 255, 255));
-		chckbxNewCheckBox_1_3.setBackground(new Color(77, 77, 77));
-		panel.add(chckbxNewCheckBox_1_3);
+		dsHangCheckBox = new ArrayList<JCheckBox>();
+		panel.removeAll();
+		ArrayList<String> layDSHang = sp_bus.getBrand();
+		for (String hang:layDSHang) {
+			JCheckBox chckbxNewCheckBox = new JCheckBox(hang);
+			chckbxNewCheckBox.setForeground(new Color(0, 255, 255));
+			chckbxNewCheckBox.setBackground(new Color(77, 77, 77));
+			chckbxNewCheckBox.setSelected(true);
+			panel.add(chckbxNewCheckBox);
+			dsHangCheckBox.add(chckbxNewCheckBox);
+		}
+		
+		// TODO : gan chuc nang cho checkbox hang
+		
+		for(int i =0 ;i < dsHangCheckBox.size(); i++) {
+			dsHangCheckBox.get(i).addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					filterByBrand();
+				}
+			});
+		}			
+	}
+	public void loadSanPhamTable() {
+		DecimalFormat df = new DecimalFormat("#,###₫");
+		model = (DefaultTableModel) table.getModel();
+		model.setRowCount(0);
+		for (int i=0;i<sp_bus.listHT.size();i++) {
+			model.addRow(new Object[] {sp_bus.listHT.get(i).getMasp(), sp_bus.listHT.get(i).getTensp(),
+					sp_bus.listHT.get(i).getCpu(), sp_bus.listHT.get(i).getRam(), sp_bus.listHT.get(i).getRom(),sp_bus.listHT.get(i).getCard(),
+					sp_bus.listHT.get(i).getHang(),df.format(sp_bus.listHT.get(i).getGia()),
+					sp_bus.tonKhoMap.get(sp_bus.listHT.get(i).getMasp()), tinhTrangMap.get(sp_bus.listHT.get(i).getTinhtrang())});
+		}
+	}
+	public void filterByBrand() {
+		ArrayList<String> brands = new ArrayList<String>();
+		for(int i = 0;i < dsHangCheckBox.size();i++) {
+			if(dsHangCheckBox.get(i).isSelected()) {
+				brands.add(dsHangCheckBox.get(i).getText());
+			}
+		}
+		sp_bus.filterByBrand(brands);
+		loadSanPhamTable();
 	}
 	
-	private static void filterByBrand(DefaultTableModel model) {
-        for (int i = 0; i < model.getRowCount(); i++) {
-            String brand =  model.getValueAt(i, 9).toString();
-            if (brand.equals("Asus") || brand.equals("Acer") || brand.equals("HP") || brand.equals("Intel") || brand.equals("Lenovo")) {
-                model.removeRow(i);
-                //i--; 
-            }
-        }
-    }
+	public void sapXepSanPham(int index) {
+		sp_bus.sapXepSanPham(index);
+		loadSanPhamTable();
+		
+	}
+	public void timKiemSanPham(String str, int index) {
+		sp_bus.timKiemSanPham(str, index);
+		loadSanPhamTable();
+	}
 }

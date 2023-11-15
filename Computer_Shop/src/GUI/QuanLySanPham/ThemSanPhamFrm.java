@@ -77,6 +77,7 @@ public class ThemSanPhamFrm extends JFrame {
 		setTitle("Thêm sản phẩm");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1024, 742);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(102, 102, 102));
 

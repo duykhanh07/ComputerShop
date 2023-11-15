@@ -62,6 +62,7 @@ public class CapNhatSanPhamFrm extends JFrame {
 		setMinimumSize(new Dimension(370, 740));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 368, 745);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);
 		contentPane.setBackground(new Color(102, 102, 102));
