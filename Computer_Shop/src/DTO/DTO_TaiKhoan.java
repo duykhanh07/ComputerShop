@@ -51,4 +51,9 @@ public class DTO_TaiKhoan {
 		return "DTO_TaiKhoan [matk=" + matk + ", manv=" + manv + ", username=" + username + ", password=" + password
 				+ ", tinhtrang=" + tinhtrang + "]";
 	}
+	
+	public String insertString() {
+		String insertString = String.format("('%s','%s','%s','%s','%s','%s')", matk, manv, username, password, tinhtrang);
+		return insertString;
+	}
 }

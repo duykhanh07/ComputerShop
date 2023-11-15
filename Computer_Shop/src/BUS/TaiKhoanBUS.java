@@ -1,19 +1,22 @@
 package BUS;
 
+import java.util.ArrayList;
+
 import DAO.DAO_TaiKhoan;
+import DTO.DTO_TaiKhoan;
 import GUI.MainForm;
 
 public class TaiKhoanBUS {
-	public int TaiKhoan() {
-		String data[] = DAO_TaiKhoan.selectTaikhoanNV();
-		if (data[0] != null) {
-			if (data[1] == null) {
-				return -1;
-			}
-			new MainForm(data).setVisible(true);
-			return 1;
-		} else {
-			return 0;
-		}
+	public ArrayList<DTO_TaiKhoan> ds_taikhoan;
+	public TaiKhoanBUS() {
+		ds_taikhoan = new DAO_TaiKhoan().selectAllTaiKhoan();
+	}
+	
+	public int themTK(DTO_TaiKhoan tk) {
+		return DAO_TaiKhoan.themTaiKhoan(tk);
+	}
+	
+	public int suaTK(String matk, String manv) {
+		return DAO_TaiKhoan.suaTK(matk, manv);
 	}
 }

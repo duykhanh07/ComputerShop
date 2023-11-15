@@ -9,6 +9,8 @@ import java.awt.Color;
 import javax.swing.border.EmptyBorder;
 import java.awt.Dimension;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+
 import MyDesign.MyComponents.MyButton;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -30,6 +32,7 @@ public class QuanLyNhanVienFrm extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
+	protected JComponent nv_bus;
 
 	/**
 	 * Create the panel.
@@ -92,7 +95,7 @@ public class QuanLyNhanVienFrm extends JPanel {
 		MyButton themNhanVienBtn = new MyButton();
 		themNhanVienBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new ThemNhanVienFrm().setVisible(true);
+				new ThemNhanVienFrm(nv_bus).setVisible(true);
 			}
 		});
 		themNhanVienBtn.setText("Thêm");

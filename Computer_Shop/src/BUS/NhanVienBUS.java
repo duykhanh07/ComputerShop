@@ -15,4 +15,8 @@ public class NhanVienBUS {
 	public int themNV(DTO_NhanVien nv) {
 		return DAO_NhanVien.themNV(nv);
 	}
+	
+	public int suaNV(String manv, String tennv) {
+		return DAO_NhanVien.suaNV(manv, tennv);
+	}
 }

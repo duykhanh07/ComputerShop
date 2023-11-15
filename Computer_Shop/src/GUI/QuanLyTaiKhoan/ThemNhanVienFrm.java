@@ -41,7 +41,7 @@ public class ThemNhanVienFrm extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	private NhanVienBUS nv_bus;
+	private static NhanVienBUS nv_bus;
 	private JComboBox chucVuCmbx;
 
 	/**
@@ -51,7 +51,7 @@ public class ThemNhanVienFrm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ThemNhanVienFrm frame = new ThemNhanVienFrm();
+					ThemNhanVienFrm frame = new ThemNhanVienFrm(nv_bus);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
