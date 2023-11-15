@@ -1,19 +1,18 @@
 package BUS;
 
+import java.util.ArrayList;
+
 import DAO.DAO_NhanVien;
+import DTO.DTO_NhanVien;
 import GUI.MainForm;
 
 public class NhanVienBUS {
-	public int NhanVien() {
-		String[] data = DAO_NhanVien.selectAllNhanVien();
-		if (data[0] != null) {
-			if (data[1] == null) {
-				return -1;
-			}
-			new MainForm(data).setVisible(true);
-			return 1;
-		} else {
-			return 0;
-		}
+	public ArrayList<DTO_NhanVien> ds_nhanvien;
+	public NhanVienBUS() {
+		ds_nhanvien = new DAO_NhanVien().selectAllNhanVien();
+	}
+	
+	public int themNV(DTO_NhanVien nv) {
+		return DAO_NhanVien.themNV(nv);
 	}
 }

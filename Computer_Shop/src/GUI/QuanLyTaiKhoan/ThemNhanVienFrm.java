@@ -12,6 +12,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JScrollPane;
@@ -24,15 +26,23 @@ import javax.swing.JComboBox;
 import MyDesign.MyComponents.MyButton;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import BUS.NhanVienBUS;
+import DTO.DTO_NhanVien;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ThemNhanVienFrm extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
+	private NhanVienBUS nv_bus;
+	private JComboBox chucVuCmbx;
 
 	/**
 	 * Launch the application.
@@ -53,7 +63,8 @@ public class ThemNhanVienFrm extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ThemNhanVienFrm() {
+	public ThemNhanVienFrm(NhanVienBUS nv_bus1) {
+		nv_bus = nv_bus1;
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
@@ -137,8 +148,8 @@ public class ThemNhanVienFrm extends JFrame {
 		lblTnSnPhm_1_1_3_1.setForeground(Color.CYAN);
 		lblTnSnPhm_1_1_3_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		JComboBox chucVuCmbx = new JComboBox();
-		chucVuCmbx.setModel(new DefaultComboBoxModel(new String[] {"admin", "bán hàng", "thủ kho", "kĩ thuật"}));
+		chucVuCmbx = new JComboBox();
+		chucVuCmbx.setModel(new DefaultComboBoxModel(new String[] {"admin", "quản lý", "bán hàng", "thủ kho", "kĩ thuật"}));
 		chucVuCmbx.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		chucVuCmbx.setForeground(new Color(0, 255, 255));
 		chucVuCmbx.setBackground(new Color(102, 102, 102));
@@ -148,6 +159,40 @@ public class ThemNhanVienFrm extends JFrame {
 		xoaBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
 		MyButton themNhanVienBtn = new MyButton();
+		themNhanVienBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int maso = nv_bus.ds_nhanvien.size()+1;
+				String manv;
+				switch(chucVuCmbx.getSelectedItem().toString()) {
+				case "admin": manv = "AD"; break;
+				case "quản lý": manv = "QL"; break;
+				default : manv = "NV"; break;
+				
+				}
+				if(maso<1000) {
+					manv += 0;
+					if(maso<100) {
+						manv += 0;
+						if(maso<10) {
+							manv += 0;
+						}
+					}
+				}
+				manv+=maso;
+				String tennv = tenTaiKhoanTxt.getText();
+				String sdt = soDienThoaiTxt.getText();
+				String email = emailTxt.getText();
+				String diachi = diaChiTxt.getText();
+				String chucvu = chucVuCmbx.getSelectedItem().toString();
+				DTO_NhanVien nv = new DTO_NhanVien(manv,tennv,sdt,email,diachi,chucvu);
+				int ketqua = nv_bus.themNV(nv);
+				if(ketqua == 0) {
+					JOptionPane.showMessageDialog(null, "Lỗi");
+				}else {
+					JOptionPane.showMessageDialog(null, "Thêm thành công");
+				}
+			}
+		});
 		themNhanVienBtn.setText("Thêm");
 		themNhanVienBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		

@@ -59,5 +59,13 @@ public class DTO_NhanVien {
 		return "DTO_NhanVien [manv=" + manv + ", tennv=" + tennv + ", sdt=" + sdt + ", email=" + email + ", diachi="
 				+ diachi + ", chucvu=" + chucvu + "]";
 	}
-	
+
+	public String insertString() {
+		String insertString = String.format("('%s','%s','%s','%s','%s','%s')", manv, tennv, sdt, email, diachi, chucvu);
+		return insertString;
+	}
+	public static void main(String[] args) {
+		DTO_NhanVien nv = new DTO_NhanVien("nv01","Nguyen","slkfdj","ldskaf","lskdjf","admin");
+		System.out.println("insert into Nhanvien Values"+nv.insertString());
+	}
 }

@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 
@@ -26,23 +27,36 @@ private static Connection conn = null;
 		}
 	}
 	
-	public static String[] selectAllNhanVien() {
-		openData();
-		String[] data = {null,null,null};
+	public static ArrayList<DTO_NhanVien> selectAllNhanVien() {
+		ArrayList<DTO_NhanVien> ds_nhanvien = new ArrayList<DTO_NhanVien>();
 		openData();
 		try {
 			Statement stmt = (Statement) conn.createStatement();
 			String sql = "select * from nhanvien";
 			ResultSet rs  = stmt.executeQuery(sql);
 			while(rs.next()) {		
-				data[0] = rs.getString("manv");
-				data[1] = rs.getString("tennv");
+				DTO_NhanVien nhanvien = new DTO_NhanVien(rs.getString("manv"), rs.getString("tennv"), rs.getString("sdt"), rs.getString("email"),rs.getString("diachi"), rs.getString("chucvu"));
 			}
 			conn.close();
+			return ds_nhanvien;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return data;
+		return null;
+	}
+	
+	public static int themNV(DTO_NhanVien nv) {
+		openData();
+		try {
+			Statement stmt = (Statement) conn.createStatement();
+			String sql = "insert into Nhanvien Values"+nv.insertString();
+			int ketqua = stmt.executeUpdate(sql);
+			conn.close();
+			return ketqua;
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return 0;
 	}
 }
