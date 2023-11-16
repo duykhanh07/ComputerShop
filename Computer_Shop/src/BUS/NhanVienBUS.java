@@ -11,6 +11,7 @@ import GUI.MainForm;
 public class NhanVienBUS {
 	public ArrayList<DTO_NhanVien> ds_hienThi;
 	public ArrayList<DTO_NhanVien> ds_nhanVien;
+	private ArrayList <DTO_NhanVien> NhanVien_mainList = DAO_NhanVien.selectAllNhanVien();
 
 	public NhanVienBUS() {
 		ds_nhanVien = new DAO_NhanVien().selectAllNhanVien();
@@ -18,6 +19,14 @@ public class NhanVienBUS {
 			ds_hienThi = (ArrayList<DTO_NhanVien>) ds_nhanVien.clone();
 		}
 	}
+	
+	public ArrayList<DTO_NhanVien> getNhanVien_mainList() {
+        return NhanVien_mainList;
+    }
+
+    public void setNhanVien_mainList() {
+        this.NhanVien_mainList = DAO_NhanVien.selectAllNhanVien();
+    }
 
 	public int themNV(DTO_NhanVien nv) {
 		return DAO_NhanVien.themNV(nv);
@@ -42,7 +51,7 @@ public class NhanVienBUS {
 	}
 
 	public void timKiemNhanVien(String thongTinTimKiem, int selectedIndex) {
-		ds_nhanVien.clear();
+		ds_hienThi.clear();
 		for (int i = 0; i < ds_nhanVien.size(); i++) {
 			switch (selectedIndex) {
 			case 0:

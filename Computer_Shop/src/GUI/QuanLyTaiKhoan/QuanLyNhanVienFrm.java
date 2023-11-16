@@ -218,6 +218,7 @@ public class QuanLyNhanVienFrm extends JPanel {
 		
 		setLayout(groupLayout);
 		loadNhanVienTable();
+		setVisible(true);
 	}
 	public void loadNhanVienTable() {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();

@@ -203,6 +203,7 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 					.addGap(22))
 		);
 		setLayout(groupLayout);
+		setVisible(true);
 
 	}
 }

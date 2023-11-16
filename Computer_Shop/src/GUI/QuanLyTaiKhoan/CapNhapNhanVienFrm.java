@@ -4,28 +4,44 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import BUS.NhanVienBUS;
+import DTO.DTO_NhanVien;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+
 import MyDesign.MyComponents.MyTextfield;
 import javax.swing.JComboBox;
 import MyDesign.MyComponents.MyButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractButton;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.UIManager.LookAndFeelInfo;
+
 import java.awt.Toolkit;
-
+import GUI.QuanLyTaiKhoan.QuanLyNhanVienFrm;
 public class CapNhapNhanVienFrm extends JFrame {
-
+	private ArrayList <DTO_NhanVien> NhanVien_tempList = new ArrayList <DTO_NhanVien> ();
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
+	private NhanVienBUS bus_nhanvien = new NhanVienBUS();
+	private DefaultTableModel tblm;
+	private JTable table;
 	/**
 	 * Launch the application.
 	 */
@@ -47,6 +63,14 @@ public class CapNhapNhanVienFrm extends JFrame {
 	 */
 	public CapNhapNhanVienFrm() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(CapNhapNhanVienFrm.class.getResource("/assets/Laptop_Login.png")));
+		try {
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {}
 		setTitle("cập nhật thông tin sinh viên");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(367, 371);
@@ -57,7 +81,7 @@ public class CapNhapNhanVienFrm extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-		
+		tblm = (DefaultTableModel) table.getModel();
 		JLabel lblNewLabel_1 = new JLabel("----------Thông tin tài khoản----------");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setForeground(Color.CYAN);
@@ -100,6 +124,7 @@ public class CapNhapNhanVienFrm extends JFrame {
 		diaChiTxt.setBackground(new Color(77, 77, 77));
 		
 		JComboBox chucVuCmbx = new JComboBox();
+		chucVuCmbx.setModel(new DefaultComboBoxModel(new String[] {"Admin", "Quản lý", "Nhân viên"}));
 		chucVuCmbx.setForeground(Color.CYAN);
 		chucVuCmbx.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		chucVuCmbx.setBackground(new Color(102, 102, 102));
@@ -110,7 +135,19 @@ public class CapNhapNhanVienFrm extends JFrame {
 		
 		MyButton capNhatBtn = new MyButton();
 		capNhatBtn.addActionListener(new ActionListener() {
+		
 			public void actionPerformed(ActionEvent e) {
+				DTO_NhanVien nv = bus_nhanvien.getNhanVien_mainList().get(getSelectedNhanVien());
+				nv.setManv(getName());
+				nv.setTennv(tenNhanVienTxt.getText().toString());
+				nv.setSdt(soDienThoaiTxt.getText().toString());
+				nv.setEmail(emailTxt.getText().toString());
+				nv.setDiachi(diaChiTxt.getText().toString());
+				nv.setChucvu(chucVuCmbx.getName());
+				bus_nhanvien.suaNV(nv.getManv(), nv.getTennv());
+				renderMainTable(NhanVien_tempList);
+//				nv.getMaNV(tenNhanVienTxt.getText().toString());
+				
 			}
 		});
 		capNhatBtn.setText("cập nhật");
@@ -213,4 +250,30 @@ public class CapNhapNhanVienFrm extends JFrame {
 		);
 		contentPane.setLayout(gl_contentPane);
 	}
+	
+	 private void renderMainTable(ArrayList <DTO_NhanVien> lst) {
+	        tblm.setRowCount(0);
+	        for(DTO_NhanVien nv : lst) {
+	            String data [] = new String[5];
+	            data[0] = nv.getManv();
+	            data[1] = nv.getTennv();
+	            data[2] = nv.getSdt();
+	            data[3] = nv.getEmail();
+	            data[4] = nv.getDiachi();
+	            data[5] = nv.getChucvu();
+	            tblm.addRow(data);
+	        }
+	    }
+	
+	 private int getSelectedNhanVien() {
+	        int Rowindex = table.getSelectedRow();
+	        int index = -1;
+	        for(int i = 0; i < bus_nhanvien.getNhanVien_mainList().size(); i++) {
+	            if(table.getValueAt(Rowindex, 0).equals(bus_nhanvien.getNhanVien_mainList().get(i).getManv())) {
+	                index = i;
+	                break;
+	            }
+	        }
+	        return index;
+	    }
 }
