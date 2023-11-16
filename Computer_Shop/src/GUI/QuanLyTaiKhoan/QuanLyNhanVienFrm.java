@@ -9,18 +9,27 @@ import java.awt.Color;
 import javax.swing.border.EmptyBorder;
 import java.awt.Dimension;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+
 import MyDesign.MyComponents.MyButton;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import BUS.NhanVienBUS;
+
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -30,6 +39,8 @@ public class QuanLyNhanVienFrm extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
+	protected JComponent nv_bus;
+	private NhanVienBUS qlnv;
 
 	/**
 	 * Create the panel.
@@ -43,6 +54,8 @@ public class QuanLyNhanVienFrm extends JPanel {
 		        }
 		    }
 		} catch (Exception e) {}
+		
+		qlnv = new NhanVienBUS();
 		setBackground(new Color(102, 102, 102));
 		setSize(835,525);
 		
@@ -53,10 +66,18 @@ public class QuanLyNhanVienFrm extends JPanel {
 		timKiemTaiKhoanTxt.setBackground(new Color(77, 77, 77));
 		
 		JComboBox timKiemTypeCmbx_1 = new JComboBox();
+		timKiemTypeCmbx_1.setModel(new DefaultComboBoxModel(new String[] {"mã nhân viên", "tên nhân viên", "số điện thoại", "email", "địa chỉ", "chức vụ"}));
 		timKiemTypeCmbx_1.setForeground(Color.CYAN);
 		timKiemTypeCmbx_1.setBackground(new Color(102, 102, 102));
 		
 		MyButton timKiemBtn_1 = new MyButton();
+		timKiemBtn_1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				timKiemNhanVien(timKiemTaiKhoanTxt.getText(), timKiemTypeCmbx_1.getSelectedIndex());
+			}
+		});
 		timKiemBtn_1.setText("Lọc");
 		timKiemBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
 		
@@ -67,8 +88,17 @@ public class QuanLyNhanVienFrm extends JPanel {
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		JComboBox sortCmbx_1 = new JComboBox();
+		sortCmbx_1.setModel(new DefaultComboBoxModel(new String[] {"----------", "tên nhân viên (A -> Z)", "tên nhân viên (Z -> A)"}));
 		sortCmbx_1.setForeground(Color.CYAN);
 		sortCmbx_1.setBackground(new Color(102, 102, 102));
+		sortCmbx_1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sapXepNhanVien(sortCmbx_1.getSelectedIndex());
+				
+			}
+		});
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.getViewport().setBackground(new Color(51,51,51));
@@ -114,6 +144,12 @@ public class QuanLyNhanVienFrm extends JPanel {
 		JLabel autoIncreaseSizeLbl_1 = new JLabel("");
 		
 		MyButton mbtnLmMi = new MyButton();
+		mbtnLmMi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				qlnv = new NhanVienBUS();
+				loadNhanVienTable();
+			}
+		});
 		mbtnLmMi.setIcon(new ImageIcon(QuanLyNhanVienFrm.class.getResource("/assets/reset.png")));
 		mbtnLmMi.setText("làm mới");
 		mbtnLmMi.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -179,6 +215,32 @@ public class QuanLyNhanVienFrm extends JPanel {
 						.addComponent(themTaiKhoanExcelBtn, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap())
 		);
+		
 		setLayout(groupLayout);
+		loadNhanVienTable();
+		setVisible(true);
 	}
+	public void loadNhanVienTable() {
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		model.setRowCount(0);
+		for(int i = 0; i<qlnv.ds_hienThi.size(); i++) {
+			model.addRow(new Object[]{qlnv.ds_hienThi.get(i).getManv(), qlnv.ds_hienThi.get(i).getTennv(), 
+					qlnv.ds_hienThi.get(i).getSdt(), qlnv.ds_hienThi.get(i).getEmail(),  qlnv.ds_hienThi.get(i).getDiachi(),  qlnv.ds_hienThi.get(i).getChucvu()});
+		}
+	}
+	
+	public void sapXepNhanVien(int selectedIndex) {
+		qlnv.sapXepNhanVien(selectedIndex);
+		loadNhanVienTable();
+	}
+	public void timKiemNhanVien(String thongtin, int selectedIndex) {
+		if(thongtin.equalsIgnoreCase("")) {
+			JOptionPane.showMessageDialog(null, "Vui lòng nhập thông tin tìm kiếm");
+		}else {
+			qlnv.timKiemNhanVien(thongtin, selectedIndex);
+			loadNhanVienTable();
+		}
+	}
+	
+	
 }

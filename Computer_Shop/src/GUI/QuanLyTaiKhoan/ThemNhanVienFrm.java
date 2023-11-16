@@ -41,8 +41,9 @@ public class ThemNhanVienFrm extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	private NhanVienBUS nv_bus;
+	private static NhanVienBUS nv_bus;
 	private JComboBox chucVuCmbx;
+	private NhanVienBUS nv_bus1;
 
 	/**
 	 * Launch the application.
@@ -63,7 +64,7 @@ public class ThemNhanVienFrm extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ThemNhanVienFrm(NhanVienBUS nv_bus1) {
+	public ThemNhanVienFrm() {
 		nv_bus = nv_bus1;
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -161,7 +162,7 @@ public class ThemNhanVienFrm extends JFrame {
 		MyButton themNhanVienBtn = new MyButton();
 		themNhanVienBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int maso = nv_bus.ds_nhanvien.size()+1;
+				int maso = nv_bus.ds_nhanVien.size()+1;
 				String manv;
 				switch(chucVuCmbx.getSelectedItem().toString()) {
 				case "admin": manv = "AD"; break;
