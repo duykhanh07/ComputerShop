@@ -43,6 +43,7 @@ public class ThemNhanVienFrm extends JFrame {
 	private JTable table;
 	private static NhanVienBUS nv_bus;
 	private JComboBox chucVuCmbx;
+	private NhanVienBUS nv_bus1;
 
 	/**
 	 * Launch the application.
@@ -51,7 +52,7 @@ public class ThemNhanVienFrm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ThemNhanVienFrm frame = new ThemNhanVienFrm(nv_bus);
+					ThemNhanVienFrm frame = new ThemNhanVienFrm();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,7 +64,7 @@ public class ThemNhanVienFrm extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ThemNhanVienFrm(NhanVienBUS nv_bus1) {
+	public ThemNhanVienFrm() {
 		nv_bus = nv_bus1;
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -161,7 +162,7 @@ public class ThemNhanVienFrm extends JFrame {
 		MyButton themNhanVienBtn = new MyButton();
 		themNhanVienBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int maso = nv_bus.ds_nhanvien.size()+1;
+				int maso = nv_bus.ds_nhanVien.size()+1;
 				String manv;
 				switch(chucVuCmbx.getSelectedItem().toString()) {
 				case "admin": manv = "AD"; break;
