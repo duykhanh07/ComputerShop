@@ -38,6 +38,7 @@ public class DAO_TaiKhoan {
 			while (rs.next()) {
 				DTO_TaiKhoan taikhoan = new DTO_TaiKhoan(rs.getString("matk"), rs.getString("manv"),
 						rs.getString("username"), rs.getString("password"), rs.getInt("tinhtrang"));
+				ds_taikhoan.add(taikhoan);
 			}
 			conn.close();
 			return ds_taikhoan;

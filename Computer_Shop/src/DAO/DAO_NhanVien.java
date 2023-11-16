@@ -37,6 +37,7 @@ public class DAO_NhanVien {
 			while (rs.next()) {
 				DTO_NhanVien nhanvien = new DTO_NhanVien(rs.getString("manv"), rs.getString("tennv"),
 						rs.getString("sdt"), rs.getString("email"), rs.getString("diachi"), rs.getString("chucvu"));
+				ds_nhanvien.add(nhanvien);
 			}
 			conn.close();
 			return ds_nhanvien;
