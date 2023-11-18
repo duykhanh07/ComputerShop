@@ -37,7 +37,7 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
-	private TaiKhoanBUS qltk;
+	private TaiKhoanBUS qltk = new TaiKhoanBUS();
 
 	/**
 	 * Create the panel.
