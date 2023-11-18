@@ -55,17 +55,22 @@ public class NhanVienBUS {
 		for (int i = 0; i < ds_nhanVien.size(); i++) {
 			switch (selectedIndex) {
 			case 0:
-				if (ds_nhanVien.get(i).getTennv().contains(thongTinTimKiem)) {
+				if (ds_nhanVien.get(i).getManv().contains(thongTinTimKiem)) {
 					ds_hienThi.add(ds_nhanVien.get(i));
 				}
 				break;
 			case 1:
-				if (ds_nhanVien.get(i).getSdt().equalsIgnoreCase(thongTinTimKiem)) {
+				if (ds_nhanVien.get(i).getTennv().contains(thongTinTimKiem)) {
 					ds_hienThi.add(ds_nhanVien.get(i));
 				}
 				break;
 			case 2:
-				if (ds_nhanVien.get(i).getManv().contains(thongTinTimKiem)) {
+				if (ds_nhanVien.get(i).getSdt().equalsIgnoreCase(thongTinTimKiem)) {
+					ds_hienThi.add(ds_nhanVien.get(i));
+				}
+				break;
+			case 3:
+				if (ds_nhanVien.get(i).getEmail().contains(thongTinTimKiem)) {
 					ds_hienThi.add(ds_nhanVien.get(i));
 				}
 				break;
