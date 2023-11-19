@@ -3,14 +3,18 @@ package BUS;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import DAO.DAO_NhanVien;
 import DAO.DAO_TaiKhoan;
 import DTO.DTO_KhachHang;
+import DTO.DTO_NhanVien;
 import DTO.DTO_TaiKhoan;
 import GUI.MainForm;
 
 public class TaiKhoanBUS {
 	public ArrayList<DTO_TaiKhoan> ds_taiKhoan;
 	public ArrayList<DTO_TaiKhoan> ds_hienThi;
+	private ArrayList <DTO_TaiKhoan> TaiKhoan__mainList = DAO_TaiKhoan.selectAllTaiKhoan();
+	
 	public TaiKhoanBUS() {
 		ds_taiKhoan = new DAO_TaiKhoan().selectAllTaiKhoan();
 		if(ds_taiKhoan.size() >0 ) {
@@ -18,6 +22,14 @@ public class TaiKhoanBUS {
 		}
 	}
 	
+	public ArrayList<DTO_TaiKhoan> getTaiKhoan_mainList() {
+        return TaiKhoan__mainList;
+    }
+
+    public void setTaiKhoan_mainList() {
+        this.TaiKhoan__mainList = DAO_TaiKhoan.selectAllTaiKhoan();
+    }
+    
 	public int themTK(DTO_TaiKhoan tk) {
 		return DAO_TaiKhoan.themTaiKhoan(tk);
 	}
@@ -40,7 +52,7 @@ public class TaiKhoanBUS {
 	}
 	
 	public void timKiemTaiKhoan(String thongTinTimKiem, int selectedIndex) {
-		ds_taiKhoan.clear();
+		ds_hienThi.clear();
 		for (int i = 0; i < ds_taiKhoan.size(); i++) {
 			switch (selectedIndex) {
 			case 0:
@@ -49,12 +61,12 @@ public class TaiKhoanBUS {
 				}
 				break;
 			case 1:
-				if (ds_taiKhoan.get(i).getPassword().equalsIgnoreCase(thongTinTimKiem)) {
+				if (ds_taiKhoan.get(i).getManv().contains(thongTinTimKiem)) {
 					ds_hienThi.add(ds_taiKhoan.get(i));
 				}
 				break;
 			case 2:
-				if (ds_taiKhoan.get(i).getManv().contains(thongTinTimKiem)) {
+				if (ds_taiKhoan.get(i).getUsername().contains(thongTinTimKiem)) {
 					ds_hienThi.add(ds_taiKhoan.get(i));
 				}
 				break;

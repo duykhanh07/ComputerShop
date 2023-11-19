@@ -161,6 +161,10 @@ public class ThemTaiKhoanFrm extends JFrame {
 		scrollPane.setViewportView(table);
 		
 		MyButton xacNhanBtn = new MyButton();
+		xacNhanBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		xacNhanBtn.setText("xác nhận");
 		xacNhanBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);

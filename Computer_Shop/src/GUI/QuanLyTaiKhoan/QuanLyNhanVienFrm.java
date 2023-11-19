@@ -39,8 +39,7 @@ public class QuanLyNhanVienFrm extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
-	protected JComponent nv_bus;
-	private NhanVienBUS qlnv;
+	private NhanVienBUS qlnv = new NhanVienBUS();
 
 	/**
 	 * Create the panel.
