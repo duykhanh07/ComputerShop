@@ -115,7 +115,7 @@ public class ThemNhaCungCap extends JFrame {
 		MyButton xemTruocBtn = new MyButton();
 		xemTruocBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new XemTruocKhoFrm().setVisible(true);
+				//new XemTruocKhoFrm(null, null, null,0.0,null).setVisible(true);
 			}
 		});
 		xemTruocBtn.setText("Xem trước");

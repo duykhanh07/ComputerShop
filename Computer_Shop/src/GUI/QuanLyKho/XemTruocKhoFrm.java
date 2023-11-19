@@ -12,6 +12,8 @@ import MyDesign.MyTable.CustomTableCellRenderer;
 import MyDesign.MyTable.CustomTableHeaderUI;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -20,13 +22,23 @@ import javax.swing.JTabbedPane;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+
+import BUS.ThemDonNhapBUS;
+import DTO.DTO_CTDonNhap;
+import DTO.DTO_DonNhap;
 import MyDesign.MyComponents.MyButton;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JComboBox;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager.LookAndFeelInfo;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.util.Date;
 
 public class XemTruocKhoFrm extends JFrame {
 
@@ -35,27 +47,27 @@ public class XemTruocKhoFrm extends JFrame {
 	private JTable table;
 	private JTable table_1;
 	private JTable table_2;
-
+	private ThemDonNhapBUS themDonNhapBUS = new ThemDonNhapBUS();
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					XemTruocKhoFrm frame = new XemTruocKhoFrm();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					XemTruocKhoFrm frame = new XemTruocKhoFrm();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
 	 */
-	public XemTruocKhoFrm() {
+	public XemTruocKhoFrm(String madn, String manv, String mancc, Double tongTien, Date thoiGian, JTable jTable, JLabel jLabel, JComboBox<String> cb_nhacungcap, JComboBox<String> cb_masanpham, JTextField dongia, JTextField soluong) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(XemTruocKhoFrm.class.getResource("/assets/Laptop_Login.png")));
 		setTitle("Xem trước");
 		try {
@@ -100,7 +112,7 @@ public class XemTruocKhoFrm extends JFrame {
 		table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null},
+				{madn, manv, mancc, tongTien, thoiGian},
 			},
 			new String[] {
 				"m\u00E3 \u0111\u01A1n nh\u1EADp", "m\u00E3 nh\u00E2n vi\u00EAn", "m\u00E3 nh\u00E0 cung c\u1EA5p", "t\u1ED5ng ti\u1EC1n", "th\u1EDDi gian"
@@ -167,6 +179,44 @@ public class XemTruocKhoFrm extends JFrame {
 		panel_1.setLayout(gl_panel_1);
 		
 		MyButton xacNhanPhieuNhapBtn = new MyButton();
+		xacNhanPhieuNhapBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if(jTable.getRowCount()!=0) {
+					int dem = 0;
+					DTO_DonNhap donNhap = new DTO_DonNhap(madn, manv, mancc, tongTien, thoiGian);
+					if(themDonNhapBUS.insertDonNhap(donNhap)==0) {
+						JOptionPane.showMessageDialog(null, "Thêm đơn nhập thất bại");
+					}else {
+						int rowCount = jTable.getRowCount();
+						for(int i=0; i < rowCount; i++) {
+							String maSanPham = String.valueOf(jTable.getValueAt(i, 0));
+							Double donGia = Double.parseDouble(jTable.getValueAt(i, 3).toString());
+							int soLuong = Integer.parseInt(jTable.getValueAt(i, 2).toString());
+							DTO_CTDonNhap chiTietDonNhap = new DTO_CTDonNhap(madn, maSanPham, null, donGia, soLuong, 0);
+							if(themDonNhapBUS.insertChiTietDonNhap(chiTietDonNhap)!=0) {
+								dem+=1;
+							}
+						}
+					}
+					JOptionPane.showMessageDialog(null, "Có "+dem+" chi tiết phiếu thêm thành công");
+					DefaultTableModel model = (DefaultTableModel) table.getModel();
+					model.setRowCount(0);
+					DefaultTableModel model_table = (DefaultTableModel) jTable.getModel();
+					model_table.setRowCount(0);
+					jLabel.setText("Tổng cộng: "+Double.parseDouble("0.0"));
+					cb_nhacungcap.setEnabled(true);
+					cb_nhacungcap.setSelectedIndex(0);
+					cb_masanpham.setSelectedIndex(0);
+					dongia.setText("");
+					soluong.setText("1");
+				}else {
+					JOptionPane.showMessageDialog(null, "Không có dữ liệu để thêm");
+				}
+			}
+		});
 		xacNhanPhieuNhapBtn.setText("Xác nhận");
 		xacNhanPhieuNhapBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
