@@ -58,7 +58,7 @@ public class QuanLySanPhamFrm extends JPanel {
 			"Card", "Màn hình", "Pin", "Hãng", "Giá", "Tình trạng"};
 	DefaultTableModel model;
 	int selectrow;
-	private Map<JCheckBox, String> brandCheckboxMap;
+	
 	private ArrayList<JCheckBox> dsHangCheckBox;
 	private HashMap<Integer, String> tinhTrangMap;
 
@@ -206,6 +206,19 @@ public class QuanLySanPhamFrm extends JPanel {
 		MyButton mbtnLmMi = new MyButton();
 		mbtnLmMi.setText("làm mới");
 		mbtnLmMi.setHorizontalTextPosition(SwingConstants.LEADING);
+		
+		mbtnLmMi.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				timKiemSanPhamTxt.setText("");
+				timKiemSanPham("", 0);
+				sortCmbx_1.setSelectedIndex(0);
+				
+			}
+		});
+		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
 import com.mysql.cj.x.protobuf.MysqlxCrud.Collection;
 
 import DAO.SanPhamDAO;
@@ -40,18 +42,24 @@ public class SanPhamBUS {
 	public void sapXepSanPham(int index) {
 		switch (index) {
 		case 0:
-			Collections.sort(listHT, (o1, o2) -> o1.getMasp().compareToIgnoreCase(o2.getMasp()));break;
+			Collections.sort(listHT, (o1, o2) -> o1.getMasp().compareToIgnoreCase(o2.getMasp()));
+			break;
 		case 1:
-			Collections.sort(listHT, (o1, o2) -> o1.getTensp().compareToIgnoreCase(o2.getTensp()));break;
+			Collections.sort(listHT, (o1, o2) -> o1.getTensp().compareToIgnoreCase(o2.getTensp()));
+			break;
 		case 2:
-			Collections.sort(listHT, (o1, o2) -> o2.getTensp().compareToIgnoreCase(o1.getTensp()));break;
+			Collections.sort(listHT, (o1, o2) -> o2.getTensp().compareToIgnoreCase(o1.getTensp()));
+			break;
 		case 3:
-			Collections.sort(listHT, (o1, o2) -> o1.getGia() - o2.getGia());break;
+			Collections.sort(listHT, (o1, o2) -> o1.getGia() - o2.getGia());
+			break;
 		case 4:
-			Collections.sort(listHT, (o1, o2) -> o2.getGia() - o1.getGia());break;
+			Collections.sort(listHT, (o1, o2) -> o2.getGia() - o1.getGia());
+			break;
 			
 		default:
-			Collections.sort(listHT, (o1, o2) -> o1.getMasp().compareToIgnoreCase(o2.getMasp()));break;
+			Collections.sort(listHT, (o1, o2) -> o1.getMasp().compareToIgnoreCase(o2.getMasp()));
+			break;
 		}
 		
 	}
@@ -81,5 +89,9 @@ public class SanPhamBUS {
 			
 		}
 		
+	}
+	
+	public void addSP(DTO_SanPham sp) {
+		SanPhamDAO.getInstance().insert(sp);
 	}
 }

@@ -20,7 +20,13 @@ import javax.swing.SwingConstants;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+
+import BUS.SanPhamBUS;
+
 import java.awt.Toolkit;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
@@ -29,6 +35,9 @@ public class XemTruocThemSanPham extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
+	public DefaultTableModel model;
+	private SanPhamBUS sp_bus;
+	private HashMap<Integer, String> tinhTrangMap;
 
 	/**
 	 * Launch the application.
@@ -68,6 +77,7 @@ public class XemTruocThemSanPham extends JFrame {
 		scrollPane_1.setBorder(new LineBorder(new Color(130, 135, 144)));
 		
 		table = new JTable();
+		table.setDefaultEditor(Object.class, null);
 		table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
 		table.getTableHeader().setUI(new CustomTableHeaderUI());
 		table.getTableHeader().setFont(new Font("Tahoma",Font.PLAIN,15));
@@ -79,6 +89,9 @@ public class XemTruocThemSanPham extends JFrame {
 				"m\u00E3 s\u1EA3n ph\u1EA9m", "t\u00EAn s\u1EA3n ph\u1EA9m", "CPU", "Ram", "B\u1ED9 nh\u1EDB", "Card \u0111\u1ED3 h\u1ECDa", "m\u00E0n h\u00ECnh", "pin", "h\u00E3ng", "gi\u00E1", "t\u00ECnh tr\u1EA1ng", "h\u00ECnh \u1EA3nh"
 			}
 		));
+		model = (DefaultTableModel)table.getModel();
+		
+		sp_bus = new SanPhamBUS();
 		scrollPane_1.setViewportView(table);
 		
 		MyButton huyBtn = new MyButton();
@@ -115,4 +128,6 @@ public class XemTruocThemSanPham extends JFrame {
 		);
 		contentPane.setLayout(gl_contentPane);
 	}
+	
+	
 }

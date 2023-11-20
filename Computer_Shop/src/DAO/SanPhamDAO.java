@@ -2,6 +2,7 @@ package DAO;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -132,5 +133,65 @@ public class SanPhamDAO {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	
+	public int insert (DTO_SanPham sp) {
+		Connection c =Connect_mySQL();
+		String sql = "INSERT INTO sanpham " +
+				"VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+		try {
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setString(1, sp.getMasp());
+			ps.setString(2, sp.getTensp());
+			ps.setString(3, sp.getImage());
+			ps.setString(4, sp.getCpu());
+			ps.setString(5, sp.getRam());
+			ps.setString(6, sp.getRom());
+			ps.setString(7, sp.getCard());
+			ps.setString(8, sp.getManhinh());
+			ps.setString(9, sp.getPin());
+			ps.setString(10,sp.getHang());
+			ps.setInt(11, sp.getGia());
+			ps.setInt(12, sp.getTinhtrang());
+			ps.execute();
+			ps.close();
+		}
+		catch (SQLException e) {
+			System.out.println("Khong the them");
+			e.printStackTrace();
+		}
+		closeConnection(c);
+		return 0;
+	}
+	
+	public int update(DTO_SanPham sp) {
+		Connection c = Connect_mySQL();
+		String sql = "UPDATE sanpham SET " +
+				"tensp=?, image=?, cpu=?, ram=?, rom=?, card?," +
+				" manhinh=?, pin=?, hang=?, gia=?, tinhtrang=?";
+		
+		try {
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setString(1, sp.getTensp());
+			ps.setString(2, sp.getImage());
+			ps.setString(3, sp.getCpu());
+			ps.setString(4, sp.getRam());
+			ps.setString(5, sp.getRom());
+			ps.setString(6, sp.getCard());
+			ps.setString(7, sp.getManhinh());
+			ps.setString(8, sp.getPin());
+			ps.setString(9, sp.getHang());
+			ps.setInt(10, sp.getGia());
+			ps.setInt(11, sp.getTinhtrang());
+			ps.execute();
+			ps.close();
+		}
+		catch(SQLException e) {
+			System.out.println("Khong the sua");
+			e.printStackTrace();
+		}
+		closeConnection(c);
+		return 0;
 	}
 }
