@@ -82,6 +82,7 @@ public class CapNhatTaiKhoanFrm extends JFrame {
 		lblTnSnPhm_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		JComboBox maNhanVienCmbx = new JComboBox();
+		maNhanVienCmbx.setModel(new DefaultComboBoxModel(new String[] {"AD", "NV", "QL"}));
 		maNhanVienCmbx.setForeground(Color.CYAN);
 		maNhanVienCmbx.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		maNhanVienCmbx.setBackground(new Color(102, 102, 102));

@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -29,12 +31,16 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ThemTaiKhoanFrm extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
+	private JLabel lblTnSnPhm_1;
+	private DefaultTableModel tbl;
 
 	/**
 	 * Launch the application.
@@ -57,7 +63,16 @@ public class ThemTaiKhoanFrm extends JFrame {
 	 * Chỉ cần điền Tên đăng nhập, chọn mã tài khoản và tình trạng
 	 * password và mã tài khoản cần để cho hệ thộng tự tạo, password nên thống nhất mặc định là 888888888
 	 */
+	private boolean checkErrors() {
+        boolean check = true;
+        if(lblTnSnPhm_1.getText().toString().equals("")) {
+            check = false;
+        }
+        return check;
+    }
+	
 	public ThemTaiKhoanFrm() {
+		tbl = (DefaultTableModel) table.getModel();
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
@@ -111,6 +126,14 @@ public class ThemTaiKhoanFrm extends JFrame {
 		tinhTrangCmbx.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		MyButton themNhanVienBtn = new MyButton();
+		themNhanVienBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 if(!checkErrors()) {
+			            JOptionPane.showMessageDialog(themNhanVienBtn, "Mời kiểm tra lại thông tin!");
+			            return;
+			        }
+			}
+		});
 		themNhanVienBtn.setText("Thêm");
 		themNhanVienBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
@@ -138,6 +161,10 @@ public class ThemTaiKhoanFrm extends JFrame {
 		scrollPane.setViewportView(table);
 		
 		MyButton xacNhanBtn = new MyButton();
+		xacNhanBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		xacNhanBtn.setText("xác nhận");
 		xacNhanBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);

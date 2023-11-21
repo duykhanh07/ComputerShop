@@ -263,7 +263,7 @@ public class MainForm extends JFrame {
 					public void actionPerformed(ActionEvent e) {
 						if(!getTitle().equalsIgnoreCase(chucvu + " - Quản lý kho hàng")) {
 							setTitle(chucvu+" - Quản lý kho hàng");
-							splitPane.setRightComponent(new QuanLyKhoFrm());
+							splitPane.setRightComponent(new QuanLyKhoFrm(manv));
 							splitPane.setDividerLocation(175);
 						}
 					}
@@ -309,7 +309,7 @@ public class MainForm extends JFrame {
 					public void actionPerformed(ActionEvent e) {
 						if(!getTitle().equalsIgnoreCase(chucvu + " - Quản lý bảo hành")) {
 							setTitle(chucvu + " - Quản lý bảo hành");
-							splitPane.setRightComponent(new QuanLyBaoHanhFrm());
+							splitPane.setRightComponent(new QuanLyBaoHanhFrm(manv));
 							splitPane.setDividerLocation(175);
 						}
 					}

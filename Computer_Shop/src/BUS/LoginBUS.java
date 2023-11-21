@@ -2,6 +2,7 @@ package BUS;
 
 import DAO.LoginDAO;
 import GUI.MainForm;
+import GUI.QuanLyKho.ThemDonNhapFrm;
 
 public class LoginBUS {
 	
@@ -17,4 +18,5 @@ public class LoginBUS {
 			return 0;
 		}
 	}
+
 }

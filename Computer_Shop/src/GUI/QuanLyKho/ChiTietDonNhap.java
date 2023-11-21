@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -17,6 +18,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import BUS.ChiTietDonNhapBUS;
 import MyDesign.MyTable.CustomTableCellRenderer;
 import MyDesign.MyTable.CustomTableHeaderUI;
 import java.awt.Toolkit;
@@ -26,7 +28,13 @@ public class ChiTietDonNhap extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-
+	private JPanel panel;
+	private JLabel maNhanVienPhieuNhapLbl;
+	private JLabel maNhaCungCapLbl;
+	private JLabel ngayNhapLbl;
+	private JLabel lblTngCng;
+	private JLabel maPhieuNhapLbl;
+	private ChiTietDonNhapBUS busChiTietDonNhap = new ChiTietDonNhapBUS();
 	/**
 	 * Launch the application.
 	 */
@@ -34,7 +42,7 @@ public class ChiTietDonNhap extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ChiTietDonNhap frame = new ChiTietDonNhap();
+					ChiTietDonNhap frame = new ChiTietDonNhap(null, null, null, null, null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,7 +54,8 @@ public class ChiTietDonNhap extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ChiTietDonNhap() {
+	
+	public ChiTietDonNhap(String madn, String manv, String mancc, String tongTien, String ngayNhap) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ChiTietDonNhap.class.getResource("/assets/Laptop_Login.png")));
 		setTitle("Chi tiết phiếu nhập");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -60,23 +69,23 @@ public class ChiTietDonNhap extends JFrame {
 
 		setContentPane(contentPane);
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setBackground(new Color(102, 102, 102));
 		panel.setLayout(null);
 		
-		JLabel maNhanVienPhieuNhapLbl = new JLabel("mã nhân viên : <<mavn>>");
+		maNhanVienPhieuNhapLbl = new JLabel("mã nhân viên : <<mavn>>");
 		maNhanVienPhieuNhapLbl.setBounds(10, 50, 493, 19);
 		maNhanVienPhieuNhapLbl.setForeground(Color.CYAN);
 		maNhanVienPhieuNhapLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel.add(maNhanVienPhieuNhapLbl);
 		
-		JLabel maNhaCungCapLbl = new JLabel("mã nhà cung cấp: <<mancc>>");
+		maNhaCungCapLbl = new JLabel("mã nhà cung cấp: <<mancc>>");
 		maNhaCungCapLbl.setForeground(Color.CYAN);
 		maNhaCungCapLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		maNhaCungCapLbl.setBounds(10, 80, 493, 30);
 		panel.add(maNhaCungCapLbl);
 		
-		JLabel ngayNhapLbl = new JLabel("ngày nhập: <<ngaynhap>>");
+		ngayNhapLbl = new JLabel("ngày nhập: <<ngaynhap>>");
 		ngayNhapLbl.setForeground(Color.CYAN);
 		ngayNhapLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		ngayNhapLbl.setBounds(10, 121, 493, 30);
@@ -90,7 +99,7 @@ public class ChiTietDonNhap extends JFrame {
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null},
+				
 			},
 			new String[] {
 				"m\u00E3 s\u1EA3n ph\u1EA9m", "t\u00EAn s\u1EA3n ph\u1EA9m", "\u0111\u01A1n gi\u00E1", "s\u1ED1 l\u01B0\u1EE3ng", "th\u00E0nh ti\u1EC1n"
@@ -101,7 +110,9 @@ public class ChiTietDonNhap extends JFrame {
 		table.getTableHeader().setFont(new Font("Tahoma", Font.PLAIN, 15));
 		scrollPane.setViewportView(table);
 		
-		JLabel lblTngCng = new JLabel("tổng cộng :....................");
+		
+		
+		lblTngCng = new JLabel("tổng cộng :....................");
 		lblTngCng.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblTngCng.setForeground(Color.CYAN);
 		lblTngCng.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -128,12 +139,26 @@ public class ChiTietDonNhap extends JFrame {
 					.addGap(6))
 		);
 		
-		JLabel maPhieuNhapLbl = new JLabel("mã phiếu nhập : <madh>");
+		maPhieuNhapLbl = new JLabel();
+		maPhieuNhapLbl.setText("mã phiếu nhập : <madh>");
 		maPhieuNhapLbl.setForeground(Color.CYAN);
 		maPhieuNhapLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		maPhieuNhapLbl.setBounds(10, 20, 493, 19);
 		panel.add(maPhieuNhapLbl);
+		//thêm dữ liệu
+		DefaultTableModel model_table = (DefaultTableModel) table.getModel();
+		model_table.setRowCount(0);
+		//Đưa dữ liệu vào bảng bên chi tiết
+		busChiTietDonNhap.hienThiDonNhapHang(table, madn);
+		//Set dữ liệu cho các lb bên from chi tiết
+		maPhieuNhapLbl.setText("Mã phiếu nhập: "+madn);
+		maNhanVienPhieuNhapLbl.setText("Mã nhân viên: "+manv);
+		maNhaCungCapLbl.setText("Mã nhà cung cấp: "+mancc);
+		lblTngCng.setText("Tổng cộng: "+tongTien);
+		ngayNhapLbl.setText("Ngày nhập: "+ngayNhap);
+		
 		contentPane.setLayout(gl_contentPane);
+
 	}
 
 }

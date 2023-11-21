@@ -24,6 +24,15 @@ import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.Date;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Comparator;
+
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -33,9 +42,9 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+
 import javax.swing.table.TableModel;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -50,6 +59,13 @@ import BUS.NhaCungCapBUS;
 import BUS.QuanLyTonKhoBUS;
 import DTO.DTO_NhaCungCap;
 
+import javax.swing.table.TableRowSorter;
+
+import com.google.protobuf.Message;
+
+import BUS.QuanLyDonNhapHangBUS;
+
+
 import javax.swing.border.LineBorder;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.ImageIcon;
@@ -63,6 +79,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+
 public class QuanLyKhoFrm extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -74,12 +91,44 @@ public class QuanLyKhoFrm extends JPanel {
 	private JTable tonKhoTable;
 	private JTable table;
 
+
 	private QuanLyTonKhoBUS qltk_bus = new QuanLyTonKhoBUS();
+
+	private QuanLyDonNhapHangBUS busDonNhap = new QuanLyDonNhapHangBUS();
+	private String manv;
+	private JComboBox sortCmbx;
+	private MyDateChooser toDateChooser;
+
 	/**
 	 * Create the panel.
 	 */
-	
-	public QuanLyKhoFrm() {
+	public boolean checkNgay() {
+		String stringFM = "dd/MM/yyyy";
+        SimpleDateFormat df= new SimpleDateFormat(stringFM);
+		if(fromDateChooser.getDate().after(Date.valueOf(LocalDate.now()))) {
+			JOptionPane.showMessageDialog(null, "Ngày bắt đầu không được lớn hơn ngày hôm nay");
+			fromDateChooser.setDate(Date.valueOf(LocalDate.now()));
+			fromDateChooser.myTextfield1.setText(df.format(Date.valueOf(LocalDate.now())));
+			return false;
+		}
+		if(toDateChooser.getDate().after(Date.valueOf(LocalDate.now()))) {
+			JOptionPane.showMessageDialog(null, "Ngày kết thúc không được lớn hơn ngày hôm nay");
+			toDateChooser.setDate(Date.valueOf(LocalDate.now()));
+			toDateChooser.myTextfield1.setText(df.format(Date.valueOf(LocalDate.now())));
+			return false;
+		}
+		if(toDateChooser.getDate().before(fromDateChooser.getDate())) {
+			JOptionPane.showMessageDialog(null, "Ngày bắt đầu không được lớn hơn ngày kết thúc");
+			toDateChooser.setDate(Date.valueOf(LocalDate.now()));
+			toDateChooser.myTextfield1.setText(df.format(Date.valueOf(LocalDate.now())));
+			fromDateChooser.setDate(Date.valueOf(LocalDate.now()));
+			fromDateChooser.myTextfield1.setText(df.format(Date.valueOf(LocalDate.now())));
+			return false;
+		}
+		return true;
+	}
+	public QuanLyKhoFrm(String manv) {
+		this.manv = manv;
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
@@ -107,6 +156,8 @@ public class QuanLyKhoFrm extends JPanel {
 					.addGap(22))
 		);
 		
+		
+		
 		JPanel donNhapPanel = new JPanel();
 		donNhapPanel.setBackground(new Color(102, 102, 102));
 		tabbedPane.addTab("Đơn nhập", null, donNhapPanel, null);
@@ -120,18 +171,108 @@ public class QuanLyKhoFrm extends JPanel {
 		JComboBox timKiemTypeCmbx = new JComboBox();
 		timKiemTypeCmbx.setForeground(new Color(0, 255, 255));
 		timKiemTypeCmbx.setBackground(new Color(102, 102, 102));
+		timKiemTypeCmbx.addItem("Mã đơn nhập");
+		timKiemTypeCmbx.addItem("Mã nhân viên");
+		timKiemTypeCmbx.addItem("Mã nhà cung cấp");
+		timKiemTypeCmbx.addItem("Ngày nhập");
 		
 		timKiemBtn = new MyButton();
 		timKiemBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		timKiemBtn.setText("Lọc");
 		timKiemBtn.addActionListener(new ActionListener() {
+			//Lọc
 			public void actionPerformed(ActionEvent e) {
+				if(timKiemDonNhapTxt.getText().isEmpty() && timKiemTypeCmbx.getSelectedItem().equals("Ngày nhập") == false ) {
+					JOptionPane.showMessageDialog(null, "Ô tìm kiếm trống!");
+				}else {
+					if(timKiemTypeCmbx.getSelectedItem().equals("Mã đơn nhập")) {
+						DefaultTableModel model_table =(DefaultTableModel) donNhapTable.getModel();
+						model_table.setRowCount(0);
+						busDonNhap.selectDonNhap_MaDN(donNhapTable, timKiemDonNhapTxt.getText());
+					}
+					if(timKiemTypeCmbx.getSelectedItem().equals("Mã nhân viên")) {
+						DefaultTableModel model_table =(DefaultTableModel) donNhapTable.getModel();
+						model_table.setRowCount(0);
+						busDonNhap.selectDonNhap_MaNV(donNhapTable, timKiemDonNhapTxt.getText());;
+					}
+					if(timKiemTypeCmbx.getSelectedItem().equals("Mã nhà cung cấp")) {
+						DefaultTableModel model_table =(DefaultTableModel) donNhapTable.getModel();
+						model_table.setRowCount(0);
+						busDonNhap.selectDonNhap_MaNCC(donNhapTable, timKiemDonNhapTxt.getText());
+					}
+					if(timKiemTypeCmbx.getSelectedItem().equals("Ngày nhập")) {
+						if(checkNgay()) {
+							String stringFM = "yyyy-MM-dd";
+					        SimpleDateFormat df= new SimpleDateFormat(stringFM);
+							DefaultTableModel model_table =(DefaultTableModel) donNhapTable.getModel();
+							model_table.setRowCount(0);
+							busDonNhap.selectDonNhap_Ngay(donNhapTable, df.format(fromDateChooser.getDate()),df.format(toDateChooser.getDate()));
+						}
+					}
+				}
 			}
 		});
 		
-		JComboBox sortCmbx = new JComboBox();
+		sortCmbx = new JComboBox();
 		sortCmbx.setBackground(new Color(102, 102, 102));
 		sortCmbx.setForeground(new Color(0, 255, 255));
+		sortCmbx.addItem("Mã đơn nhập");
+		sortCmbx.addItem("Mã nhân viên");
+		sortCmbx.addItem("Mã nhà cung cấp");
+		sortCmbx.addItem("Tổng tiền");
+		sortCmbx.addItem("Ngày nhập");
+		sortCmbx.addItemListener(new ItemListener() {
+			private int columnIndexToSort;
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// TODO Auto-generated method stub
+				 // Tạo mô hình dữ liệu
+                DefaultTableModel model = (DefaultTableModel) donNhapTable.getModel();
+
+                // Tạo TableRowSorter
+                TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+
+                if(sortCmbx.getSelectedItem().equals("Mã đơn nhập")) {
+                	columnIndexToSort = 0;
+                }
+                if(sortCmbx.getSelectedItem().equals("Mã nhân viên")) {
+                	columnIndexToSort = 1;
+                }
+                if(sortCmbx.getSelectedItem().equals("Mã nhà cung cấp")) {
+                	columnIndexToSort = 2;
+                }
+                if(sortCmbx.getSelectedItem().equals("Tổng tiền")) {
+                	columnIndexToSort = 3;
+                }
+                if(sortCmbx.getSelectedItem().equals("Ngày nhập")) {
+                	columnIndexToSort = 4;
+                }
+                Comparator<Double> doubleComparator = new Comparator<Double>() {
+                    public int compare(Double d1, Double d2) {
+                        return Double.compare(d1, d2);
+                    }
+                };
+                Comparator<Date> dateComparator = new Comparator<Date>() {
+                    public int compare(Date date1, Date date2) {
+                        return date1.compareTo(date2);
+                    }
+                };
+
+                sorter.setSortable(columnIndexToSort, true);
+                if(columnIndexToSort == 3) {
+                	sorter.setComparator(columnIndexToSort, doubleComparator);
+                }else if(columnIndexToSort == 4) {
+                	sorter.setComparator(columnIndexToSort, dateComparator);
+                }
+                else {
+                	sorter.setComparator(columnIndexToSort, String.CASE_INSENSITIVE_ORDER);
+                }
+                sorter.toggleSortOrder(columnIndexToSort); 
+
+                // Đặt TableRowSorter vào JTable
+                donNhapTable.setRowSorter(sorter);
+			}
+		});
 		
 		JLabel lblNewLabel = new JLabel("Sắp xếp :");
 		lblNewLabel.setForeground(new Color(0, 255, 255));
@@ -150,7 +291,8 @@ public class QuanLyKhoFrm extends JPanel {
 		fromDateChooser = new MyDateChooser();
 		fromDateChooser.setBackground(new Color(102, 102, 102));
 		
-		MyDateChooser toDateChooser = new MyDateChooser();
+		
+		toDateChooser = new MyDateChooser();
 		toDateChooser.setBackground(new Color(102, 102, 102));
 		
 		scrollPane = new JScrollPane();
@@ -159,11 +301,11 @@ public class QuanLyKhoFrm extends JPanel {
 		scrollPane.getViewport().setBackground(new Color(51,51,51));
 		
 		JLabel auto_increase_spaceLbl_1 = new JLabel("");
-		
+		//thêm đơn nhập hàng
 		MyButton themDonNhapBtn = new MyButton();
 		themDonNhapBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new ThemDonNhapFrm().setVisible(true);
+				new ThemDonNhapFrm(manv).setVisible(true);
 			}
 		});
 		themDonNhapBtn.setText("Thêm");
@@ -172,11 +314,39 @@ public class QuanLyKhoFrm extends JPanel {
 		MyButton inBtn = new MyButton();
 		inBtn.setText("In");
 		inBtn.setHorizontalTextPosition(SwingConstants.LEADING);
+		inBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				MessageFormat header = new MessageFormat("Báo cáo");
+				MessageFormat footer = new MessageFormat("Page{0,number,integer}");
+				
+				try {
+					donNhapTable.print(JTable.PrintMode.FIT_WIDTH,header,footer);
+				} catch (Exception e2) {
+					// TODO: handle exception
+					JOptionPane.showMessageDialog(null,"In thất bại");
+				}
+			}
+		});
 		
 		MyButton chiTietBtn = new MyButton();
+		//Nút chi tiết
 		chiTietBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new ChiTietDonNhap().setVisible(true);
+				int selectedRow = donNhapTable.getSelectedRow(); // Lấy chỉ số của hàng đang được chọn
+				if (selectedRow != -1) { // Kiểm tra xem có hàng nào được chọn không
+					String madn = donNhapTable.getValueAt(selectedRow, 0)+"";
+					String manv = donNhapTable.getValueAt(selectedRow, 1)+"";
+					String mancc = donNhapTable.getValueAt(selectedRow, 2)+"";
+					String tong = donNhapTable.getValueAt(selectedRow, 3)+"";
+					String ngayNhap = donNhapTable.getValueAt(selectedRow, 4)+"";
+					new ChiTietDonNhap(madn, manv, mancc, tong, ngayNhap).setVisible(true);
+					
+				} else {
+				    JOptionPane.showMessageDialog(null, "Không có hàng nào được chọn");
+				}
 			}
 		});
 		chiTietBtn.setText("Chi tiết");
@@ -195,22 +365,46 @@ public class QuanLyKhoFrm extends JPanel {
 		donNhapTable = new JTable();
 		donNhapTable.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"DN001", "NV00001", "NCC002", "15000000", "15/6/2023 16:31:32"},
+				
 			},
 			new String[] {
 				"m\u00E3 \u0111\u01A1n nh\u1EADp", "m\u00E3 nh\u00E2n vi\u00EAn", "m\u00E3 nh\u00E0 cung c\u1EA5p", "t\u1ED5ng ti\u1EC1n", "ng\u00E0y nh\u1EADp"
 			}
 		));
+		
+		
+		
 		donNhapTable.getColumnModel().getColumn(2).setPreferredWidth(100);
 		donNhapTable.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		donNhapTable.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
 		
 		scrollPane.setViewportView(donNhapTable);
+		//Load data
+		busDonNhap.hienThiDonNhapHang(donNhapTable);
 		
 		MyButton mbtnLmMi = new MyButton();
 		mbtnLmMi.setIcon(new ImageIcon(QuanLyKhoFrm.class.getResource("/assets/reset.png")));
 		mbtnLmMi.setText("làm mới");
 		mbtnLmMi.setHorizontalTextPosition(SwingConstants.LEADING);
+		mbtnLmMi.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				DefaultTableModel model_table = (DefaultTableModel) donNhapTable.getModel();
+				model_table.setRowCount(0);
+				busDonNhap.hienThiDonNhapHang(donNhapTable);
+				sortCmbx.setSelectedIndex(0);
+				timKiemTypeCmbx.setSelectedIndex(0);
+				String stringFM = "dd/MM/yyyy";
+		        SimpleDateFormat df= new SimpleDateFormat(stringFM);
+				toDateChooser.setDate(Date.valueOf(LocalDate.now()));
+				toDateChooser.myTextfield1.setText(df.format(Date.valueOf(LocalDate.now())));
+				fromDateChooser.setDate(Date.valueOf(LocalDate.now()));
+				fromDateChooser.myTextfield1.setText(df.format(Date.valueOf(LocalDate.now())));
+			}
+		});
+		
 		GroupLayout gl_donNhapPanel = new GroupLayout(donNhapPanel);
 		gl_donNhapPanel.setHorizontalGroup(
 			gl_donNhapPanel.createParallelGroup(Alignment.LEADING)

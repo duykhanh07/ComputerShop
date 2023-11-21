@@ -14,14 +14,20 @@ import MyDesign.MyComponents.MyButton;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import BUS.TaiKhoanBUS;
+
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -31,6 +37,7 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
+	private TaiKhoanBUS qltk = new TaiKhoanBUS();
 
 	/**
 	 * Create the panel.
@@ -64,10 +71,17 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 		timKiemTaiKhoanTxt.setBackground(new Color(77, 77, 77));
 		
 		JComboBox timKiemTypeCmbx_1 = new JComboBox();
+		timKiemTypeCmbx_1.setModel(new DefaultComboBoxModel(new String[] {"mã tài khoản", "mã nhân viên", "username"}));
 		timKiemTypeCmbx_1.setForeground(Color.CYAN);
 		timKiemTypeCmbx_1.setBackground(new Color(102, 102, 102));
 		
 		MyButton timKiemBtn_1 = new MyButton();
+		timKiemBtn_1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				timKiemTaiKhoan(timKiemTaiKhoanTxt.getText(), timKiemTypeCmbx_1.getSelectedIndex());
+			}
+		});
 		timKiemBtn_1.setText("Lọc");
 		timKiemBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
 		
@@ -76,9 +90,17 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		JComboBox sortCmbx_1 = new JComboBox();
+		sortCmbx_1.setModel(new DefaultComboBoxModel(new String[] {"----------", "mã nhân viên (A -> Z)", "mã nhân viên (Z -> A)"}));
 		sortCmbx_1.setForeground(Color.CYAN);
 		sortCmbx_1.setBackground(new Color(102, 102, 102));
-		
+		sortCmbx_1.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sapXepTaiKhoan(sortCmbx_1.getSelectedIndex());
+			}
+			
+		});
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -109,6 +131,15 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 		themTaiKhoanExcelBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
 		MyButton mbtnLmMi = new MyButton();
+		mbtnLmMi.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				qltk = new TaiKhoanBUS();
+				loadTaiKhoanTable();
+				
+			}
+		});
 		mbtnLmMi.setIcon(new ImageIcon(QuanLyTaiKhoanFrm.class.getResource("/assets/reset.png")));
 		mbtnLmMi.setText("làm mới");
 		mbtnLmMi.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -203,6 +234,30 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 					.addGap(22))
 		);
 		setLayout(groupLayout);
+		loadTaiKhoanTable();
+		setVisible(true);
 
+	}
+	
+	public void loadTaiKhoanTable() {
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		model.setRowCount(0);
+		for(int i = 0; i<qltk.ds_hienThi.size(); i++) {
+			model.addRow(new Object[]{qltk.ds_hienThi.get(i).getMatk(), qltk.ds_hienThi.get(i).getManv(), 
+					qltk.ds_hienThi.get(i).getUsername(), qltk.ds_hienThi.get(i).getPassword(),  qltk.ds_hienThi.get(i).getTinhtrang()});
+		}
+	}
+	
+	public void sapXepTaiKhoan(int selectedIndex) {
+		qltk.sapXepTaiKhoan(selectedIndex);
+		loadTaiKhoanTable();
+	}
+	public void timKiemTaiKhoan(String thongtin, int selectedIndex) {
+		if(thongtin.equalsIgnoreCase("")) {
+			JOptionPane.showMessageDialog(null, "Vui lòng nhập thông tin tìm kiếm");
+		}else {
+			qltk.timKiemTaiKhoan(thongtin, selectedIndex);
+			loadTaiKhoanTable();
+		}
 	}
 }
