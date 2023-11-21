@@ -49,7 +49,7 @@ public class ThemNhanVienFrm extends JFrame {
 	private MyTextfield soDienThoaiTxt;
 	private MyTextfield emailTxt;
 	private MyTextfield diaChiTxt;
-	private ArrayList<NhanVienBUS> ds_nv = new ArrayList<NhanVienBUS>();
+	private NhanVienBUS ds_nv;
 	/**
 	 * Launch the application.
 	 */
@@ -169,40 +169,7 @@ public class ThemNhanVienFrm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				int tinhtrang=0;
-				if (checkField()== 1 && checkDupAdd() == 1) {
-					if (tinhTrangCmbx.getSelectedItem() == "đang kinh doanh")
-						tinhtrang=1;
-					DTO_SanPham sp = new DTO_SanPham(maSanPhamTxt.getText(), tenSanPhamTxt.getText(), relativePath, 
-							CPUTxt.getText(), ramTxt.getText(), romTxt.getText(), cardTxt.getText(), manHinhTxt.getText(),
-							pinTxt.getText(),hangTxt.getText(), Integer.parseInt(giaTxt.getText()), tinhtrang); 
-					//sp_bus.addSP(sp);
-					listSP = sp_bus.importToTable(listSP);
-					Object[] newRow = {maSanPhamTxt.getText(), tenSanPhamTxt.getText(), relativePath, CPUTxt.getText(),
-							ramTxt.getText(), romTxt.getText(), cardTxt.getText(), manHinhTxt.getText(), pinTxt.getText(),
-							hangTxt.getText(), Integer.parseInt(giaTxt.getText()), tinhtrang};
-					
-					maSanPhamTxt.setText("");
-					tenSanPhamTxt.setText("");
-					CPUTxt.setText("");
-					ramTxt.setText("");
-					romTxt.setText("");
-					cardTxt.setText("");
-					manHinhTxt.setText("");
-					pinTxt.setText("");
-					hangTxt.setText("");
-					giaTxt.setText("");
-					tinhTrangCmbx.setSelectedIndex(-1);
-					imageLinkTxt.setText("hình ảnh : " );
-					lblNewLabel.setIcon(null);
-					relativePath = "/assets/Image/";
-					model.addRow(newRow);
-					listHT.add(sp);
-					
-				}
-				else {
-					System.out.println("Failure");
-				}
+				
 			}
 		});
 		themNhanVienBtn.setText("Thêm");
@@ -311,9 +278,9 @@ public class ThemNhanVienFrm extends JFrame {
 	public int checkDupAdd() {
 		int flag=1;
 		for(int i=0; i<ds_nv.getNhanVien_mainList().size();i++) {
-			if (maSanPhamTxt.getText().equals(sp_bus.listSP.get(i).getMasp().trim())) {
+			if (tenTaiKhoanTxt.getText().equals(ds_nv.getNhanVien_mainList().get(i).getTennv().trim())) {
 				
-				JOptionPane.showMessageDialog(null,"Mã sản phẩm không thể trùng!");
+				JOptionPane.showMessageDialog(null,"Tên nhân viên không thể trùng!");
 				flag=0;
 			}
 		}
