@@ -34,6 +34,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class ThemNhanVienFrm extends JFrame {
@@ -44,7 +45,11 @@ public class ThemNhanVienFrm extends JFrame {
 	private static NhanVienBUS nv_bus;
 	private JComboBox chucVuCmbx;
 	private NhanVienBUS nv_bus1;
-
+	private MyTextfield tenTaiKhoanTxt;
+	private MyTextfield soDienThoaiTxt;
+	private MyTextfield emailTxt;
+	private MyTextfield diaChiTxt;
+	private ArrayList<NhanVienBUS> ds_nv = new ArrayList<NhanVienBUS>();
 	/**
 	 * Launch the application.
 	 */
@@ -113,7 +118,7 @@ public class ThemNhanVienFrm extends JFrame {
 		lblTnSnPhm_1_1.setForeground(Color.CYAN);
 		lblTnSnPhm_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		MyTextfield tenTaiKhoanTxt = new MyTextfield();
+		tenTaiKhoanTxt = new MyTextfield();
 		tenTaiKhoanTxt.setColumns(10);
 		tenTaiKhoanTxt.setBorder(null);
 		tenTaiKhoanTxt.setBackground(new Color(77, 77, 77));
@@ -122,7 +127,7 @@ public class ThemNhanVienFrm extends JFrame {
 		lblTnSnPhm_1_1_1.setForeground(Color.CYAN);
 		lblTnSnPhm_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		MyTextfield soDienThoaiTxt = new MyTextfield();
+		soDienThoaiTxt = new MyTextfield();
 		soDienThoaiTxt.setColumns(10);
 		soDienThoaiTxt.setBorder(null);
 		soDienThoaiTxt.setBackground(new Color(77, 77, 77));
@@ -131,7 +136,7 @@ public class ThemNhanVienFrm extends JFrame {
 		lblTnSnPhm_1_1_2.setForeground(Color.CYAN);
 		lblTnSnPhm_1_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		MyTextfield emailTxt = new MyTextfield();
+		emailTxt = new MyTextfield();
 		emailTxt.setColumns(10);
 		emailTxt.setBorder(null);
 		emailTxt.setBackground(new Color(77, 77, 77));
@@ -140,7 +145,7 @@ public class ThemNhanVienFrm extends JFrame {
 		lblTnSnPhm_1_1_3.setForeground(Color.CYAN);
 		lblTnSnPhm_1_1_3.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		MyTextfield diaChiTxt = new MyTextfield();
+		diaChiTxt = new MyTextfield();
 		diaChiTxt.setColumns(10);
 		diaChiTxt.setBorder(null);
 		diaChiTxt.setBackground(new Color(77, 77, 77));
@@ -161,36 +166,42 @@ public class ThemNhanVienFrm extends JFrame {
 		
 		MyButton themNhanVienBtn = new MyButton();
 		themNhanVienBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				int maso = nv_bus.ds_nhanVien.size()+1;
-				String manv;
-				switch(chucVuCmbx.getSelectedItem().toString()) {
-				case "admin": manv = "AD"; break;
-				case "quản lý": manv = "QL"; break;
-				default : manv = "NV"; break;
 				
+				int tinhtrang=0;
+				if (checkField()== 1 && checkDupAdd() == 1) {
+					if (tinhTrangCmbx.getSelectedItem() == "đang kinh doanh")
+						tinhtrang=1;
+					DTO_SanPham sp = new DTO_SanPham(maSanPhamTxt.getText(), tenSanPhamTxt.getText(), relativePath, 
+							CPUTxt.getText(), ramTxt.getText(), romTxt.getText(), cardTxt.getText(), manHinhTxt.getText(),
+							pinTxt.getText(),hangTxt.getText(), Integer.parseInt(giaTxt.getText()), tinhtrang); 
+					//sp_bus.addSP(sp);
+					listSP = sp_bus.importToTable(listSP);
+					Object[] newRow = {maSanPhamTxt.getText(), tenSanPhamTxt.getText(), relativePath, CPUTxt.getText(),
+							ramTxt.getText(), romTxt.getText(), cardTxt.getText(), manHinhTxt.getText(), pinTxt.getText(),
+							hangTxt.getText(), Integer.parseInt(giaTxt.getText()), tinhtrang};
+					
+					maSanPhamTxt.setText("");
+					tenSanPhamTxt.setText("");
+					CPUTxt.setText("");
+					ramTxt.setText("");
+					romTxt.setText("");
+					cardTxt.setText("");
+					manHinhTxt.setText("");
+					pinTxt.setText("");
+					hangTxt.setText("");
+					giaTxt.setText("");
+					tinhTrangCmbx.setSelectedIndex(-1);
+					imageLinkTxt.setText("hình ảnh : " );
+					lblNewLabel.setIcon(null);
+					relativePath = "/assets/Image/";
+					model.addRow(newRow);
+					listHT.add(sp);
+					
 				}
-				if(maso<1000) {
-					manv += 0;
-					if(maso<100) {
-						manv += 0;
-						if(maso<10) {
-							manv += 0;
-						}
-					}
-				}
-				manv+=maso;
-				String tennv = tenTaiKhoanTxt.getText();
-				String sdt = soDienThoaiTxt.getText();
-				String email = emailTxt.getText();
-				String diachi = diaChiTxt.getText();
-				String chucvu = chucVuCmbx.getSelectedItem().toString();
-				DTO_NhanVien nv = new DTO_NhanVien(manv,tennv,sdt,email,diachi,chucvu);
-				int ketqua = nv_bus.themNV(nv);
-				if(ketqua == 0) {
-					JOptionPane.showMessageDialog(null, "Lỗi");
-				}else {
-					JOptionPane.showMessageDialog(null, "Thêm thành công");
+				else {
+					System.out.println("Failure");
 				}
 			}
 		});
@@ -276,5 +287,36 @@ public class ThemNhanVienFrm extends JFrame {
 					.addGap(6))
 		);
 		contentPane.setLayout(gl_contentPane);
+	}
+	
+	public int checkField() {
+		int flag=1;
+		//kiem tra cac truong du lieu co trong hay khong
+		if (tenTaiKhoanTxt.getText().isEmpty()|| soDienThoaiTxt.getText().isEmpty() || emailTxt.getText().isEmpty()
+				|| diaChiTxt.getText().isEmpty()|| chucVuCmbx.getSelectedIndex() == -1){
+			
+			JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!");
+			flag=0;
+		}
+		
+		//kiem tra dau vao cua gia san pham co phai la so hay khong
+		if (!(soDienThoaiTxt.getText().matches("[0-9]+"))) {
+			JOptionPane.showMessageDialog(null, "Số điện thoại phải là số!");
+			flag=0;
+		}
+		
+		return flag;
+	}
+	
+	public int checkDupAdd() {
+		int flag=1;
+		for(int i=0; i<ds_nv.getNhanVien_mainList().size();i++) {
+			if (maSanPhamTxt.getText().equals(sp_bus.listSP.get(i).getMasp().trim())) {
+				
+				JOptionPane.showMessageDialog(null,"Mã sản phẩm không thể trùng!");
+				flag=0;
+			}
+		}
+		return flag;
 	}
 }
