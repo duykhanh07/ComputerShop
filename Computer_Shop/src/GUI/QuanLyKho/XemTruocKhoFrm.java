@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.plaf.TableHeaderUI;
 
 import MyDesign.MyTabPane.MyTabbedPaneCustom;
@@ -25,9 +27,11 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import DTO.DTO_NhaCungCap;
 import BUS.ThemDonNhapBUS;
 import DTO.DTO_CTDonNhap;
 import DTO.DTO_DonNhap;
+
 import MyDesign.MyComponents.MyButton;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -37,8 +41,11 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import java.util.ArrayList;
 import java.time.LocalDate;
 import java.util.Date;
+
 
 public class XemTruocKhoFrm extends JFrame {
 
@@ -46,6 +53,28 @@ public class XemTruocKhoFrm extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private JTable table_1;
+
+	private static JTable table_2 = new JTable();
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					XemTruocKhoFrm frame = new XemTruocKhoFrm();
+					frame = new XemTruocKhoFrm();
+					frame.setVisible(true);
+					frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
 	private JTable table_2;
 	private ThemDonNhapBUS themDonNhapBUS = new ThemDonNhapBUS();
 	/**
@@ -63,6 +92,7 @@ public class XemTruocKhoFrm extends JFrame {
 //			}
 //		});
 //	}
+
 
 	/**
 	 * Create the frame.
@@ -86,14 +116,6 @@ public class XemTruocKhoFrm extends JFrame {
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 
 		setContentPane(contentPane);
-		
-		JLabel lblXemTrc = new JLabel("XEM TRƯỚC ");
-		lblXemTrc.setOpaque(true);
-		lblXemTrc.setHorizontalAlignment(SwingConstants.CENTER);
-		lblXemTrc.setForeground(new Color(0, 204, 204));
-		lblXemTrc.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblXemTrc.setBackground(new Color(255, 255, 102));
-		lblXemTrc.setAlignmentY(0.0f);
 		
 		MyTabbedPaneCustom tabbedPane = new MyTabbedPaneCustom();
 		
@@ -180,7 +202,6 @@ public class XemTruocKhoFrm extends JFrame {
 		
 		MyButton xacNhanPhieuNhapBtn = new MyButton();
 		xacNhanPhieuNhapBtn.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -220,18 +241,17 @@ public class XemTruocKhoFrm extends JFrame {
 		xacNhanPhieuNhapBtn.setText("Xác nhận");
 		xacNhanPhieuNhapBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
-		JLabel autoIncreaseLbl = new JLabel("New label");
+		JLabel autoIncreaseLbl = new JLabel("");
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addComponent(lblXemTrc, GroupLayout.DEFAULT_SIZE, 904, Short.MAX_VALUE)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(10)
-					.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 886, Short.MAX_VALUE)
 					.addGap(10))
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(autoIncreaseLbl, GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE)
+					.addComponent(autoIncreaseLbl, GroupLayout.DEFAULT_SIZE, 787, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(xacNhanPhieuNhapBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(10))
@@ -239,23 +259,31 @@ public class XemTruocKhoFrm extends JFrame {
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(lblXemTrc, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-					.addGap(11)
-					.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
+					.addGap(30)
+					.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+					.addGap(0, 0, Short.MAX_VALUE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(11)
+							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(xacNhanPhieuNhapBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(autoIncreaseLbl, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(17, Short.MAX_VALUE))
+					.addGap(18))
 		);
 		
 		JPanel panel_1_1 = new JPanel();
 		panel_1_1.setBorder(null);
 		panel_1_1.setBackground(new Color(102, 102, 102));
-		tabbedPane.addTab("New tab", null, panel_1_1, null);
+		tabbedPane.addTab("Nhà Cung Cấp", null, panel_1_1, null);
+		//Hiển thị danh sách nhà cung cấp vừa thêm (chưa lưu vào Database)
+		tabbedPane.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				// TODO Auto-generated method stub
+				loadNhaCungCap();
+			}
+        });
 		
 		JScrollPane scrollPane_1_1 = new JScrollPane();
 		scrollPane_1_1.getViewport().setBackground(new Color(51,51,51));
@@ -279,7 +307,7 @@ public class XemTruocKhoFrm extends JFrame {
 					.addGap(16))
 		);
 		
-		table_2 = new JTable();
+		//table_2 = new JTable();
 		table_2.getTableHeader().setUI(new CustomTableHeaderUI());
 		table_2.getTableHeader().setFont(new Font("Tahoma",Font.PLAIN,18));
 		table_2.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
@@ -295,5 +323,25 @@ public class XemTruocKhoFrm extends JFrame {
 		scrollPane_1_1.setViewportView(table_2);
 		panel_1_1.setLayout(gl_panel_1_1);
 		contentPane.setLayout(gl_contentPane);
+		
+		
+	}
+	
+	static ArrayList <DTO_NhaCungCap> arr = new ArrayList <DTO_NhaCungCap>();
+	
+	//Lấy dữ liệu trong ArrayList của form "Xem trước"
+	public static void transferArrayList(ArrayList <DTO_NhaCungCap> arr_sample)
+	{
+		arr.clear();
+		arr.addAll(arr_sample);
+	}
+	
+	//Hiển thị nhà cung cấp vừa thêm (chưa lưu vào Database) lên form nhà cung cấp
+	public void loadNhaCungCap()
+	{
+		DefaultTableModel model = (DefaultTableModel) table_2.getModel();
+		model.setRowCount(0);
+		for(DTO_NhaCungCap x: arr)
+			model.addRow(new Object [] {x.getMancc(), x.getTenncc(), x.getSdt(), x.getDiachi()});
 	}
 }
