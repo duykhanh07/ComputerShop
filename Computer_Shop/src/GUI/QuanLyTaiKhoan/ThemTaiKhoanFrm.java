@@ -104,6 +104,7 @@ public class ThemTaiKhoanFrm extends JFrame {
 		lblTnSnPhm_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		maNhanVienCmbx = new JComboBox();
+		maNhanVienCmbx.setModel(new DefaultComboBoxModel(new String[] {"admin", "quản lý", "bán hàng", "thủ kho", "kĩ thuật"}));
 		maNhanVienCmbx.setForeground(new Color(0, 255, 255));
 		maNhanVienCmbx.setBackground(new Color(102, 102, 102));
 		maNhanVienCmbx.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -130,8 +131,35 @@ public class ThemTaiKhoanFrm extends JFrame {
 		MyButton themNhanVienBtn = new MyButton();
 		themNhanVienBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String matk = "";
+				String username = "";
 				int maso = 1;
+				String password = "88888";
+				if(checkField()==1 && checkDupAdd()==1) {
+					if(maNhanVienCmbx.getSelectedItem()=="admin") {
+						username="admin";
+					}
+					
+					if(maNhanVienCmbx.getSelectedItem()=="quản lý") {
+						chucVu="quản lý";
+						if(maso<10) {
+							manv="QL000"+maso;
+							maso++;
+						}else {
+							manv="QL00"+maso;
+							maso++;
+						}
+					}
+					
+					if(maNhanVienCmbx.getSelectedItem()=="bán hàng" || chucVuCmbx.getSelectedItem()=="thủ kho" || chucVuCmbx.getSelectedItem()=="kĩ thuật") {
+						chucVu="nhân viên";
+						if(maso<10) {
+							manv="NV000"+maso;
+							maso++;
+						}else {
+							manv="NV00"+maso;
+							maso++;
+						}
+				}
 				
 			}
 		});
