@@ -50,6 +50,8 @@ public class ThemNhanVienFrm extends JFrame {
 	private MyTextfield emailTxt;
 	private MyTextfield diaChiTxt;
 	private NhanVienBUS ds_nv;
+	private ArrayList<DTO_NhanVien> listNV;
+	private ArrayList<DTO_NhanVien> listHT = new ArrayList<DTO_NhanVien>();
 	/**
 	 * Launch the application.
 	 */
@@ -168,7 +170,45 @@ public class ThemNhanVienFrm extends JFrame {
 		themNhanVienBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				String manv = "";
+				int maso = 1;
+				String chucVu = "";
+				if(checkField()==1 && checkDupAdd()==1) {
+					if(chucVuCmbx.getSelectedItem()=="admin") {
+						chucVu="admin";
+						if(maso<10) {
+							manv="AD000"+maso;
+							maso++;
+						}else {
+							manv="AD00"+maso;
+							maso++;
+						}
+					}
+					
+					if(chucVuCmbx.getSelectedItem()=="quản lý") {
+						chucVu="quản lý";
+						if(maso<10) {
+							manv="QL000"+maso;
+							maso++;
+						}else {
+							manv="QL00"+maso;
+							maso++;
+						}
+					}
+					
+					if(chucVuCmbx.getSelectedItem()=="bán hàng" || chucVuCmbx.getSelectedItem()=="thủ kho" || chucVuCmbx.getSelectedItem()=="kĩ thuật") {
+						chucVu="nhân viên";
+						if(maso<10) {
+							manv="NV000"+maso;
+							maso++;
+						}else {
+							manv="NV00"+maso;
+							maso++;
+						}
+					}
+					DTO_NhanVien nv = new DTO_NhanVien(manv, tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu);
+					
+				}
 				
 			}
 		});

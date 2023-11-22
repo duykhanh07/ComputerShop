@@ -13,7 +13,7 @@ import DTO.DTO_NhanVien;
 
 public class DAO_NhanVien {
 	private static Connection conn = null;
-
+	
 	public static void openData() {
 		try {
 			DriverManager.registerDriver(new SQLServerDriver());
@@ -27,6 +27,10 @@ public class DAO_NhanVien {
 		}
 	}
 
+	public static DAO_NhanVien getInstance() { 
+		return new DAO_NhanVien();
+	}
+	
 	public static ArrayList<DTO_NhanVien> selectAllNhanVien() {
 		ArrayList<DTO_NhanVien> ds_nhanvien = new ArrayList<DTO_NhanVien>();
 		openData();

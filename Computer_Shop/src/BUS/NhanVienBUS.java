@@ -20,6 +20,11 @@ public class NhanVienBUS {
 		}
 	}
 	
+	public ArrayList<DTO_NhanVien> importToTable(ArrayList<DTO_NhanVien> splist) {
+		splist = DAO_NhanVien.getInstance().selectAllNhanVien();
+		return splist;
+	}
+	
 	public ArrayList<DTO_NhanVien> getNhanVien_mainList() {
         return NhanVien_mainList;
     }
