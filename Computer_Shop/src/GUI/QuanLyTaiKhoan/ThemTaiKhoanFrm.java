@@ -28,10 +28,15 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import BUS.NhanVienBUS;
+import BUS.TaiKhoanBUS;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class ThemTaiKhoanFrm extends JFrame {
@@ -41,6 +46,10 @@ public class ThemTaiKhoanFrm extends JFrame {
 	private JTable table;
 	private JLabel lblTnSnPhm_1;
 	private DefaultTableModel tbl;
+	private JComboBox maNhanVienCmbx;
+	private MyTextfield tenTaiKhoanTxt;
+	private JComboBox tinhTrangCmbx;
+	private TaiKhoanBUS ds_tk = new TaiKhoanBUS();
 
 	/**
 	 * Launch the application.
@@ -63,13 +72,6 @@ public class ThemTaiKhoanFrm extends JFrame {
 	 * Chỉ cần điền Tên đăng nhập, chọn mã tài khoản và tình trạng
 	 * password và mã tài khoản cần để cho hệ thộng tự tạo, password nên thống nhất mặc định là 888888888
 	 */
-	private boolean checkErrors() {
-        boolean check = true;
-        if(lblTnSnPhm_1.getText().toString().equals("")) {
-            check = false;
-        }
-        return check;
-    }
 	
 	public ThemTaiKhoanFrm() {
 		tbl = (DefaultTableModel) table.getModel();
@@ -101,7 +103,7 @@ public class ThemTaiKhoanFrm extends JFrame {
 		lblTnSnPhm_1.setForeground(Color.CYAN);
 		lblTnSnPhm_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		JComboBox maNhanVienCmbx = new JComboBox();
+		maNhanVienCmbx = new JComboBox();
 		maNhanVienCmbx.setForeground(new Color(0, 255, 255));
 		maNhanVienCmbx.setBackground(new Color(102, 102, 102));
 		maNhanVienCmbx.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -110,7 +112,7 @@ public class ThemTaiKhoanFrm extends JFrame {
 		lblTnSnPhm_1_1.setForeground(Color.CYAN);
 		lblTnSnPhm_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		MyTextfield tenTaiKhoanTxt = new MyTextfield();
+		tenTaiKhoanTxt = new MyTextfield();
 		tenTaiKhoanTxt.setColumns(10);
 		tenTaiKhoanTxt.setBorder(null);
 		tenTaiKhoanTxt.setBackground(new Color(77, 77, 77));
@@ -119,7 +121,7 @@ public class ThemTaiKhoanFrm extends JFrame {
 		lblTnSnPhm_1_1_1.setForeground(Color.CYAN);
 		lblTnSnPhm_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		JComboBox tinhTrangCmbx = new JComboBox();
+		tinhTrangCmbx = new JComboBox();
 		tinhTrangCmbx.setModel(new DefaultComboBoxModel(new String[] {"đang hoạt động", "đã khóa"}));
 		tinhTrangCmbx.setForeground(new Color(0, 255, 255));
 		tinhTrangCmbx.setBackground(new Color(102, 102, 102));
@@ -128,10 +130,9 @@ public class ThemTaiKhoanFrm extends JFrame {
 		MyButton themNhanVienBtn = new MyButton();
 		themNhanVienBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 if(!checkErrors()) {
-			            JOptionPane.showMessageDialog(themNhanVienBtn, "Mời kiểm tra lại thông tin!");
-			            return;
-			        }
+				String matk = "";
+				int maso = 1;
+				
 			}
 		});
 		themNhanVienBtn.setText("Thêm");
@@ -231,5 +232,25 @@ public class ThemTaiKhoanFrm extends JFrame {
 					.addGap(9))
 		);
 		contentPane.setLayout(gl_contentPane);
+	}
+	public int checkField() {
+		int flag=1;
+		//kiem tra cac truong du lieu co trong hay khong
+		if (maNhanVienCmbx.getSelectedIndex() == -1|| tenTaiKhoanTxt.getText().isEmpty() || tinhTrangCmbx.getSelectedIndex() == -1){
+			JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!");
+			flag=0;
+		}
+		return flag;
+	}
+	
+	public int checkDupAdd() {
+		int flag=1;
+		for(int i=0; i<ds_tk.getTaiKhoan_mainList().size();i++) {
+			if (tenTaiKhoanTxt.getText().equals(ds_tk.getTaiKhoan_mainList().get(i).getUsername().trim())) {
+				JOptionPane.showMessageDialog(null,"Tên tài khoản không thể trùng!");
+				flag=0;
+			}
+		}
+		return flag;
 	}
 }

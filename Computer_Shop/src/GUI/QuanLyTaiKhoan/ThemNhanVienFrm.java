@@ -34,6 +34,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
@@ -241,6 +242,7 @@ public class ThemNhanVienFrm extends JFrame {
 		MyButton xacNhanBtn = new MyButton();
 		xacNhanBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+//				DecimalFormat df = new DecimalFormat();
 			}
 		});
 		xacNhanBtn.setText("xác nhận");
