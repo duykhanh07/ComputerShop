@@ -141,98 +141,42 @@ public class ThemTaiKhoanFrm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String manv = "";
-				int masonv = 1, masotk = 1, tinhtrang = 1;
+				int maso= 1, tinhtrang = 1;
 				String password = "88888";
-				String matk = "TK";
+				String matk = "";
 				if (checkField() == 1 && checkDupAdd() == 1) {
 					if (maNhanVienCmbx.getSelectedItem() == "admin") {
 						manv = "AD";
-						if (masotk < 10) {
-							matk += "000" + masotk;
-							masotk++;
+					}else if (maNhanVienCmbx.getSelectedItem() == "quản lý") {
+						if(maso>100) {
+							matk = "TK0"+maso;
+							manv = "QL0" +maso;
+							maso++;
+						} else if(maso>10) {
+							matk = "TK00"+maso;
+							manv = "QL00" +maso;
+							maso++;
 						} else {
-							matk += "00" + masotk;
-							masotk++;
+							matk = "TK000"+maso;
+							manv = "QL000" +maso;
+							maso++;
 						}
-						if (masonv < 10) {
-							manv += "000" + masonv;
-							masonv++;
+					}else {
+						if(maso>100) {
+							matk = "TK0"+maso;
+							manv = "NV0" +maso;
+							maso++;
+						} else if(maso>10) {
+							matk = "TK00"+maso;
+							manv = "NV00" +maso;
+							maso++;
 						} else {
-							manv += "00" + masonv;
-							masonv++;
-						}
-					}
-
-					if (maNhanVienCmbx.getSelectedItem() == "quản lý") {
-						manv = "QL";
-						if (masotk < 10) {
-							matk += "000" + masotk;
-							masotk++;
-						} else {
-							matk += "00" + masotk;
-							masotk++;
-						}
-						if (masonv < 10) {
-							manv += "000" + masonv;
-							masonv++;
-						} else {
-							manv += "00" + masonv;
-							masonv++;
+							matk = "TK000"+maso;
+							manv = "NV000" +maso;
+							maso++;
 						}
 					}
-					if (maNhanVienCmbx.getSelectedItem() == "bán hàng") {
-						manv = "NV";
-						if (masotk < 10) {
-							matk += "000" + masotk;
-							masotk++;
-						} else {
-							matk += "00" + masotk;
-							masotk++;
-						}
-						if (masonv < 10) {
-							manv += "000" + masonv;
-							masonv++;
-						} else {
-							manv += "00" + masonv;
-							masonv++;
-						}
-					}
-					if (maNhanVienCmbx.getSelectedItem() == "thủ kho") {
-						manv = "NV";
-						if (masotk < 10) {
-							matk += "000" + masotk;
-							masotk++;
-						} else {
-							matk += "00" + masotk;
-							masotk++;
-						}
-						if (masonv < 10) {
-							manv += "000" + masonv;
-							masonv++;
-						} else {
-							manv += "00" + masonv;
-							masonv++;
-						}
-					}
-
-					if (maNhanVienCmbx.getSelectedItem() == "kĩ thuật") {
-						manv = "NV";
-						if (masotk < 10) {
-							matk += "000" + masotk;
-							masotk++;
-						} else {
-							matk += "00" + masotk;
-							masotk++;
-						}
-						if (masonv < 10) {
-							manv += "000" + masonv;
-							masonv++;
-						} else {
-							manv += "00" + masonv;
-							masonv++;
-						}
-					}
-
+					
 					if (tinhTrangCmbx.getSelectedItem() == "đã khóa") {
 						tinhtrang = 0;
 					}
