@@ -78,4 +78,32 @@ public class DAO_TaiKhoan {
 		}
 		return 0;
 	}
+	
+	public static int themNV(DTO_TaiKhoan tk) {
+		openData();
+		try {
+			Statement stmt = (Statement) conn.createStatement();
+			String sql = "insert into TaiKhoan Values" + tk.insertString();
+			int ketqua = stmt.executeUpdate(sql);
+			conn.close();
+			return ketqua;
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return 0;
+	}
+
+	public static int suaNV(DTO_TaiKhoan tk) {
+		openData();
+		try {
+			Statement stmt = (Statement) conn.createStatement();
+			String sql = String.format("Update TaiKhoan set manv =N'%s', username=N'%s', password=N'%s', tinhtrang=N'%d' where matk = '%s' ",tk.getMatk(), tk.getManv(), tk.getUsername());
+			int ketqua = stmt.executeUpdate(sql);
+			conn.close();
+			return ketqua;
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return 0;
+	}
 }

@@ -14,7 +14,7 @@ public class TaiKhoanBUS {
 	public ArrayList<DTO_TaiKhoan> ds_taiKhoan;
 	public ArrayList<DTO_TaiKhoan> ds_hienThi;
 	private ArrayList <DTO_TaiKhoan> TaiKhoan__mainList = DAO_TaiKhoan.selectAllTaiKhoan();
-	
+	public ArrayList<DTO_TaiKhoan> ds_taiKhoan_temp;
 	public TaiKhoanBUS() {
 		ds_taiKhoan = new DAO_TaiKhoan().selectAllTaiKhoan();
 		if(ds_taiKhoan.size() >0 ) {
@@ -35,13 +35,17 @@ public class TaiKhoanBUS {
         this.TaiKhoan__mainList = DAO_TaiKhoan.selectAllTaiKhoan();
     }
     
-	public int themTK(DTO_TaiKhoan tk) {
-		return DAO_TaiKhoan.themTaiKhoan(tk);
+    public void themTK() {
+		for(int i =0; i< ds_taiKhoan_temp.size(); i++) {
+			ds_taiKhoan_temp.get(i).setManv(taoMa(ds_taiKhoan_temp.get(i), i));
+			new DAO_NhanVien().themNV(ds_taiKhoan_temp.get(i));
+		}
+	}
+
+	public int suaTK(DTO_TaiKhoan tk) {
+		return DAO_TaiKhoan.suaTK(tk);
 	}
 	
-	public int suaTK(String matk, String manv) {
-		return DAO_TaiKhoan.suaTK(matk, manv);
-	}
 	public void sapXepTaiKhoan(int selectedIndex) {
 		switch (selectedIndex) {
 		case 1:
@@ -77,5 +81,32 @@ public class TaiKhoanBUS {
 				break;
 			}
 		}
+	}
+	
+	public String taoMa(DTO_TaiKhoan taiKhoan, int i) {
+		int maso = ds_taiKhoan.size() + i + 1;
+		String manv = "";
+		String matk = "TK";
+		if(taiKhoan.getManv().equalsIgnoreCase("admin")) {
+			manv = "AD";
+		}else if(taiKhoan.getManv().equalsIgnoreCase("quản lí")) {
+			manv = "QL";
+		}else {
+			manv = "NV";
+		}
+		if(maso < 1000) {
+			manv+="0";
+			if(maso <100) {
+				manv += "0";
+				if(maso < 10) {
+					manv += "0";
+				}
+			}
+		}
+		manv += maso;
+		matk+=maso;
+		
+		return manv;
+		
 	}
 }
