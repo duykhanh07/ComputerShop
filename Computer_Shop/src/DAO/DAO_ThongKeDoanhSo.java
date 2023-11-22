@@ -7,6 +7,7 @@ import DTO.DTO_CTHoaDon;
 import DTO.DTO_NhanVien;
 import DTO.DTO_SanPham;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -206,6 +207,8 @@ public class DAO_ThongKeDoanhSo {
 
     public static List<Object[]> getSalesData() {
         List<Object[]> salesData = new ArrayList<>();
+        DecimalFormat decimalFormat = new DecimalFormat("#,###.00");
+
         try (Connection conn = DAO_ThongKeDoanhSo.getConnection();
                 PreparedStatement ps = conn.prepareStatement(
                         "SELECT nv.manv, nv.tennv, COUNT(hd.mahd) AS soDonBanDuoc, SUM(cthd.dongia * cthd.solg) AS doanhThu "
@@ -221,7 +224,8 @@ public class DAO_ThongKeDoanhSo {
                 row[0] = rs.getString("manv");
                 row[1] = rs.getString("tennv");
                 row[2] = rs.getLong("soDonBanDuoc"); // Sử dụng getLong() cho COUNT
-                row[3] = rs.getDouble("doanhThu");
+                double doanhThu = rs.getDouble("doanhThu");
+                row[3] = decimalFormat.format(doanhThu);
                 salesData.add(row);
             }
         } catch (SQLException e) {
