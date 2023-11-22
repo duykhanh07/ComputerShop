@@ -53,6 +53,7 @@ public class ThemNhanVienFrm extends JFrame {
 	private ArrayList<DTO_NhanVien> listNV;
 	private ArrayList<DTO_NhanVien> listHT = new ArrayList<DTO_NhanVien>();
 	DefaultTableModel model;
+	int luaChonDong;
 	/**
 	 * Launch the application.
 	 */
@@ -115,6 +116,8 @@ public class ThemNhanVienFrm extends JFrame {
 				"t\u00EAn nh\u00E2n vi\u00EAn", "s\u1ED1 \u0111i\u1EC7n tho\u1EA1i", "email", "\u0111\u1ECBa ch\u1EC9", "ch\u1EE9c v\u1EE5"
 			}
 		));
+		model = (DefaultTableModel) table.getModel();
+		model.setRowCount(0);
 		scrollPane.setViewportView(table);
 		
 		JLabel lblTnSnPhm_1_1 = new JLabel("tên nhân viên :");
@@ -164,6 +167,15 @@ public class ThemNhanVienFrm extends JFrame {
 		chucVuCmbx.setBackground(new Color(102, 102, 102));
 		
 		MyButton xoaBtn = new MyButton();
+		xoaBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				luaChonDong = table.getSelectedRow();
+				int reply = JOptionPane.showConfirmDialog(null, "Bạn có muốn xóa không?", "Xóa", JOptionPane.YES_NO_OPTION);
+				if(reply == JOptionPane.YES_OPTION) {
+					model.removeRow(luaChonDong);
+				}
+			}
+		});
 		xoaBtn.setText("xóa");
 		xoaBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
@@ -209,7 +221,7 @@ public class ThemNhanVienFrm extends JFrame {
 					}
 					DTO_NhanVien nv = new DTO_NhanVien(manv, tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu);
 					listNV = ds_nv.importToTable(listNV);
-					Object[] newRow = {manv, tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu};
+					Object[] newRow = {tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu};
 					tenTaiKhoanTxt.setText("");
 					soDienThoaiTxt.setText("");
 					emailTxt.setText("");
@@ -227,6 +239,10 @@ public class ThemNhanVienFrm extends JFrame {
 		themNhanVienBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
 		MyButton xacNhanBtn = new MyButton();
+		xacNhanBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		xacNhanBtn.setText("xác nhận");
 		xacNhanBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
