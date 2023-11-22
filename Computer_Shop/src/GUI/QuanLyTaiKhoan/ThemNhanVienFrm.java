@@ -49,9 +49,10 @@ public class ThemNhanVienFrm extends JFrame {
 	private MyTextfield soDienThoaiTxt;
 	private MyTextfield emailTxt;
 	private MyTextfield diaChiTxt;
-	private NhanVienBUS ds_nv;
+	private NhanVienBUS ds_nv = new NhanVienBUS();
 	private ArrayList<DTO_NhanVien> listNV;
 	private ArrayList<DTO_NhanVien> listHT = new ArrayList<DTO_NhanVien>();
+	DefaultTableModel model;
 	/**
 	 * Launch the application.
 	 */
@@ -208,14 +209,16 @@ public class ThemNhanVienFrm extends JFrame {
 					}
 					DTO_NhanVien nv = new DTO_NhanVien(manv, tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu);
 					listNV = ds_nv.importToTable(listNV);
-					Object[] newRow = {tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu};
+					Object[] newRow = {manv, tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu};
 					tenTaiKhoanTxt.setText("");
 					soDienThoaiTxt.setText("");
 					emailTxt.setText("");
 					diaChiTxt.setText("");
 					chucVuCmbx.setSelectedIndex(-1);
-					model.addRow = new Row();
+					model.addRow(newRow);
 					listHT.add(nv);
+				}else {
+					System.out.println("Failure");
 				}
 				
 			}
