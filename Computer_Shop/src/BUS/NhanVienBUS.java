@@ -12,17 +12,15 @@ public class NhanVienBUS {
 	public ArrayList<DTO_NhanVien> ds_hienThi;
 	public ArrayList<DTO_NhanVien> ds_nhanVien;
 	private ArrayList <DTO_NhanVien> NhanVien_mainList = DAO_NhanVien.selectAllNhanVien();
+	
+	public ArrayList<DTO_NhanVien> ds_nhanVien_temp;
 
 	public NhanVienBUS() {
 		ds_nhanVien = new DAO_NhanVien().selectAllNhanVien();
 		if (ds_nhanVien.size() > 0) {
 			ds_hienThi = (ArrayList<DTO_NhanVien>) ds_nhanVien.clone();
 		}
-	}
-	
-	public ArrayList<DTO_NhanVien> importToTable(ArrayList<DTO_NhanVien> splist) {
-		splist = DAO_NhanVien.getInstance().selectAllNhanVien();
-		return splist;
+		ds_nhanVien_temp = new ArrayList<DTO_NhanVien>();
 	}
 	
 	public ArrayList<DTO_NhanVien> getNhanVien_mainList() {
@@ -33,12 +31,15 @@ public class NhanVienBUS {
         this.NhanVien_mainList = DAO_NhanVien.selectAllNhanVien();
     }
 
-	public int themNV(DTO_NhanVien nv) {
-		return DAO_NhanVien.themNV(nv);
+	public void themNV() {
+		for(int i =0; i< ds_nhanVien_temp.size(); i++) {
+			ds_nhanVien_temp.get(i).setManv(taoMa(ds_nhanVien_temp.get(i), i));
+			new DAO_NhanVien().themNV(ds_nhanVien_temp.get(i));
+		}
 	}
 
-	public int suaNV(String manv, String tennv) {
-		return DAO_NhanVien.suaNV(manv, tennv);
+	public int suaNV(DTO_NhanVien nv) {
+		return DAO_NhanVien.suaNV(nv);
 	}
 
 	public void sapXepNhanVien(int selectedIndex) {
@@ -81,5 +82,29 @@ public class NhanVienBUS {
 				break;
 			}
 		}
+	}
+	public String taoMa(DTO_NhanVien nhanVien, int i) {
+		int maso = ds_nhanVien.size() + i + 1;
+		String manv = "";
+		if(nhanVien.getChucvu().equalsIgnoreCase("admin")) {
+			manv = "AD";
+		}else if(nhanVien.getChucvu().equalsIgnoreCase("quản lí")) {
+			manv = "QL";
+		}else {
+			manv = "NV";
+		}
+		if(maso < 1000) {
+			manv+="0";
+			if(maso <100) {
+				manv += "0";
+				if(maso < 10) {
+					manv += "0";
+				}
+			}
+		}
+		manv += maso;
+		
+		return manv;
+		
 	}
 }

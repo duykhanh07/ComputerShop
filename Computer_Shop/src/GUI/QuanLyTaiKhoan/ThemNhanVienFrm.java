@@ -45,7 +45,6 @@ public class ThemNhanVienFrm extends JFrame {
 	private JTable table;
 	private static NhanVienBUS nv_bus;
 	private JComboBox chucVuCmbx;
-	private NhanVienBUS nv_bus1;
 	private MyTextfield tenTaiKhoanTxt;
 	private MyTextfield soDienThoaiTxt;
 	private MyTextfield emailTxt;
@@ -55,6 +54,7 @@ public class ThemNhanVienFrm extends JFrame {
 	private ArrayList<DTO_NhanVien> listHT = new ArrayList<DTO_NhanVien>();
 	DefaultTableModel model;
 	int luaChonDong;
+	private QuanLyNhanVienFrm qlnv;
 	/**
 	 * Launch the application.
 	 */
@@ -62,7 +62,7 @@ public class ThemNhanVienFrm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ThemNhanVienFrm frame = new ThemNhanVienFrm();
+					ThemNhanVienFrm frame = new ThemNhanVienFrm(null, null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -74,8 +74,9 @@ public class ThemNhanVienFrm extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ThemNhanVienFrm() {
-		nv_bus = nv_bus1;
+	public ThemNhanVienFrm(QuanLyNhanVienFrm qlnv_form,NhanVienBUS nvbus) {
+		this.nv_bus = nvbus;
+		this.qlnv = qlnv_form;
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
@@ -185,7 +186,7 @@ public class ThemNhanVienFrm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String manv = "";
-				int maso = 1;
+				int maso = nv_bus.ds_nhanVien.size() + nv_bus.ds_nhanVien_temp.size();
 				String chucVu = "";
 				if(checkField()==1 && checkDupAdd()==1) {
 					if(chucVuCmbx.getSelectedItem()=="admin") {
@@ -221,7 +222,9 @@ public class ThemNhanVienFrm extends JFrame {
 						}
 					}
 					DTO_NhanVien nv = new DTO_NhanVien(manv, tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu);
-					listNV = ds_nv.importToTable(listNV);
+					
+					nv_bus.ds_nhanVien_temp.add(nv);
+					
 					Object[] newRow = {tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu};
 					tenTaiKhoanTxt.setText("");
 					soDienThoaiTxt.setText("");
@@ -229,7 +232,7 @@ public class ThemNhanVienFrm extends JFrame {
 					diaChiTxt.setText("");
 					chucVuCmbx.setSelectedIndex(-1);
 					model.addRow(newRow);
-					listHT.add(nv);
+//					listHT.add(nv);
 				}else {
 					System.out.println("Failure");
 				}
@@ -242,7 +245,15 @@ public class ThemNhanVienFrm extends JFrame {
 		MyButton xacNhanBtn = new MyButton();
 		xacNhanBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				DecimalFormat df = new DecimalFormat();
+				if(nv_bus.ds_nhanVien_temp.size()>0) {
+					nv_bus.themNV();
+					nv_bus.ds_nhanVien_temp.clear();
+					qlnv.Refresh();
+					dispose();
+				}else {
+					JOptionPane.showMessageDialog(null, "Ít nhất phải có 1 nhân viên trong bảng");
+				}
+				
 			}
 		});
 		xacNhanBtn.setText("xác nhận");
