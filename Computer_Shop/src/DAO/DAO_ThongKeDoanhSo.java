@@ -36,7 +36,7 @@ public class DAO_ThongKeDoanhSo {
         List<String> yearsList = new ArrayList<>();
 
         try {
-            String query = "SELECT DISTINCT YEAR(ngaylaphd) AS year FROM sanpham";
+            String query = "SELECT DISTINCT YEAR(ngaylaphd) AS year FROM hoadon";
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
 

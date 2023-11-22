@@ -345,6 +345,9 @@ public class ThongKeDoanhSo extends JPanel {
 			}
 		});
 
+		
+		
+		
 		List<Object[]> salesData = BUS_ThongKeDoanhSo.getSalesData();
 		updateTableFromSalesData(salesData);
 
