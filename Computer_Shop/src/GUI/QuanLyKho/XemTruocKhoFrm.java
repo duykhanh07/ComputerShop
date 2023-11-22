@@ -64,7 +64,6 @@ public class XemTruocKhoFrm extends JFrame {
 			public void run() {
 				try {
 					XemTruocKhoFrm frame = new XemTruocKhoFrm();
-					frame = new XemTruocKhoFrm();
 					frame.setVisible(true);
 					frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 					
