@@ -39,9 +39,6 @@ public class CapNhapNhanVienFrm extends JFrame {
 	private ArrayList <DTO_NhanVien> NhanVien_tempList = new ArrayList <DTO_NhanVien> ();
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private NhanVienBUS bus_nhanvien = new NhanVienBUS();
-	private DefaultTableModel tblm;
-	private JTable table;
 	/**
 	 * Launch the application.
 	 */
@@ -81,7 +78,6 @@ public class CapNhapNhanVienFrm extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-		tblm = (DefaultTableModel) table.getModel();
 		JLabel lblNewLabel_1 = new JLabel("----------Thông tin tài khoản----------");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setForeground(Color.CYAN);
@@ -137,16 +133,6 @@ public class CapNhapNhanVienFrm extends JFrame {
 		capNhatBtn.addActionListener(new ActionListener() {
 		
 			public void actionPerformed(ActionEvent e) {
-				DTO_NhanVien nv = bus_nhanvien.getNhanVien_mainList().get(getSelectedNhanVien());
-				nv.setManv(getName());
-				nv.setTennv(tenNhanVienTxt.getText().toString());
-				nv.setSdt(soDienThoaiTxt.getText().toString());
-				nv.setEmail(emailTxt.getText().toString());
-				nv.setDiachi(diaChiTxt.getText().toString());
-				nv.setChucvu(chucVuCmbx.getName());
-				bus_nhanvien.suaNV(nv.getManv(), nv.getTennv());
-				renderMainTable(NhanVien_tempList);
-//				nv.getMaNV(tenNhanVienTxt.getText().toString());
 				
 			}
 		});
@@ -250,30 +236,4 @@ public class CapNhapNhanVienFrm extends JFrame {
 		);
 		contentPane.setLayout(gl_contentPane);
 	}
-	
-	 private void renderMainTable(ArrayList <DTO_NhanVien> lst) {
-	        tblm.setRowCount(0);
-	        for(DTO_NhanVien nv : lst) {
-	            String data [] = new String[5];
-	            data[0] = nv.getManv();
-	            data[1] = nv.getTennv();
-	            data[2] = nv.getSdt();
-	            data[3] = nv.getEmail();
-	            data[4] = nv.getDiachi();
-	            data[5] = nv.getChucvu();
-	            tblm.addRow(data);
-	        }
-	    }
-	
-	 private int getSelectedNhanVien() {
-	        int Rowindex = table.getSelectedRow();
-	        int index = -1;
-	        for(int i = 0; i < bus_nhanvien.getNhanVien_mainList().size(); i++) {
-	            if(table.getValueAt(Rowindex, 0).equals(bus_nhanvien.getNhanVien_mainList().get(i).getManv())) {
-	                index = i;
-	                break;
-	            }
-	        }
-	        return index;
-	    }
 }

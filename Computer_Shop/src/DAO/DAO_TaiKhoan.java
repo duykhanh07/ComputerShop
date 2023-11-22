@@ -28,6 +28,10 @@ public class DAO_TaiKhoan {
 		}
 	}
 	
+	public static DAO_TaiKhoan getInstance() { 
+		return new DAO_TaiKhoan();
+	}
+	
 	public static ArrayList<DTO_TaiKhoan> selectAllTaiKhoan() {
 		ArrayList<DTO_TaiKhoan> ds_taikhoan = new ArrayList<DTO_TaiKhoan>();
 		openData();

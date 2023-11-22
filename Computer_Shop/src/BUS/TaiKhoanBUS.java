@@ -22,6 +22,11 @@ public class TaiKhoanBUS {
 		}
 	}
 	
+	public ArrayList<DTO_TaiKhoan> importToTable(ArrayList<DTO_TaiKhoan> splist) {
+		splist = DAO_TaiKhoan.getInstance().selectAllTaiKhoan();
+		return splist;
+	}
+	
 	public ArrayList<DTO_TaiKhoan> getTaiKhoan_mainList() {
         return TaiKhoan__mainList;
     }
