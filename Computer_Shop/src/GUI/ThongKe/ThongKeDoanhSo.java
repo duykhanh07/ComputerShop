@@ -24,6 +24,8 @@ import DTO.DTO_CTHoaDon;
 
 import javax.swing.JCheckBox;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -38,10 +40,6 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.ScrollPaneConstants;
 
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
 import javax.swing.JFrame;
 
 public class ThongKeDoanhSo extends JPanel {
@@ -52,6 +50,7 @@ public class ThongKeDoanhSo extends JPanel {
 	JComboBox yearCmbx = new JComboBox();
 	JComboBox yearCmbx_1 = new JComboBox();
 	JComboBox yearCmbx_1_1 = new JComboBox();
+	JPanel bieuDoLoiNhuan = new JPanel();
 	private BUS_ThongKeDoanhSo busThongKe = new BUS_ThongKeDoanhSo();
 
 	/**
@@ -185,10 +184,11 @@ public class ThongKeDoanhSo extends JPanel {
 								.addGap(11)));
 		bangDoanhSoPanel.setLayout(gl_bangDoanhSoPanel);
 
-		JPanel bieuDoLoiNhuan = new JPanel();
 		bieuDoLoiNhuan.setBackground(new Color(102, 102, 102));
 		tabbedPane.addTab("Biểu đồ lợi nhuận", null, bieuDoLoiNhuan, null);
 		bieuDoLoiNhuan.setLayout(new BorderLayout());
+
+		drawProfitChart(bieuDoLoiNhuan);
 
 		JPanel DoanhSoNhanVien = new JPanel();
 		DoanhSoNhanVien.setBackground(new Color(102, 102, 102));
@@ -345,20 +345,6 @@ public class ThongKeDoanhSo extends JPanel {
 			}
 		});
 
-		List<DTO_CTHoaDon> cthdData = BUS_ThongKeDoanhSo.getCTHDData();
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		for (DTO_CTHoaDon cthd : cthdData) {
-			dataset.addValue(cthd.getDongia() * cthd.getSolg(), "Lợi nhuận", cthd.getMasp());
-		}
-		JFreeChart chart = ChartFactory.createBarChart(
-				"Biểu đồ lợi nhuận sản phẩm",
-				"Mã sản phẩm",
-				"Lợi nhuận",
-				dataset);
-		ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setPreferredSize(new Dimension(500, 300));
-		bieuDoLoiNhuan.add(chartPanel, BorderLayout.CENTER);
-
 		List<Object[]> salesData = BUS_ThongKeDoanhSo.getSalesData();
 		updateTableFromSalesData(salesData);
 
@@ -387,6 +373,35 @@ public class ThongKeDoanhSo extends JPanel {
 		for (Object[] sanPham : danhSachSanPham) {
 			model.addRow(sanPham);
 		}
+	}
+
+	private void drawProfitChart(JPanel panel) {
+		List<DTO_CTHoaDon> cthdData = BUS_ThongKeDoanhSo.getCTHDData();
+		JPanel chartPanel = new JPanel() {
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				Graphics2D g2d = (Graphics2D) g.create();
+
+				int barWidth = 30;
+				int padding = 10;
+				int startX = 50;
+				int startY = getHeight() - 50;
+
+				g2d.setColor(Color.BLUE);
+				int x = startX;
+				for (DTO_CTHoaDon cthd : cthdData) {
+					int height = (int) (cthd.getDongia() * cthd.getSolg());
+					g2d.fillRect(x, startY - height, barWidth, height);
+					x += barWidth + padding;
+				}
+				g2d.dispose();
+			}
+		};
+		chartPanel.setPreferredSize(new Dimension(500, 300)); // Kích thước của biểu đồ, điều chỉnh theo ý muốn
+
+		panel.add(chartPanel, BorderLayout.CENTER);
+
 	}
 
 	private void updateTableFromSalesData(List<Object[]> data) {
