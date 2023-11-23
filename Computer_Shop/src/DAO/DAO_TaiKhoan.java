@@ -28,9 +28,6 @@ public class DAO_TaiKhoan {
 		}
 	}
 	
-	public static DAO_TaiKhoan getInstance() { 
-		return new DAO_TaiKhoan();
-	}
 	
 	public static ArrayList<DTO_TaiKhoan> selectAllTaiKhoan() {
 		ArrayList<DTO_TaiKhoan> ds_taikhoan = new ArrayList<DTO_TaiKhoan>();
@@ -70,7 +67,7 @@ public class DAO_TaiKhoan {
 		openData();
 		try {
 			Statement stmt = (Statement) conn.createStatement();
-			String sql = String.format("Update TaiKhoan set manv =N'%s', username=N'%s', password=N'%s', tinhtrang=N'%d' where matk = '%s' ", tk.getManv(), tk.getUsername(),tk.getPassword(), tk.getTinhtrang(), tk.getMatk());
+			String sql = String.format("Update TaiKhoan set manv =N'%s', username=N'%s', password=N'%s', tinhtrang='%d' where matk = '%s' ", tk.getManv(), tk.getUsername(),tk.getPassword(), tk.getTinhtrang(), tk.getMatk());
 			int ketqua = stmt.executeUpdate(sql);
 			conn.close();
 			return ketqua;

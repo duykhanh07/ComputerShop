@@ -53,7 +53,6 @@ public class ThemTaiKhoanFrm extends JFrame {
 	private JComboBox tinhTrangCmbx;
 	private TaiKhoanBUS ds_tk = new TaiKhoanBUS();
 	private ArrayList<DTO_TaiKhoan> listTK;
-	private ArrayList<DTO_TaiKhoan> listHT = new ArrayList<DTO_TaiKhoan>();
 	DefaultTableModel model;
 	int luaChonDong;
 	private QuanLyTaiKhoanFrm qltk;
@@ -81,6 +80,8 @@ public class ThemTaiKhoanFrm extends JFrame {
 	 */
 
 	public ThemTaiKhoanFrm(QuanLyTaiKhoanFrm qltk_form,TaiKhoanBUS tkbus) {
+		this.tk_bus = tkbus;
+		this.qltk = qltk_form;
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -141,7 +142,7 @@ public class ThemTaiKhoanFrm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String manv = "";
-				int maso = tk_bus.ds_taiKhoan.size() + tk_bus.ds_taiKhoan_temp.size();
+				int maso = tk_bus.ds_taiKhoan.size() + tk_bus.ds_taiKhoan_temp.size()+1;
 				int tinhtrang = 1;
 				String password = "88888";
 				String matk = "TK";
@@ -212,7 +213,6 @@ public class ThemTaiKhoanFrm extends JFrame {
 					tenTaiKhoanTxt.setText("");
 					tinhTrangCmbx.setSelectedIndex(-1);
 					model.addRow(newRow);
-//					listHT.add(nv);
 				} else {
 					System.out.println("Failure");
 				}

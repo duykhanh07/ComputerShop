@@ -27,9 +27,6 @@ public class DAO_NhanVien {
 		}
 	}
 
-	public static DAO_NhanVien getInstance() { 
-		return new DAO_NhanVien();
-	}
 	
 	public static ArrayList<DTO_NhanVien> selectAllNhanVien() {
 		ArrayList<DTO_NhanVien> ds_nhanvien = new ArrayList<DTO_NhanVien>();

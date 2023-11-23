@@ -11,10 +11,11 @@ import DTO.DTO_TaiKhoan;
 import GUI.MainForm;
 
 public class TaiKhoanBUS {
-	public ArrayList<DTO_TaiKhoan> ds_taiKhoan;
 	public ArrayList<DTO_TaiKhoan> ds_hienThi;
+	public ArrayList<DTO_TaiKhoan> ds_taiKhoan;
 	private ArrayList <DTO_TaiKhoan> TaiKhoan__mainList = DAO_TaiKhoan.selectAllTaiKhoan();
 	public ArrayList<DTO_TaiKhoan> ds_taiKhoan_temp;
+	
 	public TaiKhoanBUS() {
 		ds_taiKhoan = new DAO_TaiKhoan().selectAllTaiKhoan();
 		if(ds_taiKhoan.size() >0 ) {
@@ -34,7 +35,7 @@ public class TaiKhoanBUS {
     
     public void themTK() {
 		for(int i =0; i< ds_taiKhoan_temp.size(); i++) {
-			ds_taiKhoan_temp.get(i).setMatk(taoMa(ds_taiKhoan.get(i), i));
+			ds_taiKhoan_temp.get(i).setManv(taoMa(ds_taiKhoan.get(i), i));
 			new DAO_TaiKhoan().themTK(ds_taiKhoan_temp.get(i));
 		}
 	}
@@ -103,7 +104,7 @@ public class TaiKhoanBUS {
 		manv += maso;
 		matk+=maso;
 		
-		return matk;
+		return manv;
 		
 	}
 }

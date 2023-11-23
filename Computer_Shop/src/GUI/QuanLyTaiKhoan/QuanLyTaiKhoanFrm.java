@@ -121,7 +121,9 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 		MyButton timKiemBtn_1_1_1 = new MyButton();
 		timKiemBtn_1_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new CapNhatTaiKhoanFrm().setVisible(true);
+				if(table.getSelectedRow() >= 0) {
+					new CapNhatTaiKhoanFrm(tk_bus.ds_hienThi.get(table.getSelectedRow()), tk_bus).setVisible(true);
+				}
 			}
 		});
 		timKiemBtn_1_1_1.setText("Sửa");
@@ -247,7 +249,7 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 		model.setRowCount(0);
 		for(int i = 0; i<tk_bus.ds_hienThi.size(); i++) {
 			model.addRow(new Object[]{tk_bus.ds_hienThi.get(i).getMatk(), tk_bus.ds_hienThi.get(i).getManv(), 
-					tk_bus.ds_hienThi.get(i).getUsername(), tk_bus.ds_hienThi.get(i).getPassword(),  tk_bus.ds_hienThi.get(i).getTinhtrang()});
+					tk_bus.ds_hienThi.get(i).getUsername(),  tk_bus.ds_hienThi.get(i).getTinhtrang()});
 		}
 	}
 	

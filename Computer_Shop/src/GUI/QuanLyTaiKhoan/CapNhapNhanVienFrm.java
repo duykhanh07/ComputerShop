@@ -44,25 +44,13 @@ public class CapNhapNhanVienFrm extends JFrame {
 	private JPanel contentPane;
 	private DTO_NhanVien nv;
 	private NhanVienBUS nv_bus;
-
-
 	private JComboBox chucVuCmbx;
-
-
 	private MyTextfield diaChiTxt;
-
-
 	private MyTextfield emailTxt;
-
-
 	private MyTextfield tenNhanVienTxt;
-
-
 	private JLabel maNhanVienLbl;
-
-
 	private MyTextfield soDienThoaiTxt;
-	
+
 	public CapNhapNhanVienFrm(DTO_NhanVien nv, NhanVienBUS nvbus) {
 		this.nv = nv;
 		this.nv_bus = nvbus;

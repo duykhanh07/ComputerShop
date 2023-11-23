@@ -51,7 +51,6 @@ public class ThemNhanVienFrm extends JFrame {
 	private MyTextfield diaChiTxt;
 	private NhanVienBUS ds_nv = new NhanVienBUS();
 	private ArrayList<DTO_NhanVien> listNV;
-	private ArrayList<DTO_NhanVien> listHT = new ArrayList<DTO_NhanVien>();
 	DefaultTableModel model;
 	int luaChonDong;
 	private QuanLyNhanVienFrm qlnv;
@@ -244,7 +243,6 @@ public class ThemNhanVienFrm extends JFrame {
 					diaChiTxt.setText("");
 					chucVuCmbx.setSelectedIndex(-1);
 					model.addRow(newRow);
-//					listHT.add(nv);
 				}else {
 					System.out.println("Failure");
 				}
