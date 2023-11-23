@@ -26,6 +26,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import BUS.NhanVienBUS;
 import BUS.TaiKhoanBUS;
 
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -37,7 +38,7 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
-	private TaiKhoanBUS qltk = new TaiKhoanBUS();
+	private TaiKhoanBUS tk_bus = new TaiKhoanBUS();
 
 	/**
 	 * Create the panel.
@@ -135,7 +136,7 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				qltk = new TaiKhoanBUS();
+				tk_bus = new TaiKhoanBUS();
 				loadTaiKhoanTable();
 				
 			}
@@ -242,22 +243,27 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 	public void loadTaiKhoanTable() {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setRowCount(0);
-		for(int i = 0; i<qltk.ds_hienThi.size(); i++) {
-			model.addRow(new Object[]{qltk.ds_hienThi.get(i).getMatk(), qltk.ds_hienThi.get(i).getManv(), 
-					qltk.ds_hienThi.get(i).getUsername(), qltk.ds_hienThi.get(i).getPassword(),  qltk.ds_hienThi.get(i).getTinhtrang()});
+		for(int i = 0; i<tk_bus.ds_hienThi.size(); i++) {
+			model.addRow(new Object[]{tk_bus.ds_hienThi.get(i).getMatk(), tk_bus.ds_hienThi.get(i).getManv(), 
+					tk_bus.ds_hienThi.get(i).getUsername(), tk_bus.ds_hienThi.get(i).getPassword(),  tk_bus.ds_hienThi.get(i).getTinhtrang()});
 		}
 	}
 	
 	public void sapXepTaiKhoan(int selectedIndex) {
-		qltk.sapXepTaiKhoan(selectedIndex);
+		tk_bus.sapXepTaiKhoan(selectedIndex);
 		loadTaiKhoanTable();
 	}
 	public void timKiemTaiKhoan(String thongtin, int selectedIndex) {
 		if(thongtin.equalsIgnoreCase("")) {
 			JOptionPane.showMessageDialog(null, "Vui lòng nhập thông tin tìm kiếm");
 		}else {
-			qltk.timKiemTaiKhoan(thongtin, selectedIndex);
+			tk_bus.timKiemTaiKhoan(thongtin, selectedIndex);
 			loadTaiKhoanTable();
 		}
+	}
+	
+	public void Refresh() {
+		this.tk_bus = new TaiKhoanBUS();
+		loadTaiKhoanTable();
 	}
 }

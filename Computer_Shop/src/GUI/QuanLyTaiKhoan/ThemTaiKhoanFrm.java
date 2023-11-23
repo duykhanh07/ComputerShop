@@ -46,6 +46,7 @@ public class ThemTaiKhoanFrm extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
+	public static TaiKhoanBUS tk_bus;
 	private JLabel lblTnSnPhm_1;
 	private DefaultTableModel tbl;
 	private JComboBox maNhanVienCmbx;
@@ -56,6 +57,7 @@ public class ThemTaiKhoanFrm extends JFrame {
 	private ArrayList<DTO_TaiKhoan> listHT = new ArrayList<DTO_TaiKhoan>();
 	DefaultTableModel model;
 	int luaChonDong;
+	private QuanLyTaiKhoanFrm qltk;
 
 	/**
 	 * Launch the application.
@@ -229,6 +231,14 @@ public class ThemTaiKhoanFrm extends JFrame {
 		MyButton xacNhanBtn = new MyButton();
 		xacNhanBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(tk_bus.ds_taiKhoan_temp.size()>0) {
+					tk_bus.themTK();
+					tk_bus.ds_taiKhoan_temp.clear();
+					qltk.Refresh();
+					dispose();
+				}else {
+					JOptionPane.showMessageDialog(null, "Ít nhất phải có 1 nhân viên trong bảng");
+				}
 			}
 		});
 		xacNhanBtn.setText("xác nhận");
