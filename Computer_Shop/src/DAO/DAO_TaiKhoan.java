@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 
@@ -53,12 +54,13 @@ public class DAO_TaiKhoan {
 		openData();
 		try {
 			Statement stmt = (Statement) conn.createStatement();
-			String sql = "insert into TaiKhoan Values" + tk.insertString();
+			String sql = "insert into TaiKhoan Values " + tk.insertString();
 			int ketqua = stmt.executeUpdate(sql);
 			conn.close();
 			return ketqua;
 		} catch (Exception e) {
 			System.out.println(e);
+			
 		}
 		return 0;
 	}
@@ -75,5 +77,25 @@ public class DAO_TaiKhoan {
 			System.out.println(e);
 		}
 		return 0;
+	}
+	public static String[] layMaNhanVienKoTK() {
+		String[] ds_ma = {};
+		
+		try {
+			openData();
+			Statement stmt = conn.createStatement();
+			String sql = "Select distinct nv.manv from NhanVien as nv left join TaiKhoan as tk on nv.manv = tk.manv where tk.matk is null";
+			ResultSet rss = stmt.executeQuery(sql);
+			
+			while(rss.next()) {
+				String manv = rss.getString("manv");
+				ds_ma = Arrays.copyOf(ds_ma, ds_ma.length + 1);
+				ds_ma[ds_ma.length - 1] = manv;
+			}
+			return ds_ma;
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return null;
 	}
 }

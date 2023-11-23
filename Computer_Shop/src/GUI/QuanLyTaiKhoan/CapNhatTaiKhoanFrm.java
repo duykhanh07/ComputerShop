@@ -113,7 +113,7 @@ public class CapNhatTaiKhoanFrm extends JFrame {
 						tk.setTinhtrang(0);
 						tk_bus.suaTK(tk);
 					}
-					
+					JOptionPane.showMessageDialog(null, "Cập nhật thành công");
 				}
 			}
 		});
@@ -199,6 +199,7 @@ public class CapNhatTaiKhoanFrm extends JFrame {
 						.addComponent(autoIncreaseSize, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)))
 		);
 		contentPane.setLayout(gl_contentPane);
+		layDsNhanVienKoTK();
 		hienThongTin();
 	}
 	
@@ -207,6 +208,11 @@ public class CapNhatTaiKhoanFrm extends JFrame {
 		maNhanVienCmbx.setSelectedItem(tk.getManv());
 		lblTnSnPhm_1_1.setText("tên tài khoản :"+tk.getUsername());
 		passwordLbl.setText("password :" + tk.getPassword());
-		tinhTrangCmbx.setSelectedItem(tk.getTinhtrang());
+		tinhTrangCmbx.setSelectedItem(tk_bus.taikhoan_status_map.get(tk.getTinhtrang()));
+	}
+	
+	public void layDsNhanVienKoTK() {
+		maNhanVienCmbx.setModel(new DefaultComboBoxModel(this.tk_bus.layDanhSachMaNhanVienChuaCoTaiKhoan()));
+		maNhanVienCmbx.addItem(tk.getManv());
 	}
 }

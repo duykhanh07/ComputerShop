@@ -53,7 +53,7 @@ public class DTO_TaiKhoan {
 	}
 	
 	public String insertString() {
-		String insertString = String.format("('%s','%s','%s','%s','%s','%d')", matk, manv, username, password, tinhtrang);
+		String insertString = String.format("('%s','%s','%s','%s','%d')", matk, manv, username, password, tinhtrang);
 		return insertString;
 	}
 	

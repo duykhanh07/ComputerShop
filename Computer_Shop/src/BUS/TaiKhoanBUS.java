@@ -2,6 +2,9 @@ package BUS;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import DAO.DAO_NhanVien;
 import DAO.DAO_TaiKhoan;
@@ -16,12 +19,18 @@ public class TaiKhoanBUS {
 	private ArrayList <DTO_TaiKhoan> TaiKhoan__mainList = DAO_TaiKhoan.selectAllTaiKhoan();
 	public ArrayList<DTO_TaiKhoan> ds_taiKhoan_temp;
 	
+	public HashMap<Integer, String> taikhoan_status_map = new HashMap<Integer, String>();
+	
+	
 	public TaiKhoanBUS() {
 		ds_taiKhoan = new DAO_TaiKhoan().selectAllTaiKhoan();
 		if(ds_taiKhoan.size() >0 ) {
 			ds_hienThi = (ArrayList<DTO_TaiKhoan>) ds_taiKhoan.clone();
 		}
 		ds_taiKhoan_temp = new ArrayList<DTO_TaiKhoan>();
+		
+		taikhoan_status_map.put(1, "đang hoạt động");
+		taikhoan_status_map.put(0, "đã khóa");
 	}
 	
 	
@@ -35,7 +44,7 @@ public class TaiKhoanBUS {
     
     public void themTK() {
 		for(int i =0; i< ds_taiKhoan_temp.size(); i++) {
-			ds_taiKhoan_temp.get(i).setManv(taoMa(ds_taiKhoan.get(i), i));
+			ds_taiKhoan_temp.get(i).setMatk(taoMa(i));
 			new DAO_TaiKhoan().themTK(ds_taiKhoan_temp.get(i));
 		}
 	}
@@ -81,30 +90,26 @@ public class TaiKhoanBUS {
 		}
 	}
 	
-	public String taoMa(DTO_TaiKhoan taiKhoan, int i) {
+	public String taoMa(int i) {
 		int maso = ds_taiKhoan.size() + i + 1;
-		String manv = "";
 		String matk = "TK";
-		if(taiKhoan.getManv().equalsIgnoreCase("admin")) {
-			manv = "AD";
-		}else if(taiKhoan.getManv().equalsIgnoreCase("quản lí")) {
-			manv = "QL";
-		}else {
-			manv = "NV";
-		}
+		
 		if(maso < 1000) {
-			manv+="0";
+			matk+="0";
 			if(maso <100) {
-				manv += "0";
+				matk += "0";
 				if(maso < 10) {
-					manv += "0";
+					matk += "0";
 				}
 			}
 		}
-		manv += maso;
-		matk+=maso;
-		
-		return manv;
+		matk += maso;		
+		return matk;	
+	}
+	
+	public String[] layDanhSachMaNhanVienChuaCoTaiKhoan() {
+		String[] ds_ma = new DAO_TaiKhoan().layMaNhanVienKoTK();
+		return ds_ma;
 		
 	}
 }

@@ -113,7 +113,6 @@ public class ThemTaiKhoanFrm extends JFrame {
 		lblTnSnPhm_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 
 		maNhanVienCmbx = new JComboBox();
-		maNhanVienCmbx.setModel(new DefaultComboBoxModel(new String[] { "admin", "quản lý", "bán hàng", "thủ kho", "kĩ thuật" }));
 		maNhanVienCmbx.setForeground(new Color(0, 255, 255));
 		maNhanVienCmbx.setBackground(new Color(102, 102, 102));
 		maNhanVienCmbx.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -141,81 +140,7 @@ public class ThemTaiKhoanFrm extends JFrame {
 		themNhanVienBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String manv = "";
-				int maso = tk_bus.ds_taiKhoan.size() + tk_bus.ds_taiKhoan_temp.size()+1;
-				int tinhtrang = 1;
-				String password = "88888";
-				String matk = "TK";
-				if (checkField() == 1 && checkDupAdd() == 1) {
-					if (maNhanVienCmbx.getSelectedItem() == "admin") {
-						manv = "AD";
-						if (maso < 1000) {
-							manv += "0";
-							matk += "0";
-							if (maso < 100) {
-								manv += "0";
-								matk += "0";
-								if (maso < 10) {
-									manv += "0";
-									matk += "0";
-								}
-							}
-						}
-						manv += maso;
-						matk += maso;
-					}
-
-					if (maNhanVienCmbx.getSelectedItem() == "quản lý") {
-						manv = "QL";
-						if (maso < 1000) {
-							manv += "0";
-							matk += "0";
-							if (maso < 100) {
-								manv += "0";
-								matk += "0";
-								if (maso < 10) {
-									manv += "0";
-									matk += "0";
-								}
-							}
-						}
-						manv += maso;
-						matk += maso;
-					}
-
-					if (maNhanVienCmbx.getSelectedItem() == "bán hàng" || maNhanVienCmbx.getSelectedItem() == "thủ kho"
-							|| maNhanVienCmbx.getSelectedItem() == "kĩ thuật") {
-						manv = "NV";
-						if (maso < 1000) {
-							manv += "0";
-							matk += "0";
-							if (maso < 100) {
-								manv += "0";
-								matk += "0";
-								if (maso < 10) {
-									manv += "0";
-									matk += "0";
-								}
-							}
-						}
-						if (tinhTrangCmbx.getSelectedItem() == "đã khóa") {
-							tinhtrang = 0;
-						}
-						manv += maso;
-						matk += maso;
-					}
-					DTO_TaiKhoan tk = new DTO_TaiKhoan(matk, manv, tenTaiKhoanTxt.getText(), password, tinhtrang);
-
-					tk_bus.ds_taiKhoan_temp.add(tk);
-
-					Object[] newRow = {manv, tenTaiKhoanTxt.getText(), tinhtrang};
-					maNhanVienCmbx.setSelectedIndex(-1);
-					tenTaiKhoanTxt.setText("");
-					tinhTrangCmbx.setSelectedIndex(-1);
-					model.addRow(newRow);
-				} else {
-					System.out.println("Failure");
-				}
+				themTaiKhoanVaoBang();
 			}
 
 		});
@@ -229,7 +154,10 @@ public class ThemTaiKhoanFrm extends JFrame {
 				int reply = JOptionPane.showConfirmDialog(null, "Bạn có muốn xóa không?", "Xóa",
 						JOptionPane.YES_NO_OPTION);
 				if (reply == JOptionPane.YES_OPTION) {
+					String manv = (String) model.getValueAt(luaChonDong, 0);
 					model.removeRow(luaChonDong);
+					maNhanVienCmbx.addItem(manv);
+					tk_bus.ds_taiKhoan_temp.remove(luaChonDong);
 				}
 			}
 		});
@@ -312,6 +240,13 @@ public class ThemTaiKhoanFrm extends JFrame {
 				.addGap(11).addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE).addGap(7)
 				.addComponent(xacNhanBtn, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE).addGap(9)));
 		contentPane.setLayout(gl_contentPane);
+		
+		layDsNhanVienKoTK();
+	}
+	
+	public void layDsNhanVienKoTK() {
+		maNhanVienCmbx.setModel(new DefaultComboBoxModel(this.tk_bus.layDanhSachMaNhanVienChuaCoTaiKhoan()));
+		
 	}
 
 	public int checkField() {
@@ -334,5 +269,26 @@ public class ThemTaiKhoanFrm extends JFrame {
 			}
 		}
 		return flag;
+	}
+	
+	public void themTaiKhoanVaoBang() {
+		int tinhtrang = 0;
+		if(tinhTrangCmbx.getSelectedItem().toString().equalsIgnoreCase("đang hoạt động")) {
+			tinhtrang = 1;
+		}
+		
+		// TODO : Thêm vào danh sách tạm
+		DTO_TaiKhoan tk = new DTO_TaiKhoan("", maNhanVienCmbx.getSelectedItem().toString(), tenTaiKhoanTxt.getText(), "888888888", tinhtrang);
+		tk_bus.ds_taiKhoan_temp.add(tk);
+
+		// TODO : Thêm vào bảng
+		Object[] newRow = {maNhanVienCmbx.getSelectedItem().toString(), tenTaiKhoanTxt.getText(), tinhTrangCmbx.getSelectedItem().toString()};
+		model.addRow(newRow);
+		
+		
+		maNhanVienCmbx.removeItem(maNhanVienCmbx.getSelectedItem());
+		tenTaiKhoanTxt.setText("");
+		tinhTrangCmbx.setSelectedIndex(0);
+		
 	}
 }

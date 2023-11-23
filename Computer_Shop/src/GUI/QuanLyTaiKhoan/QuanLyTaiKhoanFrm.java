@@ -123,6 +123,8 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if(table.getSelectedRow() >= 0) {
 					new CapNhatTaiKhoanFrm(tk_bus.ds_hienThi.get(table.getSelectedRow()), tk_bus).setVisible(true);
+				}else {
+					JOptionPane.showMessageDialog(null, "Bạn phải chọn 1 tài khoản trong bảng");
 				}
 			}
 		});
@@ -249,7 +251,7 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 		model.setRowCount(0);
 		for(int i = 0; i<tk_bus.ds_hienThi.size(); i++) {
 			model.addRow(new Object[]{tk_bus.ds_hienThi.get(i).getMatk(), tk_bus.ds_hienThi.get(i).getManv(), 
-					tk_bus.ds_hienThi.get(i).getUsername(),  tk_bus.ds_hienThi.get(i).getTinhtrang()});
+					tk_bus.ds_hienThi.get(i).getUsername(),  tk_bus.taikhoan_status_map.get(tk_bus.ds_hienThi.get(i).getTinhtrang())});
 		}
 	}
 	
