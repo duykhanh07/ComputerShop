@@ -145,54 +145,44 @@ public class ThemTaiKhoanFrm extends JFrame {
 				String manv = "";
 				int maso= 1, tinhtrang = 1;
 				String password = "88888";
-				String matk = "";
-				if (checkField() == 1 && checkDupAdd() == 1) {
-					if (maNhanVienCmbx.getSelectedItem() == "admin") {
-						manv = "AD";
-					}else if (maNhanVienCmbx.getSelectedItem() == "quản lý") {
-						if(maso>100) {
-							matk = "TK0"+maso;
-							manv = "QL0" +maso;
-							maso++;
-						} else if(maso>10) {
-							matk = "TK00"+maso;
-							manv = "QL00" +maso;
-							maso++;
-						} else {
-							matk = "TK000"+maso;
-							manv = "QL000" +maso;
-							maso++;
-						}
-					}else {
-						if(maso>100) {
-							matk = "TK0"+maso;
-							manv = "NV0" +maso;
-							maso++;
-						} else if(maso>10) {
-							matk = "TK00"+maso;
-							manv = "NV00" +maso;
-							maso++;
-						} else {
-							matk = "TK000"+maso;
-							manv = "NV000" +maso;
-							maso++;
-						}
-					}
-					
-					if (tinhTrangCmbx.getSelectedItem() == "đã khóa") {
-						tinhtrang = 0;
-					}
-					DTO_TaiKhoan tk = new DTO_TaiKhoan(matk, manv, tenTaiKhoanTxt.getText(), password, tinhtrang);
-					listTK = ds_tk.importToTable(listTK);
-					Object[] newRow = { manv, tenTaiKhoanTxt.getText(), tinhtrang };
-					maNhanVienCmbx.setSelectedIndex(-1);
-					tenTaiKhoanTxt.setText("");
-					tinhTrangCmbx.setSelectedIndex(-1);
-					model.addRow(newRow);
-					listHT.add(tk);
-				} else {
-					System.out.println("Failure");
-				}
+				String matk = "TK";
+//				if(checkField()==1 && checkDupAdd()==1) {
+//					if(maNhanVienCmbx.getSelectedItem()=="admin") {
+//						manv = "AD";
+//					}
+//					
+//					if(maNhanVienCmbx.getSelectedItem()=="quản lý") {
+//						manv = "QL";
+//					}
+//					
+//					if(chucVuCmbx.getSelectedItem()=="bán hàng" || chucVuCmbx.getSelectedItem()=="thủ kho" || chucVuCmbx.getSelectedItem()=="kĩ thuật") {
+//						manv = "NV";
+//					}
+//					if(maso < 1000) {
+//						manv+="0";
+//						if(maso <100) {
+//							manv += "0";
+//							if(maso < 10) {
+//								manv += "0";
+//							}
+//						}
+//					}
+//					manv += maso;
+//					DTO_NhanVien nv = new DTO_NhanVien(manv, tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu);
+//					
+//					nv_bus.ds_nhanVien_temp.add(nv);
+//					
+//					Object[] newRow = {tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu};
+//					tenTaiKhoanTxt.setText("");
+//					soDienThoaiTxt.setText("");
+//					emailTxt.setText("");
+//					diaChiTxt.setText("");
+//					chucVuCmbx.setSelectedIndex(-1);
+//					model.addRow(newRow);
+////					listHT.add(nv);
+//				}else {
+//					System.out.println("Failure");
+//				}
 			}
 
 		});
