@@ -47,7 +47,6 @@ public class ThemTaiKhoanFrm extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	public static TaiKhoanBUS tk_bus;
-	private JLabel lblTnSnPhm_1;
 	private DefaultTableModel tbl;
 	private JComboBox maNhanVienCmbx;
 	private MyTextfield tenTaiKhoanTxt;
@@ -66,7 +65,7 @@ public class ThemTaiKhoanFrm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ThemTaiKhoanFrm frame = new ThemTaiKhoanFrm();
+					ThemTaiKhoanFrm frame = new ThemTaiKhoanFrm(null,null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -81,7 +80,7 @@ public class ThemTaiKhoanFrm extends JFrame {
 	 * thống nhất mặc định là 888888888
 	 */
 
-	public ThemTaiKhoanFrm() {
+	public ThemTaiKhoanFrm(QuanLyTaiKhoanFrm qltk_form,TaiKhoanBUS tkbus) {
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -113,8 +112,7 @@ public class ThemTaiKhoanFrm extends JFrame {
 		lblTnSnPhm_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 
 		maNhanVienCmbx = new JComboBox();
-		maNhanVienCmbx.setModel(
-				new DefaultComboBoxModel(new String[] { "admin", "quản lý", "bán hàng", "thủ kho", "kĩ thuật" }));
+		maNhanVienCmbx.setModel(new DefaultComboBoxModel(new String[] { "admin", "quản lý", "bán hàng", "thủ kho", "kĩ thuật" }));
 		maNhanVienCmbx.setForeground(new Color(0, 255, 255));
 		maNhanVienCmbx.setBackground(new Color(102, 102, 102));
 		maNhanVienCmbx.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -143,63 +141,81 @@ public class ThemTaiKhoanFrm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String manv = "";
-				int maso= 1, tinhtrang = 1;
+				int maso = tk_bus.ds_taiKhoan.size() + tk_bus.ds_taiKhoan_temp.size();
+				int tinhtrang = 1;
 				String password = "88888";
 				String matk = "TK";
-//				if(checkField()==1 && checkDupAdd()==1) {
-//					if(maNhanVienCmbx.getSelectedItem()=="admin") {
-//						manv = "AD";
-//				if(maso < 1000) {
-//				manv+="0";
-//				if(maso <100) {
-//					manv += "0";
-//					if(maso < 10) {
-//						manv += "0";
-//					}
-//				}
-//			}
-//					}
-//					
-//					if(maNhanVienCmbx.getSelectedItem()=="quản lý") {
-//						manv = "QL";
-//				if(maso < 1000) {
-//				manv+="0";
-//				if(maso <100) {
-//					manv += "0";
-//					if(maso < 10) {
-//						manv += "0";
-//					}
-//				}
-//			}
-//					}
-//					
-//					if(chucVuCmbx.getSelectedItem()=="bán hàng" || chucVuCmbx.getSelectedItem()=="thủ kho" || chucVuCmbx.getSelectedItem()=="kĩ thuật") {
-//						manv = "NV";
-//				if(maso < 1000) {
-//				manv+="0";
-//				if(maso <100) {
-//					manv += "0";
-//					if(maso < 10) {
-//						manv += "0";
-//					}
-//				}
-//			}
-//					}
-//					DTO_TaiKhoan tk = new DTO_TaiKhoan(manv, tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu);
-//					
-//					tk_bus.ds_nhanVien_temp.add(nv);
-//					
-//					Object[] newRow = {tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu};
-//					tenTaiKhoanTxt.setText("");
-//					soDienThoaiTxt.setText("");
-//					emailTxt.setText("");
-//					diaChiTxt.setText("");
-//					chucVuCmbx.setSelectedIndex(-1);
-//					model.addRow(newRow);
-////					listHT.add(nv);
-//				}else {
-//					System.out.println("Failure");
-//				}
+				if (checkField() == 1 && checkDupAdd() == 1) {
+					if (maNhanVienCmbx.getSelectedItem() == "admin") {
+						manv = "AD";
+						if (maso < 1000) {
+							manv += "0";
+							matk += "0";
+							if (maso < 100) {
+								manv += "0";
+								matk += "0";
+								if (maso < 10) {
+									manv += "0";
+									matk += "0";
+								}
+							}
+						}
+						manv += maso;
+						matk += maso;
+					}
+
+					if (maNhanVienCmbx.getSelectedItem() == "quản lý") {
+						manv = "QL";
+						if (maso < 1000) {
+							manv += "0";
+							matk += "0";
+							if (maso < 100) {
+								manv += "0";
+								matk += "0";
+								if (maso < 10) {
+									manv += "0";
+									matk += "0";
+								}
+							}
+						}
+						manv += maso;
+						matk += maso;
+					}
+
+					if (maNhanVienCmbx.getSelectedItem() == "bán hàng" || maNhanVienCmbx.getSelectedItem() == "thủ kho"
+							|| maNhanVienCmbx.getSelectedItem() == "kĩ thuật") {
+						manv = "NV";
+						if (maso < 1000) {
+							manv += "0";
+							matk += "0";
+							if (maso < 100) {
+								manv += "0";
+								matk += "0";
+								if (maso < 10) {
+									manv += "0";
+									matk += "0";
+								}
+							}
+						}
+						if (tinhTrangCmbx.getSelectedItem() == "đã khóa") {
+							tinhtrang = 0;
+						}
+						manv += maso;
+						matk += maso;
+					}
+					DTO_TaiKhoan tk = new DTO_TaiKhoan(matk, manv, tenTaiKhoanTxt.getText(), password, tinhtrang);
+
+					tk_bus.ds_taiKhoan_temp.add(tk);
+
+					Object[] newRow = {manv, tenTaiKhoanTxt.getText(), tinhtrang};
+					maNhanVienCmbx.setSelectedIndex(-1);
+					tenTaiKhoanTxt.setText("");
+					tinhTrangCmbx.setSelectedIndex(-1);
+					model.addRow(newRow);
+//					listHT.add(nv);
+				} else {
+					System.out.println("Failure");
+				}
 			}
 
 		});
@@ -238,12 +254,12 @@ public class ThemTaiKhoanFrm extends JFrame {
 		MyButton xacNhanBtn = new MyButton();
 		xacNhanBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(tk_bus.ds_taiKhoan_temp.size()>0) {
+				if (tk_bus.ds_taiKhoan_temp.size() > 0) {
 					tk_bus.themTK();
 					tk_bus.ds_taiKhoan_temp.clear();
 					qltk.Refresh();
 					dispose();
-				}else {
+				} else {
 					JOptionPane.showMessageDialog(null, "Ít nhất phải có 1 nhân viên trong bảng");
 				}
 			}

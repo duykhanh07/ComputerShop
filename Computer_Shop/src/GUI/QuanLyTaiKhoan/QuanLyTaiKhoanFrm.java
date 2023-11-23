@@ -46,6 +46,8 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 	
 	// TODO : LƯU Ý : KHÔNG HIỂN THỊ MẬT KHẨU LÊN FORM
 	public QuanLyTaiKhoanFrm() {
+		tk_bus = new TaiKhoanBUS();
+		QuanLyTaiKhoanFrm self = this;
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
@@ -110,7 +112,7 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 		MyButton timKiemBtn_1_1 = new MyButton();
 		timKiemBtn_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new ThemTaiKhoanFrm().setVisible(true);
+				new ThemTaiKhoanFrm(self, tk_bus).setVisible(true);
 			}
 		});
 		timKiemBtn_1_1.setText("Thêm");

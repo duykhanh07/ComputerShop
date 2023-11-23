@@ -20,12 +20,9 @@ public class TaiKhoanBUS {
 		if(ds_taiKhoan.size() >0 ) {
 			ds_hienThi = (ArrayList<DTO_TaiKhoan>) ds_taiKhoan.clone();
 		}
+		ds_taiKhoan_temp = new ArrayList<DTO_TaiKhoan>();
 	}
 	
-	public ArrayList<DTO_TaiKhoan> importToTable(ArrayList<DTO_TaiKhoan> splist) {
-		splist = DAO_TaiKhoan.getInstance().selectAllTaiKhoan();
-		return splist;
-	}
 	
 	public ArrayList<DTO_TaiKhoan> getTaiKhoan_mainList() {
         return TaiKhoan__mainList;
@@ -37,7 +34,7 @@ public class TaiKhoanBUS {
     
     public void themTK() {
 		for(int i =0; i< ds_taiKhoan_temp.size(); i++) {
-			ds_taiKhoan_temp.get(i).setManv(taoMa(ds_taiKhoan_temp.get(i), i));
+			ds_taiKhoan_temp.get(i).setMatk(taoMa(ds_taiKhoan.get(i), i));
 			new DAO_TaiKhoan().themTK(ds_taiKhoan_temp.get(i));
 		}
 	}
@@ -106,7 +103,7 @@ public class TaiKhoanBUS {
 		manv += maso;
 		matk+=maso;
 		
-		return manv;
+		return matk;
 		
 	}
 }

@@ -12,7 +12,6 @@ public class NhanVienBUS {
 	public ArrayList<DTO_NhanVien> ds_hienThi;
 	public ArrayList<DTO_NhanVien> ds_nhanVien;
 	private ArrayList <DTO_NhanVien> NhanVien_mainList = DAO_NhanVien.selectAllNhanVien();
-	
 	public ArrayList<DTO_NhanVien> ds_nhanVien_temp;
 
 	public NhanVienBUS() {
