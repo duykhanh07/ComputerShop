@@ -12,6 +12,8 @@ import BUS.NhanVienBUS;
 import DTO.DTO_NhanVien;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -36,32 +38,22 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import java.awt.Toolkit;
 import GUI.QuanLyTaiKhoan.QuanLyNhanVienFrm;
 public class CapNhapNhanVienFrm extends JFrame {
-	private ArrayList <DTO_NhanVien> NhanVien_tempList = new ArrayList <DTO_NhanVien> ();
 	private static final long serialVersionUID = 1L;
+	
+	
 	private JPanel contentPane;
-	private NhanVienBUS bus_nhanvien = new NhanVienBUS();
-	private DefaultTableModel tblm;
-	private JTable table;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CapNhapNhanVienFrm frame = new CapNhapNhanVienFrm();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private DTO_NhanVien nv;
+	private NhanVienBUS nv_bus;
+	private JComboBox chucVuCmbx;
+	private MyTextfield diaChiTxt;
+	private MyTextfield emailTxt;
+	private MyTextfield tenNhanVienTxt;
+	private JLabel maNhanVienLbl;
+	private MyTextfield soDienThoaiTxt;
 
-	/**
-	 * Create the frame.
-	 */
-	public CapNhapNhanVienFrm() {
+	public CapNhapNhanVienFrm(DTO_NhanVien nv, NhanVienBUS nvbus) {
+		this.nv = nv;
+		this.nv_bus = nvbus;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(CapNhapNhanVienFrm.class.getResource("/assets/Laptop_Login.png")));
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -81,7 +73,6 @@ public class CapNhapNhanVienFrm extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-		tblm = (DefaultTableModel) table.getModel();
 		JLabel lblNewLabel_1 = new JLabel("----------Thông tin tài khoản----------");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setForeground(Color.CYAN);
@@ -91,7 +82,7 @@ public class CapNhapNhanVienFrm extends JFrame {
 		lblTnSnPhm_1_1.setForeground(Color.CYAN);
 		lblTnSnPhm_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		MyTextfield tenNhanVienTxt = new MyTextfield();
+		tenNhanVienTxt = new MyTextfield();
 		tenNhanVienTxt.setColumns(10);
 		tenNhanVienTxt.setBorder(null);
 		tenNhanVienTxt.setBackground(new Color(77, 77, 77));
@@ -100,7 +91,7 @@ public class CapNhapNhanVienFrm extends JFrame {
 		lblTnSnPhm_1_1_1.setForeground(Color.CYAN);
 		lblTnSnPhm_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		MyTextfield soDienThoaiTxt = new MyTextfield();
+		soDienThoaiTxt = new MyTextfield();
 		soDienThoaiTxt.setColumns(10);
 		soDienThoaiTxt.setBorder(null);
 		soDienThoaiTxt.setBackground(new Color(77, 77, 77));
@@ -109,7 +100,7 @@ public class CapNhapNhanVienFrm extends JFrame {
 		lblTnSnPhm_1_1_2.setForeground(Color.CYAN);
 		lblTnSnPhm_1_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		MyTextfield emailTxt = new MyTextfield();
+		emailTxt = new MyTextfield();
 		emailTxt.setColumns(10);
 		emailTxt.setBorder(null);
 		emailTxt.setBackground(new Color(77, 77, 77));
@@ -118,13 +109,13 @@ public class CapNhapNhanVienFrm extends JFrame {
 		lblTnSnPhm_1_1_3.setForeground(Color.CYAN);
 		lblTnSnPhm_1_1_3.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		MyTextfield diaChiTxt = new MyTextfield();
+		diaChiTxt = new MyTextfield();
 		diaChiTxt.setColumns(10);
 		diaChiTxt.setBorder(null);
 		diaChiTxt.setBackground(new Color(77, 77, 77));
 		
-		JComboBox chucVuCmbx = new JComboBox();
-		chucVuCmbx.setModel(new DefaultComboBoxModel(new String[] {"Admin", "Quản lý", "Nhân viên"}));
+		chucVuCmbx = new JComboBox();
+		chucVuCmbx.setModel(new DefaultComboBoxModel(new String[] {"admin", "quản lý", "bán hàng", "thủ kho", "kĩ thuật"}));
 		chucVuCmbx.setForeground(Color.CYAN);
 		chucVuCmbx.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		chucVuCmbx.setBackground(new Color(102, 102, 102));
@@ -137,23 +128,23 @@ public class CapNhapNhanVienFrm extends JFrame {
 		capNhatBtn.addActionListener(new ActionListener() {
 		
 			public void actionPerformed(ActionEvent e) {
-				DTO_NhanVien nv = bus_nhanvien.getNhanVien_mainList().get(getSelectedNhanVien());
-				nv.setManv(getName());
-				nv.setTennv(tenNhanVienTxt.getText().toString());
-				nv.setSdt(soDienThoaiTxt.getText().toString());
-				nv.setEmail(emailTxt.getText().toString());
-				nv.setDiachi(diaChiTxt.getText().toString());
-				nv.setChucvu(chucVuCmbx.getName());
-				bus_nhanvien.suaNV(nv.getManv(), nv.getTennv());
-				renderMainTable(NhanVien_tempList);
-//				nv.getMaNV(tenNhanVienTxt.getText().toString());
-				
+				if(tenNhanVienTxt.getText().strip().equalsIgnoreCase("") || soDienThoaiTxt.getText().strip().equalsIgnoreCase("") || diaChiTxt.getText().strip().equalsIgnoreCase("")
+						|| emailTxt.getText().strip().equalsIgnoreCase("")) {
+					JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin");
+				}else {
+					nv.setTennv(tenNhanVienTxt.getText());
+					nv.setDiachi(diaChiTxt.getText());
+					nv.setEmail(emailTxt.getText());
+					nv.setSdt(soDienThoaiTxt.getText());
+					nv.setChucvu(chucVuCmbx.getSelectedItem().toString());
+					nv_bus.suaNV(nv);
+				}
 			}
 		});
 		capNhatBtn.setText("cập nhật");
 		capNhatBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
-		JLabel maNhanVienLbl = new JLabel("mã nhân viên : <manv>");
+		maNhanVienLbl = new JLabel("mã nhân viên : <manv>");
 		maNhanVienLbl.setForeground(Color.CYAN);
 		maNhanVienLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
@@ -249,31 +240,14 @@ public class CapNhapNhanVienFrm extends JFrame {
 					.addContainerGap())
 		);
 		contentPane.setLayout(gl_contentPane);
+		hienThongTin();
 	}
-	
-	 private void renderMainTable(ArrayList <DTO_NhanVien> lst) {
-	        tblm.setRowCount(0);
-	        for(DTO_NhanVien nv : lst) {
-	            String data [] = new String[5];
-	            data[0] = nv.getManv();
-	            data[1] = nv.getTennv();
-	            data[2] = nv.getSdt();
-	            data[3] = nv.getEmail();
-	            data[4] = nv.getDiachi();
-	            data[5] = nv.getChucvu();
-	            tblm.addRow(data);
-	        }
-	    }
-	
-	 private int getSelectedNhanVien() {
-	        int Rowindex = table.getSelectedRow();
-	        int index = -1;
-	        for(int i = 0; i < bus_nhanvien.getNhanVien_mainList().size(); i++) {
-	            if(table.getValueAt(Rowindex, 0).equals(bus_nhanvien.getNhanVien_mainList().get(i).getManv())) {
-	                index = i;
-	                break;
-	            }
-	        }
-	        return index;
-	    }
+	public void hienThongTin() {
+		maNhanVienLbl.setText("Mã nhân viên :" + nv.getManv());
+		tenNhanVienTxt.setText(nv.getTennv());
+		soDienThoaiTxt.setText(nv.getSdt());
+		diaChiTxt.setText(nv.getDiachi());
+		emailTxt.setText(nv.getEmail());
+		chucVuCmbx.setSelectedItem(nv.getChucvu());
+	}
 }

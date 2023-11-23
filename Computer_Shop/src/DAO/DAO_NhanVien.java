@@ -13,7 +13,7 @@ import DTO.DTO_NhanVien;
 
 public class DAO_NhanVien {
 	private static Connection conn = null;
-
+	
 	public static void openData() {
 		try {
 			DriverManager.registerDriver(new SQLServerDriver());
@@ -27,6 +27,7 @@ public class DAO_NhanVien {
 		}
 	}
 
+	
 	public static ArrayList<DTO_NhanVien> selectAllNhanVien() {
 		ArrayList<DTO_NhanVien> ds_nhanvien = new ArrayList<DTO_NhanVien>();
 		openData();
@@ -62,11 +63,11 @@ public class DAO_NhanVien {
 		return 0;
 	}
 
-	public static int suaNV(String manv, String tennv) {
+	public static int suaNV(DTO_NhanVien nv) {
 		openData();
 		try {
 			Statement stmt = (Statement) conn.createStatement();
-			String sql = "update Nhanvien set tennv= '"+ tennv +"' where manv = '"+manv+"'";
+			String sql = String.format("Update NhanVien set tennv = N'%s', sdt =N'%s', diachi=N'%s',email=N'%s', chucvu=N'%s' where manv = '%s' ",nv.getTennv(), nv.getSdt(), nv.getDiachi(), nv.getEmail(), nv.getChucvu(), nv.getManv());
 			int ketqua = stmt.executeUpdate(sql);
 			conn.close();
 			return ketqua;

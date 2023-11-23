@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 
@@ -28,6 +29,7 @@ public class DAO_TaiKhoan {
 		}
 	}
 	
+	
 	public static ArrayList<DTO_TaiKhoan> selectAllTaiKhoan() {
 		ArrayList<DTO_TaiKhoan> ds_taikhoan = new ArrayList<DTO_TaiKhoan>();
 		openData();
@@ -47,11 +49,27 @@ public class DAO_TaiKhoan {
 		}
 		return null;
 	}
-	public static int themTaiKhoan(DTO_TaiKhoan tk) {
+	
+	public static int themTK(DTO_TaiKhoan tk) {
 		openData();
 		try {
 			Statement stmt = (Statement) conn.createStatement();
-			String sql = "insert into Taikhoan Values" + tk.insertString();
+			String sql = "insert into TaiKhoan Values " + tk.insertString();
+			int ketqua = stmt.executeUpdate(sql);
+			conn.close();
+			return ketqua;
+		} catch (Exception e) {
+			System.out.println(e);
+			
+		}
+		return 0;
+	}
+
+	public static int suaTK(DTO_TaiKhoan tk) {
+		openData();
+		try {
+			Statement stmt = (Statement) conn.createStatement();
+			String sql = String.format("Update TaiKhoan set manv =N'%s', username=N'%s', password=N'%s', tinhtrang='%d' where matk = '%s' ", tk.getManv(), tk.getUsername(),tk.getPassword(), tk.getTinhtrang(), tk.getMatk());
 			int ketqua = stmt.executeUpdate(sql);
 			conn.close();
 			return ketqua;
@@ -60,18 +78,24 @@ public class DAO_TaiKhoan {
 		}
 		return 0;
 	}
-	
-	public static int suaTK(String matk, String manv) {
-		openData();
+	public static String[] layMaNhanVienKoTK() {
+		String[] ds_ma = {};
+		
 		try {
-			Statement stmt = (Statement) conn.createStatement();
-			String sql = "update Taikhoan set manv= '"+ manv +"' where matk = '"+matk+"'";
-			int ketqua = stmt.executeUpdate(sql);
-			conn.close();
-			return ketqua;
+			openData();
+			Statement stmt = conn.createStatement();
+			String sql = "Select distinct nv.manv from NhanVien as nv left join TaiKhoan as tk on nv.manv = tk.manv where tk.matk is null";
+			ResultSet rss = stmt.executeQuery(sql);
+			
+			while(rss.next()) {
+				String manv = rss.getString("manv");
+				ds_ma = Arrays.copyOf(ds_ma, ds_ma.length + 1);
+				ds_ma[ds_ma.length - 1] = manv;
+			}
+			return ds_ma;
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		return 0;
+		return null;
 	}
 }
