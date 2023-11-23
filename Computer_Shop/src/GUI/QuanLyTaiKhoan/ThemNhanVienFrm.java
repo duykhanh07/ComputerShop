@@ -191,36 +191,48 @@ public class ThemNhanVienFrm extends JFrame {
 				if(checkField()==1 && checkDupAdd()==1) {
 					if(chucVuCmbx.getSelectedItem()=="admin") {
 						chucVu="admin";
-						if(maso<10) {
-							manv="AD000"+maso;
-							maso++;
-						}else {
-							manv="AD00"+maso;
-							maso++;
-						}
+						manv = "AD";
 					}
 					
 					if(chucVuCmbx.getSelectedItem()=="quản lý") {
 						chucVu="quản lý";
-						if(maso<10) {
-							manv="QL000"+maso;
-							maso++;
-						}else {
-							manv="QL00"+maso;
-							maso++;
+						manv = "QL";
+						if(maso < 1000) {
+							manv+="0";
+							if(maso <100) {
+								manv += "0";
+								if(maso < 10) {
+									manv += "0";
+								}
+							}
 						}
+						manv += maso;
 					}
 					
 					if(chucVuCmbx.getSelectedItem()=="bán hàng" || chucVuCmbx.getSelectedItem()=="thủ kho" || chucVuCmbx.getSelectedItem()=="kĩ thuật") {
 						chucVu="nhân viên";
-						if(maso<10) {
-							manv="NV000"+maso;
-							maso++;
-						}else {
-							manv="NV00"+maso;
-							maso++;
+						manv = "NV";
+						if(maso < 1000) {
+							manv+="0";
+							if(maso <100) {
+								manv += "0";
+								if(maso < 10) {
+									manv += "0";
+								}
+							}
+						}
+						manv += maso;
+					}
+					if(maso < 1000) {
+						manv+="0";
+						if(maso <100) {
+							manv += "0";
+							if(maso < 10) {
+								manv += "0";
+							}
 						}
 					}
+					manv += maso;
 					DTO_NhanVien nv = new DTO_NhanVien(manv, tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu);
 					
 					nv_bus.ds_nhanVien_temp.add(nv);
