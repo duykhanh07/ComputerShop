@@ -149,28 +149,45 @@ public class ThemTaiKhoanFrm extends JFrame {
 //				if(checkField()==1 && checkDupAdd()==1) {
 //					if(maNhanVienCmbx.getSelectedItem()=="admin") {
 //						manv = "AD";
+//				if(maso < 1000) {
+//				manv+="0";
+//				if(maso <100) {
+//					manv += "0";
+//					if(maso < 10) {
+//						manv += "0";
+//					}
+//				}
+//			}
 //					}
 //					
 //					if(maNhanVienCmbx.getSelectedItem()=="quản lý") {
 //						manv = "QL";
+//				if(maso < 1000) {
+//				manv+="0";
+//				if(maso <100) {
+//					manv += "0";
+//					if(maso < 10) {
+//						manv += "0";
+//					}
+//				}
+//			}
 //					}
 //					
 //					if(chucVuCmbx.getSelectedItem()=="bán hàng" || chucVuCmbx.getSelectedItem()=="thủ kho" || chucVuCmbx.getSelectedItem()=="kĩ thuật") {
 //						manv = "NV";
+//				if(maso < 1000) {
+//				manv+="0";
+//				if(maso <100) {
+//					manv += "0";
+//					if(maso < 10) {
+//						manv += "0";
 //					}
-//					if(maso < 1000) {
-//						manv+="0";
-//						if(maso <100) {
-//							manv += "0";
-//							if(maso < 10) {
-//								manv += "0";
-//							}
-//						}
+//				}
+//			}
 //					}
-//					manv += maso;
-//					DTO_NhanVien nv = new DTO_NhanVien(manv, tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu);
+//					DTO_TaiKhoan tk = new DTO_TaiKhoan(manv, tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu);
 //					
-//					nv_bus.ds_nhanVien_temp.add(nv);
+//					tk_bus.ds_nhanVien_temp.add(nv);
 //					
 //					Object[] newRow = {tenTaiKhoanTxt.getText(), soDienThoaiTxt.getText(), emailTxt.getText(), diaChiTxt.getText(), chucVu};
 //					tenTaiKhoanTxt.setText("");
