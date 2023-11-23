@@ -243,10 +243,10 @@ public class CapNhapNhanVienFrm extends JFrame {
 		hienThongTin();
 	}
 	public void hienThongTin() {
-		maNhanVienLbl.setText("Mã nhân viên :" + this.nv.getManv());
-		tenNhanVienTxt.setText(this.nv.getTennv());
-		soDienThoaiTxt.setText(this.nv.getSdt());
-		diaChiTxt.setText(this.nv.getDiachi());
+		maNhanVienLbl.setText("Mã nhân viên :" + nv.getManv());
+		tenNhanVienTxt.setText(nv.getTennv());
+		soDienThoaiTxt.setText(nv.getSdt());
+		diaChiTxt.setText(nv.getDiachi());
 		emailTxt.setText(nv.getEmail());
 		chucVuCmbx.setSelectedItem(nv.getChucvu());
 	}

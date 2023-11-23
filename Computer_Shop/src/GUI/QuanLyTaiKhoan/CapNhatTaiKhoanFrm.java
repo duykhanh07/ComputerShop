@@ -89,7 +89,7 @@ public class CapNhatTaiKhoanFrm extends JFrame {
 		lblTnSnPhm_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		tinhTrangCmbx = new JComboBox();
-		tinhTrangCmbx.setModel(new DefaultComboBoxModel(new String[] {"đang hoạt động", "đã khóa"}));
+		tinhTrangCmbx.setModel(new DefaultComboBoxModel(new String[] {"đang hoạt động ", "đã khóa"}));
 		tinhTrangCmbx.setForeground(Color.CYAN);
 		tinhTrangCmbx.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		tinhTrangCmbx.setBackground(new Color(102, 102, 102));
@@ -104,9 +104,16 @@ public class CapNhatTaiKhoanFrm extends JFrame {
 				if(maNhanVienCmbx.getSelectedIndex() == -1 || tinhTrangCmbx.getSelectedIndex() == -1) {
 					JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin");
 				}else {
-					tk.setManv(maNhanVienCmbx.getSelectedItem().toString());
-					tk.setTinhtrang(Integer.parseInt(tinhTrangCmbx.getSelectedItem().toString()));
-					tk_bus.suaTK(tk);
+					if(tinhTrangCmbx.getSelectedItem() == "đang hoạt động") {
+						tk.setManv(maNhanVienCmbx.getSelectedItem().toString());
+						tk.setTinhtrang(1);
+						tk_bus.suaTK(tk);
+					}else {
+						tk.setManv(maNhanVienCmbx.getSelectedItem().toString());
+						tk.setTinhtrang(0);
+						tk_bus.suaTK(tk);
+					}
+					
 				}
 			}
 		});
@@ -196,10 +203,10 @@ public class CapNhatTaiKhoanFrm extends JFrame {
 	}
 	
 	public void hienThongTin() {
-		maTaiKhoanLbl.setText("mã tài khoản :" + this.tk.getMatk());
-		maNhanVienCmbx.setSelectedItem(this.tk.getManv());
-		lblTnSnPhm_1_1.setText("tên tài khoản :"+this.tk.getUsername());
-		passwordLbl.setText("password :" + this.tk.getPassword());
-		tinhTrangCmbx.setSelectedItem(this.tk.getTinhtrang());
+		maTaiKhoanLbl.setText("mã tài khoản :" + tk.getMatk());
+		maNhanVienCmbx.setSelectedItem(tk.getManv());
+		lblTnSnPhm_1_1.setText("tên tài khoản :"+tk.getUsername());
+		passwordLbl.setText("password :" + tk.getPassword());
+		tinhTrangCmbx.setSelectedItem(tk.getTinhtrang());
 	}
 }
