@@ -51,35 +51,8 @@ public class DAO_TaiKhoan {
 		}
 		return null;
 	}
-	public static int themTaiKhoan(DTO_TaiKhoan tk) {
-		openData();
-		try {
-			Statement stmt = (Statement) conn.createStatement();
-			String sql = "insert into Taikhoan Values" + tk.insertString();
-			int ketqua = stmt.executeUpdate(sql);
-			conn.close();
-			return ketqua;
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		return 0;
-	}
 	
-	public static int suaTK(String matk, String manv) {
-		openData();
-		try {
-			Statement stmt = (Statement) conn.createStatement();
-			String sql = "update Taikhoan set manv= '"+ manv +"' where matk = '"+matk+"'";
-			int ketqua = stmt.executeUpdate(sql);
-			conn.close();
-			return ketqua;
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		return 0;
-	}
-	
-	public static int themNV(DTO_TaiKhoan tk) {
+	public static int themTK(DTO_TaiKhoan tk) {
 		openData();
 		try {
 			Statement stmt = (Statement) conn.createStatement();
@@ -93,11 +66,11 @@ public class DAO_TaiKhoan {
 		return 0;
 	}
 
-	public static int suaNV(DTO_TaiKhoan tk) {
+	public static int suaTK(DTO_TaiKhoan tk) {
 		openData();
 		try {
 			Statement stmt = (Statement) conn.createStatement();
-			String sql = String.format("Update TaiKhoan set manv =N'%s', username=N'%s', password=N'%s', tinhtrang=N'%d' where matk = '%s' ",tk.getMatk(), tk.getManv(), tk.getUsername());
+			String sql = String.format("Update TaiKhoan set manv =N'%s', username=N'%s', password=N'%s', tinhtrang=N'%d' where matk = '%s' ", tk.getManv(), tk.getUsername(),tk.getPassword(), tk.getTinhtrang(), tk.getMatk());
 			int ketqua = stmt.executeUpdate(sql);
 			conn.close();
 			return ketqua;

@@ -38,7 +38,7 @@ public class TaiKhoanBUS {
     public void themTK() {
 		for(int i =0; i< ds_taiKhoan_temp.size(); i++) {
 			ds_taiKhoan_temp.get(i).setManv(taoMa(ds_taiKhoan_temp.get(i), i));
-			new DAO_NhanVien().themNV(ds_taiKhoan_temp.get(i));
+			new DAO_TaiKhoan().themTK(ds_taiKhoan_temp.get(i));
 		}
 	}
 
