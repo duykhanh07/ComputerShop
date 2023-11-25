@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.apache.poi.xwpf.usermodel.Borders;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -105,18 +106,28 @@ public class ChiTietPhieuBaoHanhForm extends JFrame {
             // Tạo đối tượng XWPFParagraph cho tiêu đề "PHIẾU BẢO HÀNH"
             XWPFParagraph title = document.createParagraph();
             title.setAlignment(ParagraphAlignment.CENTER);
+            title.setBorderBottom(Borders.SINGLE); // Thêm khung chứa cho tiêu đề
+            title.setBorderTop(Borders.SINGLE);
+            title.setBorderLeft(Borders.SINGLE);
+            title.setBorderRight(Borders.SINGLE);
             XWPFRun titleRun = title.createRun();
             titleRun.setBold(true);
             titleRun.setFontSize(16);
             titleRun.setText("PHIẾU BẢO HÀNH");
 
-            // Tạo các đối tượng XWPFParagraph cho từng thông tin
+            // Tạo các đối tượng XWPFParagraph cho từng thông tin và thêm khung chứa
             for (int i = 0; i < thongTin.length; i++) {
                 XWPFParagraph paragraph = document.createParagraph();
                 XWPFRun run = paragraph.createRun();
 
                 // Đặt thông tin dưới dạng "Mã phiếu: ..."
                 run.setText(getLabel(i) + thongTin[i]);
+
+                // Thêm khung chứa bằng cách thiết lập border
+                paragraph.setBorderBottom(Borders.SINGLE);
+                paragraph.setBorderTop(Borders.SINGLE);
+                paragraph.setBorderLeft(Borders.SINGLE);
+                paragraph.setBorderRight(Borders.SINGLE);
             }
 
             // Tạo file Word tại đường dẫn được chỉ định
