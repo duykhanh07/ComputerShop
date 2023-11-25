@@ -5,9 +5,12 @@ import java.awt.Color;
 import MyDesign.MyTabPane.MyTabbedPaneCustom;
 import MyDesign.MyTable.CustomTableCellRenderer;
 import MyDesign.MyTable.CustomTableHeaderUI;
+import GUI.formPhieuBaoHanh.ChiTietPhieuBaoHanhForm;
 import MyDesign.MyComponents.MyTextfield;
 import javax.swing.border.EmptyBorder;
 import java.awt.Dimension;
+import java.awt.FileDialog;
+
 import javax.swing.JComboBox;
 import MyDesign.MyComponents.MyButton;
 import javax.swing.SwingConstants;
@@ -29,21 +32,30 @@ import java.awt.event.ItemListener;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import BUS.BUS_PhieuBaoHanh;
 import BUS.ThemPhieuBaoHanhBUS;
 import DTO.DTO_CTPhieuBaoHanh;
 import DTO.DTO_PhieuBaoHanh;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ImageIcon;
+import java.awt.Frame;
+import java.io.FileOutputStream;
+import org.apache.poi.ss.usermodel.Cell;
 
 public class QuanLyBaoHanhFrm extends JPanel {
 
@@ -55,9 +67,13 @@ public class QuanLyBaoHanhFrm extends JPanel {
     private MyTextfield loiTxt;
     private MyTextfield HuongGiaiQuyetTxt;
     private MyTextfield timKiemChiTietHoaDon;
-    
+
     MyDateChooser toDateChooser = new MyDateChooser();
     MyDateChooser fromDateChooser = new MyDateChooser();
+    JComboBox timKiemTypeCmbx = new JComboBox();
+    MyTextfield timKiemBaoHanhTxt = new MyTextfield();
+    JCheckBox chckbxHonThnh = new JCheckBox("Đã hoàn thành");
+    JCheckBox chckbxNewCheckBox_1 = new JCheckBox("Chưa hoàn thành");
 
     public boolean CheckMa() {
         if (table_2.getRowCount() == 0) {
@@ -123,13 +139,13 @@ public class QuanLyBaoHanhFrm extends JPanel {
         phieuBaoHanhPanel.setBackground(new Color(102, 102, 102));
         tabbedPane.addTab("Phiếu bảo hành", null, phieuBaoHanhPanel, null);
 
-        MyTextfield timKiemBaoHanhTxt = new MyTextfield();
         timKiemBaoHanhTxt.setPreferredSize(new Dimension(180, 35));
         timKiemBaoHanhTxt.setColumns(10);
         timKiemBaoHanhTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
         timKiemBaoHanhTxt.setBackground(new Color(77, 77, 77));
 
-        JComboBox timKiemTypeCmbx = new JComboBox();
+        timKiemTypeCmbx.setModel(
+                new DefaultComboBoxModel(new String[] { "Mã phiếu", "Mã nhân viên", "Ngày nhận", "Ngày trả" }));
         timKiemTypeCmbx.setForeground(Color.CYAN);
         timKiemTypeCmbx.setBackground(new Color(102, 102, 102));
 
@@ -144,6 +160,8 @@ public class QuanLyBaoHanhFrm extends JPanel {
         lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 
         JComboBox sortCmbx = new JComboBox();
+        sortCmbx.setModel(
+                new DefaultComboBoxModel(new String[] { "Mã phiếu", "Mã nhân viên", "Ngày nhận", "Ngày trả" }));
         sortCmbx.setForeground(Color.CYAN);
         sortCmbx.setBackground(new Color(102, 102, 102));
 
@@ -151,14 +169,12 @@ public class QuanLyBaoHanhFrm extends JPanel {
         lblT.setForeground(Color.CYAN);
         lblT.setFont(new Font("Tahoma", Font.PLAIN, 15));
 
-        
         fromDateChooser.setBackground(new Color(102, 102, 102));
 
         JLabel lbln = new JLabel("Đến :");
         lbln.setForeground(Color.CYAN);
         lbln.setFont(new Font("Tahoma", Font.PLAIN, 15));
 
-        
         toDateChooser.setBackground(new Color(102, 102, 102));
 
         JScrollPane scrollPane = new JScrollPane();
@@ -177,6 +193,9 @@ public class QuanLyBaoHanhFrm extends JPanel {
                 new String[] {
                         "m\u00E3 phi\u1EBFu", "ng\u00E0y nh\u1EADn", "ng\u00E0y tr\u1EA3", "m\u00E3 nh\u00E2n vi\u00EAn"
                 }));
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setColumnIdentifiers(new String[] { "Mã phiếu", "Ngày nhận", "Ngày trả", "Mã nhân viên" });
+
         scrollPane.setViewportView(table);
 
         MyButton timKiemBtn_1 = new MyButton();
@@ -190,27 +209,25 @@ public class QuanLyBaoHanhFrm extends JPanel {
         HangSXPanel.setForeground(Color.CYAN);
         HangSXPanel.setBackground(new Color(77, 77, 77));
 
-        JCheckBox chckbxHonThnh = new JCheckBox("Đã hoàn thành");
         chckbxHonThnh.setFont(new Font("Tahoma", Font.PLAIN, 15));
         chckbxHonThnh.setForeground(Color.CYAN);
         chckbxHonThnh.setBackground(new Color(77, 77, 77));
         HangSXPanel.add(chckbxHonThnh);
 
-        JCheckBox chckbxNewCheckBox_1 = new JCheckBox("chưa hoàn thành");
         chckbxNewCheckBox_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
         chckbxNewCheckBox_1.setForeground(Color.CYAN);
         chckbxNewCheckBox_1.setBackground(new Color(77, 77, 77));
         HangSXPanel.add(chckbxNewCheckBox_1);
 
         MyButton timKiemBtn_1_1 = new MyButton();
-        timKiemBtn_1_1.setText("in");
+        timKiemBtn_1_1.setText("In");
         timKiemBtn_1_1.setHorizontalTextPosition(SwingConstants.LEADING);
 
         JLabel auto_increase_spaceLbl_2 = new JLabel("");
 
         MyButton mbtnLmMi_1 = new MyButton();
         mbtnLmMi_1.setIcon(new ImageIcon(QuanLyBaoHanhFrm.class.getResource("/assets/reset.png")));
-        mbtnLmMi_1.setText("làm mới");
+        mbtnLmMi_1.setText("Làm mới");
         mbtnLmMi_1.setHorizontalTextPosition(SwingConstants.LEADING);
         GroupLayout gl_phieuBaoHanhPanel = new GroupLayout(phieuBaoHanhPanel);
         gl_phieuBaoHanhPanel.setHorizontalGroup(
@@ -421,6 +438,7 @@ public class QuanLyBaoHanhFrm extends JPanel {
                 new String[] {
                         "m\u00E3 h\u00F3a \u0111\u01A1n", "m\u00E3 s\u1EA3n ph\u1EA9m", "H\u1EA1n b\u1EA3o h\u00E0nh"
                 }));
+
         // Hiển thị chi tiết hóa đơn
         themPhieuBaoHanhBUS.hienThiChiTiet(table_1);
 
@@ -561,8 +579,8 @@ public class QuanLyBaoHanhFrm extends JPanel {
         JLabel auto_increase_spaceLbl_1 = new JLabel("");
 
         MyButton mbtnLmMi = new MyButton();
-        mbtnLmMi.setText("làm mới");
-        // Nút làm mới
+        mbtnLmMi.setText("Làm mới");
+        // Nút Làm mới
         mbtnLmMi.addActionListener(new ActionListener() {
 
             @Override
@@ -713,26 +731,284 @@ public class QuanLyBaoHanhFrm extends JPanel {
                                 .addGap(22)));
         setLayout(groupLayout);
 
-        DefaultTableModel model = new DefaultTableModel(
-                new Object[][] {
-                        { null, null, null, null },
-                },
-                new String[] {
-                        "Mã phiếu", "Ngày nhận", "Ngày trả", "Mã nhân viên"
-                });
-        
         List<Object[]> phieuBaoHanh = BUS_PhieuBaoHanh.layDanhSachPhieuBaoHanh();
         hienThiPhieuBaoHanh(phieuBaoHanh);
-        
+
+        timKiemBtn_1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FileDialog fileDialog = new FileDialog((Frame) null, "Chọn nơi lưu file", FileDialog.SAVE);
+                fileDialog.setVisible(true);
+
+                String directory = fileDialog.getDirectory();
+                String file = fileDialog.getFile();
+
+                if (directory != null && file != null) {
+                    try {
+                        String filePath = directory + file;
+
+                        XSSFWorkbook workbook = new XSSFWorkbook();
+                        XSSFSheet sheet = workbook.createSheet("Danh sách nhân viên");
+
+                        DefaultTableModel model = (DefaultTableModel) table.getModel();
+                        int rowCount = model.getRowCount();
+                        int columnCount = model.getColumnCount();
+
+                        XSSFRow headerRow = sheet.createRow(0);
+                        for (int col = 0; col < columnCount; col++) {
+                            Cell cell = headerRow.createCell(col);
+                            cell.setCellValue(model.getColumnName(col));
+                        }
+
+                        for (int row = 0; row < rowCount; row++) {
+                            XSSFRow excelRow = sheet.createRow(row + 1);
+                            for (int col = 0; col < columnCount; col++) {
+                                Cell cell = excelRow.createCell(col);
+                                cell.setCellValue(model.getValueAt(row, col).toString());
+                            }
+                        }
+
+                        FileOutputStream fileOut = new FileOutputStream(filePath + ".xlsx");
+                        workbook.write(fileOut);
+                        fileOut.close();
+                        workbook.close();
+
+                        System.out.println("File Excel đã được tạo thành công!");
+
+                        // Hiển thị thông báo khi xuất file thành công
+                        JOptionPane.showMessageDialog(null, "File Excel đã được tạo thành công!");
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        timKiemBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedOption = (String) timKiemTypeCmbx.getSelectedItem();
+                if (selectedOption.equals("Mã phiếu") || selectedOption.equals("Mã nhân viên")) {
+                    String searchText = timKiemBaoHanhTxt.getText();
+                    List<Object[]> filteredData = filterByColumn(phieuBaoHanh, selectedOption, searchText);
+                    hienThiPhieuBaoHanh(filteredData);
+                } else if (selectedOption.equals("Ngày nhận") || selectedOption.equals("Ngày trả")) {
+                    java.util.Date utilFromDate = fromDateChooser.getDate();
+                    java.sql.Date sqlFromDate = new java.sql.Date(utilFromDate.getTime());
+                    java.util.Date utilToDate = toDateChooser.getDate();
+                    java.sql.Date sqlToDate = new java.sql.Date(utilToDate.getTime());
+                    List<Object[]> filteredData = filterByDateRange(phieuBaoHanh, selectedOption, sqlFromDate,
+                            sqlToDate);
+                    hienThiPhieuBaoHanh(filteredData);
+                }
+            }
+        });
+
+        sortCmbx.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedOption = (String) sortCmbx.getSelectedItem();
+                if (selectedOption != null) {
+                    List<Object[]> sortedData = sortByColumn(phieuBaoHanh, selectedOption);
+                    hienThiPhieuBaoHanh(sortedData);
+                }
+            }
+        });
+
+        timKiemTypeCmbx.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    String selectedOption = (String) timKiemTypeCmbx.getSelectedItem();
+
+                    if (selectedOption.equals("Ngày nhận") || selectedOption.equals("Ngày trả")) {
+                        timKiemBaoHanhTxt.setText("");
+                        timKiemBaoHanhTxt.setEnabled(false);
+                    } else {
+                        timKiemBaoHanhTxt.setEnabled(true);
+                    }
+                }
+            }
+        });
+
+        mbtnLmMi_1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                timKiemBaoHanhTxt.setText("");
+                timKiemTypeCmbx.setSelectedIndex(0);
+                sortCmbx.setSelectedIndex(0);
+
+                // Refresh data
+                List<Object[]> refreshedData = BUS_PhieuBaoHanh.layDanhSachPhieuBaoHanh();
+
+                // Update displayed data
+                hienThiPhieuBaoHanh(refreshedData);
+
+                // Clear any previous filters or selections if needed
+                // For example, if you have applied filters or sorting,
+                // you might want to reset them when refreshing data.
+                // Clear filters or sorting logic can go here.
+            }
+        });
+
+        chckbxHonThnh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                applyFilters();
+            }
+        });
+
+        chckbxNewCheckBox_1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                applyFilters();
+            }
+        });
+
+        timKiemBtn_1_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String selectedMapbh = (String) table.getValueAt(table.getSelectedRow(), 0); // Lấy Mã phiếu từ hàng đã
+                                                                                             // chọn
+                hienThiThongTinChiTietPhieuBaoHanh(selectedMapbh);
+            }
+        });
+
     }
 
     private void hienThiPhieuBaoHanh(List<Object[]> data) {
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		model.setRowCount(0);
+        // Tạo mô hình dữ liệu mới chỉ chứa các cột cần thiết
+        String[] columnNames = { "Mã phiếu", "Ngày nhận", "Ngày trả", "Mã nhân viên" };
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
-		for (Object[] row : data) {
-			model.addRow(row);
-		}
-	}
-    
+        // Thêm các dòng từ dữ liệu vào mô hình dữ liệu mới
+        for (Object[] row : data) {
+            Object[] rowData = { row[0], row[1], row[2], row[3] }; // Chỉ lấy các cột cần thiết từ dữ liệu
+            model.addRow(rowData);
+        }
+
+        // Gán mô hình dữ liệu mới cho JTable
+        table.setModel(model);
+    }
+
+    // Phương thức lọc theo cột (mã phiếu, mã nhân viên)
+    private List<Object[]> filterByColumn(List<Object[]> data, String column, String searchText) {
+        List<Object[]> filteredData = new ArrayList<>();
+        for (Object[] row : data) {
+            String value = String.valueOf(row[getColumnIndex(column)]);
+            if (value.toLowerCase().contains(searchText.toLowerCase())) {
+                filteredData.add(row);
+            }
+        }
+        return filteredData;
+    }
+
+    private List<Object[]> filterByDateRange(List<Object[]> data, String column, java.sql.Date fromDate,
+            java.sql.Date toDate) {
+        List<Object[]> filteredData = new ArrayList<>();
+        for (Object[] row : data) {
+            java.sql.Date dateValue = (java.sql.Date) row[getColumnIndex(column)];
+            if (dateValue.after(fromDate) && dateValue.before(toDate)) {
+                filteredData.add(row);
+            }
+        }
+        return filteredData;
+    }
+
+    // Phương thức lấy chỉ số cột dựa trên tên cột
+    private int getColumnIndex(String columnName) {
+        switch (columnName) {
+            case "Mã phiếu":
+                return 0;
+            case "Ngày nhận":
+                return 1;
+            case "Ngày trả":
+                return 2;
+            case "Mã nhân viên":
+                return 3;
+            default:
+                return -1;
+        }
+    }
+
+    // Phương thức sắp xếp dữ liệu theo cột được chọn
+    private List<Object[]> sortByColumn(List<Object[]> data, String column) {
+        int columnIndex = getColumnIndex(column);
+        if (columnIndex >= 0) {
+            Collections.sort(data, new Comparator<Object[]>() {
+                @Override
+                public int compare(Object[] o1, Object[] o2) {
+                    Comparable<Object> val1 = (Comparable<Object>) o1[columnIndex];
+                    Comparable<Object> val2 = (Comparable<Object>) o2[columnIndex];
+                    return val1.compareTo(val2);
+                }
+            });
+        }
+        return data;
+    }
+
+    private void applyFilters() {
+        String selectedOption = (String) timKiemTypeCmbx.getSelectedItem();
+        String searchText = timKiemBaoHanhTxt.getText();
+        java.util.Date utilFromDate = fromDateChooser.getDate();
+        java.sql.Date sqlFromDate = new java.sql.Date(utilFromDate.getTime());
+
+        java.util.Date utilToDate = toDateChooser.getDate();
+        java.sql.Date sqlToDate = new java.sql.Date(utilToDate.getTime());
+
+        List<Object[]> filteredData = BUS_PhieuBaoHanh.layDanhSachPhieuBaoHanh();
+
+        if (chckbxHonThnh.isSelected()) {
+            filteredData = filterCompleted(filteredData);
+        }
+
+        if (chckbxNewCheckBox_1.isSelected()) {
+            filteredData = filterIncomplete(filteredData);
+        }
+
+        if (selectedOption.equals("Mã phiếu") || selectedOption.equals("Mã nhân viên")) {
+            filteredData = filterByColumn(filteredData, selectedOption, searchText);
+        } else if (selectedOption.equals("Ngày nhận") || selectedOption.equals("Ngày trả")) {
+            filteredData = filterByDateRange(filteredData, selectedOption, sqlFromDate, sqlToDate);
+        }
+
+        hienThiPhieuBaoHanh(filteredData);
+    }
+
+    private List<Object[]> filterCompleted(List<Object[]> data) {
+        List<Object[]> filteredData = new ArrayList<>();
+        Date currentDate = new Date(System.currentTimeMillis()); // Ngày hiện tại
+
+        for (Object[] row : data) {
+            Date dateValue = (Date) row[getColumnIndex("Ngày trả")];
+            if (dateValue != null && dateValue.before(currentDate)) {
+                filteredData.add(row);
+            }
+        }
+        return filteredData;
+    }
+
+    private List<Object[]> filterIncomplete(List<Object[]> data) {
+        List<Object[]> filteredData = new ArrayList<>();
+        Date currentDate = new Date(System.currentTimeMillis()); // Ngày hiện tại
+
+        for (Object[] row : data) {
+            Date dateValue = (Date) row[getColumnIndex("Ngày trả")];
+            if (dateValue != null && dateValue.after(currentDate)) {
+                filteredData.add(row);
+            }
+        }
+        return filteredData;
+    }
+
+    private void hienThiThongTinChiTietPhieuBaoHanh(String mapbh) {
+        List<Object[]> thongTinPhieu = BUS_PhieuBaoHanh.layThongTinPhieuBaoHanh(mapbh);
+
+        if (!thongTinPhieu.isEmpty()) {
+            Object[] thongTin = thongTinPhieu.get(0); // Lấy thông tin của phiếu bảo hành đã chọn
+            ChiTietPhieuBaoHanhForm form = new ChiTietPhieuBaoHanhForm(thongTin);
+            form.setVisible(true);
+        }
+    }
+
 }

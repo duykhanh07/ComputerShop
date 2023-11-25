@@ -11,7 +11,37 @@
 	<classpathentry kind="lib" path="src/jars/sqljdbc4.jar"/>
 	<classpathentry kind="lib" path="jgoodies-common-1.8.0.jar" sourcepath="jgoodies-common-1.8.0-sources.jar"/>
 	<classpathentry kind="lib" path="jgoodies-forms-1.8.0.jar" sourcepath="jgoodies-forms-1.8.0-sources.jar"/>
+	
+	<classpath kind="lib" path="src/jfreechart/hamcrest-core-1.3.jar"/>
+	<classpath kind="lib" path="src/jfreechart/jcommon-1.0.23.jar"/>
+	<classpath kind="lib" path="src/jfreechart/jfreechart-1.0.19-demo.jar"/>
+	<classpath kind="lib" path="src/jfreechart/jfreechart-1.0.19-experimental.jar"/>
+	<classpath kind="lib" path="src/jfreechart/jfreechart-1.0.19-swt.jar"/>
+	<classpath kind="lib" path="src/jfreechart/jfreechart-1.0.19.jar"/>
+	<classpath kind="lib" path="src/jfreechart/jfreesvg-2.0.jar"/>
+	<classpath kind="lib" path="src/jfreechart/junit-4.11.jar"/>
+	<classpath kind="lib" path="src/jfreechart/orsoncharts-1.4-eval-nofx.jar"/>
+	<classpath kind="lib" path="src/jfreechart/orsonpdf-1.6-eval.jar"/>
+	<classpath kind="lib" path="src/jfreechart/servlet.jar"/>
+	<classpath kind="lib" path="src/jfreechart/swtgraphics2d.jar"/>
+
+	<classpath kind="lib" path="src/ApachePOI/commons-codec-1.16.0.jar"/>
+	<classpath kind="lib" path="src/ApachePOI/commons-collections4-4.4.jar"/>
+	<classpath kind="lib" path="src/ApachePOI/commons-compress-1.24.0.jar"/>
+	<classpath kind="lib" path="src/ApachePOI/commons-io-2.13.0.jar"/>
+	<classpath kind="lib" path="src/ApachePOI/commons-math3-3.6.1.jar"/>
+	<classpath kind="lib" path="src/ApachePOI/curvesapi-1.08.jar"/>
+	<classpath kind="lib" path="src/ApachePOI/log4j-api-2.20.0.jar"/>
+	<classpath kind="lib" path="src/ApachePOI/poi-5.2.4.jar"/>
+	<classpath kind="lib" path="src/ApachePOI/poi-examples-5.2.4.jar"/>
+	<classpath kind="lib" path="src/ApachePOI/poi-ooxml-5.2.4.jar"/>
+	<classpath kind="lib" path="src/ApachePOI/poi-ooxml-lite-5.2.4.jar"/>
+	<classpath kind="lib" path="src/ApachePOI/poi-scratchpad-5.2.4.jar"/>
+	<classpath kind="lib" path="src/ApachePOI/SparseBitSet-1.3.jar"/>
+	<classpath kind="lib" path="src/ApachePOI/xmlbeans-5.1.1.jar"/>
+
+	<classpath kind="lib" path="src/GUI/formPhieuBaoHanh/itextpdf-5.5.13.3.jar"/>
+	
 	<classpathentry kind="output" path="bin"/>
-
-
+	
 </classpath>

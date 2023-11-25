@@ -1,18 +1,10 @@
 package DAO;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import DTO.DTO_CTHoaDon;
-import DTO.DTO_NhanVien;
-import DTO.DTO_SanPham;
 import java.sql.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 public class DAO_ThongKeDoanhSo {
     public static Connection getConnection() {
@@ -65,13 +57,16 @@ public class DAO_ThongKeDoanhSo {
 
     public static List<Object[]> getSanPhamDaBanTheoNam(int selectedYear) {
         List<Object[]> danhSachSanPhamDaBan = new ArrayList<>();
+        String query = "SELECT cthd.masp, sp.tensp, SUM(cthd.solg) AS solg " +
+                "FROM cthd " +
+                "INNER JOIN sanpham sp ON cthd.masp = sp.masp " +
+                "INNER JOIN hoadon hd ON cthd.mahd = hd.mahd " +
+                "WHERE YEAR(hd.ngaylaphd) = ? " +
+                "GROUP BY cthd.masp, sp.tensp";
+
         try (Connection conn = DAO_ThongKeDoanhSo.getConnection();
-                PreparedStatement ps = conn.prepareStatement(
-                        "SELECT cthd.masp, sp.tensp, cthd.solg " +
-                                "FROM cthd " +
-                                "INNER JOIN sanpham sp ON cthd.masp = sp.masp " +
-                                "INNER JOIN hoadon hd ON cthd.mahd = hd.mahd " +
-                                "WHERE YEAR(hd.ngaylaphd) = ?")) {
+                PreparedStatement ps = conn.prepareStatement(query)) {
+
             ps.setInt(1, selectedYear);
             ResultSet rs = ps.executeQuery();
 
@@ -89,16 +84,19 @@ public class DAO_ThongKeDoanhSo {
         return danhSachSanPhamDaBan;
     }
 
-    public static List<Object[]> getSanPhamDaBanTheoQuyTrongNam(int selectedYear, int selectedQuarter) {
+    public static List<Object[]> getSanPhamDaBanTheoQuy(int selectedYear, int selectedQuarter) {
         List<Object[]> danhSachSanPhamDaBan = new ArrayList<>();
+        String query = "SELECT cthd.masp, sp.tensp, SUM(cthd.solg) AS solg " +
+                "FROM cthd " +
+                "INNER JOIN sanpham sp ON cthd.masp = sp.masp " +
+                "INNER JOIN hoadon hd ON cthd.mahd = hd.mahd " +
+                "WHERE YEAR(hd.ngaylaphd) = ? " +
+                "AND QUARTER(hd.ngaylaphd) = ? " +
+                "GROUP BY cthd.masp, sp.tensp";
+
         try (Connection conn = DAO_ThongKeDoanhSo.getConnection();
-                PreparedStatement ps = conn.prepareStatement(
-                        "SELECT cthd.masp, sp.tensp, cthd.solg " +
-                                "FROM cthd " +
-                                "INNER JOIN sanpham sp ON cthd.masp = sp.masp " +
-                                "INNER JOIN hoadon hd ON cthd.mahd = hd.mahd " +
-                                "WHERE YEAR(hd.ngaylaphd) = ? " +
-                                "AND QUARTER(hd.ngaylaphd) = ?")) {
+                PreparedStatement ps = conn.prepareStatement(query)) {
+
             ps.setInt(1, selectedYear);
             ps.setInt(2, selectedQuarter);
             ResultSet rs = ps.executeQuery();
@@ -117,21 +115,54 @@ public class DAO_ThongKeDoanhSo {
         return danhSachSanPhamDaBan;
     }
 
-    public static List<Object[]> getSanPhamDaBanTheoThangTrongQuy(int selectedYear, int selectedQuarter,
-            int selectedMonth) {
+    public static List<Object[]> getSanPhamDaBanTheoThang(int selectedYear, int selectedQuarter, int selectedMonth) {
         List<Object[]> danhSachSanPhamDaBan = new ArrayList<>();
+        String query = "SELECT cthd.masp, sp.tensp, SUM(cthd.solg) AS solg " +
+                "FROM cthd " +
+                "INNER JOIN sanpham sp ON cthd.masp = sp.masp " +
+                "INNER JOIN hoadon hd ON cthd.mahd = hd.mahd " +
+                "WHERE YEAR(hd.ngaylaphd) = ? " +
+                "AND QUARTER(hd.ngaylaphd) = ? " +
+                "AND MONTH(hd.ngaylaphd) = ? " +
+                "GROUP BY cthd.masp, sp.tensp";
+
         try (Connection conn = DAO_ThongKeDoanhSo.getConnection();
-                PreparedStatement ps = conn.prepareStatement(
-                        "SELECT cthd.masp, sp.tensp, cthd.solg " +
-                                "FROM cthd " +
-                                "INNER JOIN sanpham sp ON cthd.masp = sp.masp " +
-                                "INNER JOIN hoadon hd ON cthd.mahd = hd.mahd " +
-                                "WHERE YEAR(hd.ngaylaphd) = ? " +
-                                "AND QUARTER(hd.ngaylaphd) = ? " +
-                                "AND MONTH(hd.ngaylaphd) = ?")) {
+                PreparedStatement ps = conn.prepareStatement(query)) {
+
             ps.setInt(1, selectedYear);
             ps.setInt(2, selectedQuarter);
             ps.setInt(3, selectedMonth);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Object[] row = new Object[3];
+                row[0] = rs.getString("masp");
+                row[1] = rs.getString("tensp");
+                row[2] = rs.getInt("solg");
+                danhSachSanPhamDaBan.add(row);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return danhSachSanPhamDaBan;
+    }
+
+    public static List<Object[]> getSanPhamDaBan(int selectedYear, int selectedMonth) {
+        List<Object[]> danhSachSanPhamDaBan = new ArrayList<>();
+        String query = "SELECT cthd.masp, sp.tensp, SUM(cthd.solg) AS solg " +
+                "FROM cthd " +
+                "INNER JOIN sanpham sp ON cthd.masp = sp.masp " +
+                "INNER JOIN hoadon hd ON cthd.mahd = hd.mahd " +
+                "WHERE YEAR(hd.ngaylaphd) = ? " +
+                "AND MONTH(hd.ngaylaphd) = ? " +
+                "GROUP BY cthd.masp, sp.tensp";
+
+        try (Connection conn = DAO_ThongKeDoanhSo.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, selectedYear);
+            ps.setInt(2, selectedMonth);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -207,7 +238,8 @@ public class DAO_ThongKeDoanhSo {
 
     public static List<Object[]> getSalesData() {
         List<Object[]> salesData = new ArrayList<>();
-        DecimalFormat decimalFormat = new DecimalFormat("#,###.00");
+        DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
+        decimalFormat.setMaximumFractionDigits(0);
 
         try (Connection conn = DAO_ThongKeDoanhSo.getConnection();
                 PreparedStatement ps = conn.prepareStatement(
