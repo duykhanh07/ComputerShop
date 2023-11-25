@@ -11,6 +11,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+
 import javax.swing.BorderFactory;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
@@ -80,20 +86,67 @@ public class ChiTietPhieuBaoHanhForm extends JFrame {
         panel.setBorder(BorderFactory.createTitledBorder("Thông tin phiếu bảo hành"));
 
         JPanel buttonPanel = new JPanel();
-        JButton myButtonTaoPDF = new JButton("Xuất PDF");
+        JButton myButtonTaoPDF = new JButton("Xuất WORD");
         buttonPanel.add(myButtonTaoPDF);
         contentPane.add(buttonPanel, BorderLayout.SOUTH);
 
-        // Sự kiện khi nhấn nút Xuất PDF
         myButtonTaoPDF.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                chonViTriLuuPDF(thongTinPhieu);
+                chonViTriLuuWord(thongTinPhieu);
             }
         });
 
     }
 
-    private void chonViTriLuuPDF(Object[] thongTin) {
+    private void taoWordTuThongTinPhieu(Object[] thongTin, String filePath) {
+        try {
+            XWPFDocument document = new XWPFDocument();
+
+            // Tạo đối tượng XWPFParagraph cho tiêu đề "PHIẾU BẢO HÀNH"
+            XWPFParagraph title = document.createParagraph();
+            title.setAlignment(ParagraphAlignment.CENTER);
+            XWPFRun titleRun = title.createRun();
+            titleRun.setBold(true);
+            titleRun.setFontSize(16);
+            titleRun.setText("PHIẾU BẢO HÀNH");
+
+            // Tạo các đối tượng XWPFParagraph cho từng thông tin
+            for (int i = 0; i < thongTin.length; i++) {
+                XWPFParagraph paragraph = document.createParagraph();
+                XWPFRun run = paragraph.createRun();
+
+                // Đặt thông tin dưới dạng "Mã phiếu: ..."
+                run.setText(getLabel(i) + thongTin[i]);
+            }
+
+            // Tạo file Word tại đường dẫn được chỉ định
+            FileOutputStream out = new FileOutputStream(filePath + ".docx");
+            document.write(out);
+            out.close();
+            JOptionPane.showMessageDialog(null, "Tạo file Word thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getLabel(int index) {
+        // Mảng chứa các nhãn tương ứng với từng thông tin
+        String[] labels = {
+                "Mã phiếu: ",
+                "Mã nhân viên: ",
+                "Mã hóa đơn: ",
+                "Mã sản phẩm: ",
+                "Tên sản phẩm: ",
+                "Lỗi: ",
+                "Giải quyết: ",
+                "Ngày nhận: ",
+                "Ngày trả: "
+        };
+
+        return labels[index];
+    }
+
+    private void chonViTriLuuWord(Object[] thongTin) {
         java.awt.Frame parentFrame = new java.awt.Frame(); // Tạo một instance của java.awt.Frame
         FileDialog fileDialog = new FileDialog(parentFrame, "Chọn vị trí lưu file", FileDialog.SAVE);
         fileDialog.setVisible(true);
@@ -105,41 +158,10 @@ public class ChiTietPhieuBaoHanhForm extends JFrame {
             try {
                 String filePath = directory + file;
 
-                taoPDFtuThongTinPhieu(thongTin, filePath);
+                taoWordTuThongTinPhieu(thongTin, filePath);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
     }
-
-    private void taoPDFtuThongTinPhieu(Object[] thongTin, String filePath) {
-        // Tạo PDF từ thông tin phiếu bảo hành và lưu vào đường dẫn filePath
-        try {
-            Document document = new Document();
-            PdfWriter.getInstance(document, new FileOutputStream(filePath + ".pdf"));
-            document.open();
-
-            Font font = new Font(
-                    BaseFont.createFont("D:\\arial-unicode-ms.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
-            font.setSize(12);
-            font.setStyle(Font.NORMAL);
-
-            // Thêm thông tin vào PDF
-            document.add(new Paragraph("Mã phiếu: " + thongTin[0]));
-            document.add(new Paragraph("Mã nhân viên: " + thongTin[1]));
-            document.add(new Paragraph("Mã hóa đơn: " + thongTin[2]));
-            document.add(new Paragraph("Mã sản phẩm: " + thongTin[3]));
-            document.add(new Paragraph("Tên sản phẩm: " + thongTin[4]));
-            document.add(new Paragraph("Lỗi: " + thongTin[5]));
-            document.add(new Paragraph("Giải quyết: " + thongTin[6]));
-            document.add(new Paragraph("Ngày nhận: " + thongTin[7]));
-            document.add(new Paragraph("Ngày trả: " + thongTin[8]));
-
-            document.close();
-            JOptionPane.showMessageDialog(null, "Tạo file PDF thành công!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 }
