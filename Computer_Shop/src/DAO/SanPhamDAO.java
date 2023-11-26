@@ -107,7 +107,7 @@ public class SanPhamDAO {
 		HashMap<String, Integer> ds_ton = new HashMap<String,Integer>();
 		try {
 			Connection c = Connect_mySQL();
-			String sql = "select sp.masp,(dsn.soluong - dsx.soluong) as tonkho\r\n"
+			String sql = "select distinct sp.masp,coalesce(dsn.soluong - dsx.soluong, 0) as tonkho\r\n"
 					+ "from\r\n"
 					+ "( select masp, sum(solg) as soluong\r\n"
 					+ "from ctdn\r\n"
@@ -117,7 +117,7 @@ public class SanPhamDAO {
 					+ "from cthd\r\n"
 					+ "group by masp) as dsx\r\n"
 					+ "on dsn.masp = dsx.masp\r\n"
-					+ "join Sanpham as sp on sp.masp = dsx.masp";
+					+ "right join Sanpham as sp on sp.masp = dsx.masp";
 			Statement st = c.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
 					ResultSet.CONCUR_UPDATABLE);
 			ResultSet rs = st.executeQuery(sql);
@@ -167,9 +167,10 @@ public class SanPhamDAO {
 	
 	public int update(DTO_SanPham sp) {
 		Connection c = Connect_mySQL();
-		String sql = "UPDATE sanpham SET " +
-				"tensp=?, image=?, cpu=?, ram=?, rom=?, card?," +
-				" manhinh=?, pin=?, hang=?, gia=?, tinhtrang=?";
+		String sql = "UPDATE sanpham " +
+				"SET tensp = ?, image = ?, cpu = ?, ram = ?, rom = ?," +
+				" card = ?, manhinh = ?, pin = ?, hang = ?, gia = ?, tinhtrang = ?" +
+				" WHERE masp = ?";
 		
 		try {
 			PreparedStatement ps = c.prepareStatement(sql);
@@ -184,7 +185,8 @@ public class SanPhamDAO {
 			ps.setString(9, sp.getHang());
 			ps.setInt(10, sp.getGia());
 			ps.setInt(11, sp.getTinhtrang());
-			ps.execute();
+			ps.setString(12, sp.getMasp());			
+			ps.executeUpdate();
 			ps.close();
 		}
 		catch(SQLException e) {

@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import javax.swing.JOptionPane;
-
+import javax.swing.JOptionPane;import com.jgoodies.common.display.ListDisplayable;
 import com.mysql.cj.x.protobuf.MysqlxCrud.Collection;
 
 import DAO.SanPhamDAO;
@@ -28,7 +27,15 @@ public class SanPhamBUS {
 	}
 	
 	public ArrayList<String> getBrand() {
-		return SanPhamDAO.getInstance().getAllBrands();
+//		return SanPhamDAO.getInstance().getAllBrands();
+		
+		ArrayList<String> ds_hang = new ArrayList<String>();
+		for(int i = 0; i< listHT.size(); i++) {
+			if(!ds_hang.contains(listHT.get(i).getHang())) {
+				ds_hang.add(listHT.get(i).getHang());
+			}
+		}
+		return ds_hang;
 	}
 	public void filterByBrand(ArrayList<String> brands) {
 		listHT.clear();
@@ -93,5 +100,9 @@ public class SanPhamBUS {
 	
 	public void addSP(DTO_SanPham sp) {
 		SanPhamDAO.getInstance().insert(sp);
+	}
+	
+	public void editSP(DTO_SanPham sp) {
+		SanPhamDAO.getInstance().update(sp);
 	}
 }

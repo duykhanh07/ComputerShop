@@ -9,10 +9,14 @@ import java.awt.Color;
 import javax.swing.border.EmptyBorder;
 import java.awt.Dimension;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+
 import MyDesign.MyComponents.MyButton;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -21,17 +25,31 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 //import javax.swing.table.TableRowSorter;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import BUS.SanPhamBUS;
 import DTO.DTO_SanPham;
@@ -45,6 +63,7 @@ import javax.swing.ImageIcon;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.RowFilter;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
 
 public class QuanLySanPhamFrm extends JPanel {
@@ -61,11 +80,16 @@ public class QuanLySanPhamFrm extends JPanel {
 	
 	private ArrayList<JCheckBox> dsHangCheckBox;
 	private HashMap<Integer, String> tinhTrangMap;
+	private MyTextfield timKiemSanPhamTxt;
+	private JComboBox timKiemTypeCmbx_1;
+	private JComboBox sortCmbx_1;
+	private ArrayList<DTO_SanPham> newlistsp;
 
 	/**
 	 * Create the panel.
 	 */
 	public QuanLySanPhamFrm() {
+		QuanLySanPhamFrm self = this;
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
@@ -78,14 +102,14 @@ public class QuanLySanPhamFrm extends JPanel {
 		
 		initTinhTrangMap();
 		
-		MyTextfield timKiemSanPhamTxt = new MyTextfield();
+		timKiemSanPhamTxt = new MyTextfield();
 		timKiemSanPhamTxt.setPreferredSize(new Dimension(180, 35));
 		timKiemSanPhamTxt.setColumns(10);
 		timKiemSanPhamTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
 		timKiemSanPhamTxt.setBackground(new Color(77, 77, 77));
 		
-		JComboBox timKiemTypeCmbx_1 = new JComboBox();
-		timKiemTypeCmbx_1.setModel(new DefaultComboBoxModel(new String[] {"<Chọn loại>", "Mã sản phẩm", "Tên sản phẩm"}));
+		timKiemTypeCmbx_1 = new JComboBox();
+		timKiemTypeCmbx_1.setModel(new DefaultComboBoxModel(new String[] {"----------", "Mã sản phẩm", "Tên sản phẩm"}));
 		timKiemTypeCmbx_1.setForeground(Color.CYAN);
 		timKiemTypeCmbx_1.setBackground(new Color(102, 102, 102));
 		
@@ -99,8 +123,8 @@ public class QuanLySanPhamFrm extends JPanel {
 		lblNewLabel_1.setForeground(Color.CYAN);
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		JComboBox sortCmbx_1 = new JComboBox();
-		sortCmbx_1.setModel(new DefaultComboBoxModel(new String[] {"---------", "Tên từ A-Z", "Tên từ Z-A", "Giá thấp đến cao", "Giá cao đến thấp"}));
+		sortCmbx_1 = new JComboBox();
+		sortCmbx_1.setModel(new DefaultComboBoxModel(new String[] {"----------", "Tên từ A-Z", "Tên từ Z-A", "Giá thấp đến cao", "Giá cao đến thấp"}));
 		sortCmbx_1.setForeground(Color.CYAN);
 		sortCmbx_1.setBackground(new Color(102, 102, 102));
 		
@@ -177,7 +201,7 @@ public class QuanLySanPhamFrm extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource()==themSanPhamBtn) {
-					ThemSanPhamFrm themSanPhamFrm = new ThemSanPhamFrm();
+					ThemSanPhamFrm themSanPhamFrm = new ThemSanPhamFrm(self);
 					themSanPhamFrm.setVisible(true);
 				}
 			}
@@ -187,19 +211,50 @@ public class QuanLySanPhamFrm extends JPanel {
 		mbtnThmSnPhm.setText("thêm sản phẩm với Excel");
 		mbtnThmSnPhm.setHorizontalTextPosition(SwingConstants.LEADING);
 		
+		mbtnThmSnPhm.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser jFileChooser = new JFileChooser();
+				jFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Excel workbook(.xlsx)","xlsx"));
+				jFileChooser.setAcceptAllFileFilterUsed(false); // chi luu file excel,Loai bo viec chon nhung file ko lien quan
+				int userSelection = jFileChooser.showOpenDialog(QuanLySanPhamFrm.this); //show hop thoai mo va tra ve quyet dinh cua nguoi dung
+				if (userSelection == JFileChooser.APPROVE_OPTION) {
+					File fileOpen = jFileChooser.getSelectedFile();
+					String fileName = fileOpen.getAbsolutePath();
+					import_excel(fileName);
+				}
+			}
+		});
+		
 		JLabel autoIncreaseSpaceLbl = new JLabel("");
 		
 		MyButton capNhatSanPhamBtn = new MyButton();
 		capNhatSanPhamBtn.setText("cập nhật");
 		capNhatSanPhamBtn.setHorizontalTextPosition(SwingConstants.LEADING);
-		capNhatSanPhamBtn.addActionListener(new ActionListener() {
-			
+		capNhatSanPhamBtn.addMouseListener(new MouseAdapter() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (e.getSource() == capNhatSanPhamBtn) {
+			public void mouseClicked(MouseEvent e) {
+				DefaultTableModel model = (DefaultTableModel)table.getModel();
+				selectrow = table.getSelectedRow();
 				CapNhatSanPhamFrm capNhatSanPhamFrm = new CapNhatSanPhamFrm();
 				capNhatSanPhamFrm.setVisible(true);
-				}
+				
+				capNhatSanPhamFrm.maSanPhamTxt.setText(sp_bus.listHT.get(selectrow).getMasp());
+				capNhatSanPhamFrm.tenSanPhamTxt.setText(sp_bus.listHT.get(selectrow).getTensp());
+				capNhatSanPhamFrm.CPUTxt.setText(sp_bus.listHT.get(selectrow).getCpu());
+				capNhatSanPhamFrm.ramTxt.setText(sp_bus.listHT.get(selectrow).getRam());
+				capNhatSanPhamFrm.romTxt.setText(sp_bus.listHT.get(selectrow).getRom());
+				capNhatSanPhamFrm.cardTxt.setText(sp_bus.listHT.get(selectrow).getCard());
+				capNhatSanPhamFrm.manHinhTxt.setText(sp_bus.listHT.get(selectrow).getManhinh());
+				capNhatSanPhamFrm.pinTxt.setText(sp_bus.listHT.get(selectrow).getPin());
+				capNhatSanPhamFrm.hangTxt.setText(sp_bus.listHT.get(selectrow).getHang());
+				capNhatSanPhamFrm.giaTxt.setText(sp_bus.listHT.get(selectrow).getGia()+"");
+				capNhatSanPhamFrm.tinhTrangCmbx.setSelectedItem(tinhTrangMap.get(sp_bus.listHT.get(selectrow).getTinhtrang()));
+				capNhatSanPhamFrm.imageLinkTxt.setText(sp_bus.listHT.get(selectrow).getImage());
+				capNhatSanPhamFrm.lblNewLabel.setIcon(new ImageIcon(new ImageIcon(QuanLySanPhamFrm.class.getResource
+					(sp_bus.listHT.get(selectrow).getImage())).getImage().getScaledInstance(168, 112, Image.SCALE_SMOOTH)));
+
 			}
 		});
 		
@@ -212,9 +267,8 @@ public class QuanLySanPhamFrm extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				timKiemSanPhamTxt.setText("");
-				timKiemSanPham("", 0);
-				sortCmbx_1.setSelectedIndex(0);
+				refresh();
+				
 				
 			}
 		});
@@ -322,6 +376,8 @@ public class QuanLySanPhamFrm extends JPanel {
 			panel.add(chckbxNewCheckBox);
 			dsHangCheckBox.add(chckbxNewCheckBox);
 		}
+		panel.revalidate();
+		panel.repaint();
 		
 		// TODO : gan chuc nang cho checkbox hang
 		
@@ -363,7 +419,72 @@ public class QuanLySanPhamFrm extends JPanel {
 		
 	}
 	public void timKiemSanPham(String str, int index) {
-		sp_bus.timKiemSanPham(str, index);
+		sp_bus.timKiemSanPham(str.strip().toLowerCase(), index);
 		loadSanPhamTable();
+		taoDanhSachHang();
 	}
+	
+	public void refresh() {
+		this.sp_bus = new SanPhamBUS();
+		taoDanhSachHang();
+		loadSanPhamTable();
+		timKiemSanPhamTxt.setText("");
+		timKiemTypeCmbx_1.setSelectedIndex(0);
+		sortCmbx_1.setSelectedIndex(0);
+	}
+	
+	public void import_excel(String fileName) {
+		try {
+			FileInputStream fileInputStream = new FileInputStream(fileName);
+			XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
+			XSSFSheet sheet1 = workbook.getSheetAt(0);
+				
+			Iterator<Row> row_Iterator = sheet1.iterator();
+			Row firstRow = row_Iterator.next();
+			Cell firstCell = firstRow.getCell(0);
+			System.out.println(firstCell.getStringCellValue());
+			newlistsp = new ArrayList<DTO_SanPham>();
+				
+			while(row_Iterator.hasNext()) {
+				Row currentRow = row_Iterator.next();
+				DTO_SanPham newsp = new DTO_SanPham();
+				newsp.setMasp(currentRow.getCell(0).getStringCellValue());
+				newsp.setTensp(currentRow.getCell(1).getStringCellValue());
+				newsp.setImage(currentRow.getCell(2).getStringCellValue());
+				newsp.setCpu(currentRow.getCell(3).getStringCellValue());
+				newsp.setRam(currentRow.getCell(4).getStringCellValue());
+				newsp.setRom(currentRow.getCell(5).getStringCellValue());
+				newsp.setCard(currentRow.getCell(6).getStringCellValue());
+				newsp.setManhinh(currentRow.getCell(7).getStringCellValue());
+				newsp.setPin(currentRow.getCell(8).getStringCellValue());
+				newsp.setHang(currentRow.getCell(9).getStringCellValue());
+				newsp.setGia(Integer.parseInt(currentRow.getCell(10).getStringCellValue()));
+				newsp.setTinhtrang(Integer.parseInt(currentRow.getCell(11).getStringCellValue()));
+				newlistsp.add(newsp);
+				
+			}
+			JOptionPane.showMessageDialog(null, "Import thành công");
+			loadSanPhamExcel();
+			workbook.close();
+			
+		} 
+		catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Import thất bại");
+		}
+	}
+		
+		
+
+	public void loadSanPhamExcel() {
+		DecimalFormat df = new DecimalFormat("#,###₫");
+		model = (DefaultTableModel) table.getModel();
+		model.setRowCount(0);
+		for (int i=0;i<newlistsp.size();i++) {
+			model.addRow(new Object[] {newlistsp.get(i).getMasp(), newlistsp.get(i).getTensp(),
+					newlistsp.get(i).getCpu(), newlistsp.get(i).getRam(), newlistsp.get(i).getRom(),newlistsp.get(i).getCard(),
+					newlistsp.get(i).getHang(),df.format(newlistsp.get(i).getGia()),
+					sp_bus.tonKhoMap.get(newlistsp.get(i).getMasp()), tinhTrangMap.get(newlistsp.get(i).getTinhtrang())});
+		}
+	}
+	
 }

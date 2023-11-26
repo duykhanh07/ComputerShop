@@ -37,6 +37,7 @@ import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
 import BUS.SanPhamBUS;
+import DAO.SanPhamDAO;
 import DTO.DTO_SanPham;
 
 import javax.swing.GroupLayout;
@@ -72,8 +73,9 @@ public class ThemSanPhamFrm extends JFrame {
 	private SanPhamBUS sp_bus;
 	private String relativePath = "/assets/Image/";
 	private String maspHientai;
-	private ArrayList<DTO_SanPham> listSP;
-	private ArrayList<DTO_SanPham> listHT = new ArrayList<DTO_SanPham>();
+	private ArrayList<DTO_SanPham> listSP = SanPhamDAO.getInstance().selectAll();
+	public ArrayList<DTO_SanPham> listHT = new ArrayList<DTO_SanPham>();
+	public QuanLySanPhamFrm qlsp;
 	DefaultTableModel model;
 	int selectrow;
 	
@@ -86,7 +88,7 @@ public class ThemSanPhamFrm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ThemSanPhamFrm frame = new ThemSanPhamFrm();
+					ThemSanPhamFrm frame = new ThemSanPhamFrm(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -98,8 +100,8 @@ public class ThemSanPhamFrm extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ThemSanPhamFrm() {
-		
+	public ThemSanPhamFrm(QuanLySanPhamFrm qlsp) {
+		this.qlsp = qlsp;
 		setMinimumSize(new Dimension(1024,740));
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -231,7 +233,7 @@ public class ThemSanPhamFrm extends JFrame {
 		
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				DecimalFormat df = new DecimalFormat("#,###₫");
 				int tinhtrang=0;
 				if (checkField()== 1 && checkDupAdd() == 1) {
 					if (tinhTrangCmbx.getSelectedItem() == "đang kinh doanh")
@@ -243,7 +245,7 @@ public class ThemSanPhamFrm extends JFrame {
 					listSP = sp_bus.importToTable(listSP);
 					Object[] newRow = {maSanPhamTxt.getText(), tenSanPhamTxt.getText(), relativePath, CPUTxt.getText(),
 							ramTxt.getText(), romTxt.getText(), cardTxt.getText(), manHinhTxt.getText(), pinTxt.getText(),
-							hangTxt.getText(), Integer.parseInt(giaTxt.getText()), tinhtrang};
+							hangTxt.getText(), df.format(Integer.parseInt(giaTxt.getText())), tinhtrang};
 					
 					maSanPhamTxt.setText("");
 					tenSanPhamTxt.setText("");
@@ -276,9 +278,6 @@ public class ThemSanPhamFrm extends JFrame {
 				// sử dụng File chooser lấy ra đường dẫn hoặc lấy ra tên rồi tạo đường dẫn cho hình ảnh
 				JFileChooser openFileChooser = new JFileChooser();
 				openFileChooser.setDialogTitle("Open file");
-				//openFileChooser.removeChoosableFileFilter(openFileChooser.getFileFilter());
-				//FileNameExtensionFilter filter=new FileNameExtensionFilter("Image file (.jpg)", "jpg");
-				//openFileChooser.setFileFilter(filter);
 				
 				if (openFileChooser.showOpenDialog(null)==JFileChooser.APPROVE_OPTION) {
 					File inputFile=openFileChooser.getSelectedFile();
@@ -320,7 +319,8 @@ public class ThemSanPhamFrm extends JFrame {
 				{null, null, null, null, null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"m\u00E3 s\u1EA3n ph\u1EA9m", "t\u00EAn s\u1EA3n ph\u1EA9m", "cpu", "ram", "b\u1ED9 nh\u1EDB", "card \u0111\u1ED3 h\u1ECDa", "m\u00E0n h\u00ECnh", "pin", "h\u00E3ng", "gi\u00E1", "t\u00ECnh tr\u1EA1ng", "h\u00ECnh \u1EA3nh"
+					"mã sản phẩm", "tên sản phẩm", "image", "cpu", "ram", "rom", 
+					"card", "màn hình", "pin", "hãng", "giá", "tình trạng"
 			}
 		));
 		model = (DefaultTableModel) table.getModel();
@@ -335,17 +335,27 @@ public class ThemSanPhamFrm extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				XemTruocThemSanPham xemTruoc = new XemTruocThemSanPham();
+				XemTruocThemSanPham xemTruoc = new XemTruocThemSanPham(qlsp);
 				xemTruoc.setVisible(true);
-				DecimalFormat df = new DecimalFormat("#,###₫");
+				
+				for (int i=0;i<listSP.size();i++) {
+					xemTruoc.model.addRow(new Object[] {listSP.get(i).getMasp(), listSP.get(i).getTensp(), listSP.get(i).getImage(),
+							listSP.get(i).getCpu(), listSP.get(i).getRam(), listSP.get(i).getRom(), listSP.get(i).getCard(),
+							listSP.get(i).getManhinh(), listSP.get(i).getPin(), listSP.get(i).getHang(), listSP.get(i).getGia(),
+							listSP.get(i).getTinhtrang()});
+					
+					}
+				
 				
 				for (int i=0;i<listHT.size();i++) {
 					xemTruoc.model.addRow(new Object[] {listHT.get(i).getMasp(), listHT.get(i).getTensp(), listHT.get(i).getImage(),
 							listHT.get(i).getCpu(),listHT.get(i).getRam(), listHT.get(i).getRom(),listHT.get(i).getCard(),
-							listHT.get(i).getManhinh(), listHT.get(i).getHang(),df.format(listHT.get(i).getGia()),
+							listHT.get(i).getManhinh(), listHT.get(i).getPin(), listHT.get(i).getHang(), listHT.get(i).getGia(),
 							listHT.get(i).getTinhtrang()});
 				}
-				
+				if(qlsp!=null) {
+					qlsp.refresh();
+				}
 			}
 		});
 		MyButton xoaBtn = new MyButton();

@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
@@ -22,9 +23,14 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
 import BUS.SanPhamBUS;
+import DAO.SanPhamDAO;
+import DTO.DTO_SanPham;
 
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.GroupLayout;
@@ -38,7 +44,9 @@ public class XemTruocThemSanPham extends JFrame {
 	public DefaultTableModel model;
 	private SanPhamBUS sp_bus;
 	private HashMap<Integer, String> tinhTrangMap;
-
+	public QuanLySanPhamFrm qlsp;
+	private ArrayList<DTO_SanPham> listSP = SanPhamDAO.getInstance().selectAll();
+	
 	/**
 	 * Launch the application.
 	 */
@@ -46,7 +54,7 @@ public class XemTruocThemSanPham extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					XemTruocThemSanPham frame = new XemTruocThemSanPham();
+					XemTruocThemSanPham frame = new XemTruocThemSanPham(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -58,7 +66,9 @@ public class XemTruocThemSanPham extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public XemTruocThemSanPham() {
+	public XemTruocThemSanPham(QuanLySanPhamFrm qlsp) {
+		this.qlsp = qlsp;
+		ThemSanPhamFrm themSanPhamFrm = new ThemSanPhamFrm(qlsp);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(XemTruocThemSanPham.class.getResource("/assets/Laptop_Login.png")));
 		setTitle("Xem trước thêm sản phẩm");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -86,21 +96,72 @@ public class XemTruocThemSanPham extends JFrame {
 				{null, null, null, null, null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"m\u00E3 s\u1EA3n ph\u1EA9m", "t\u00EAn s\u1EA3n ph\u1EA9m", "CPU", "Ram", "B\u1ED9 nh\u1EDB", "Card \u0111\u1ED3 h\u1ECDa", "m\u00E0n h\u00ECnh", "pin", "h\u00E3ng", "gi\u00E1", "t\u00ECnh tr\u1EA1ng", "h\u00ECnh \u1EA3nh"
+					"mã sản phẩm", "tên sản phẩm", "image", "cpu", "ram", "rom", 
+					"card", "màn hình", "pin", "hãng", "giá", "tình trạng"
 			}
 		));
 		model = (DefaultTableModel)table.getModel();
-		
+		model.setRowCount(0);
 		sp_bus = new SanPhamBUS();
 		scrollPane_1.setViewportView(table);
 		
 		MyButton huyBtn = new MyButton();
 		huyBtn.setText("hủy");
 		huyBtn.setHorizontalTextPosition(SwingConstants.LEADING);
+		huyBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int reply =JOptionPane.showConfirmDialog(null, "Bạn có muốn huỷ không?", "Huỷ", JOptionPane.YES_NO_OPTION);
+				if (reply == JOptionPane.YES_OPTION) {
+					setVisible(false);
+				}
+			}
+		});
 		
 		MyButton xacNhanBtn = new MyButton();
-		xacNhanBtn.setText("Xác nhận");
+		xacNhanBtn.setText("Xác nhận");		
 		xacNhanBtn.setHorizontalTextPosition(SwingConstants.LEADING);
+		
+		xacNhanBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sp_bus = new SanPhamBUS();
+				
+				for (int i=listSP.size();i<model.getRowCount();i++) { 
+					String masp = model.getValueAt(i,0).toString();
+					String tensp = model.getValueAt(i, 1).toString(); 
+					String image = model.getValueAt(i, 2).toString(); 
+					String cpu = model.getValueAt(i,3).toString(); 
+					String ram = model.getValueAt(i, 4).toString(); 
+					String rom =model.getValueAt(i, 5).toString(); 
+					String card = model.getValueAt(i,6).toString(); 
+					String manhinh = model.getValueAt(i, 7).toString();
+					String pin = model.getValueAt(i, 8).toString(); 
+					String hang = model.getValueAt(i,9).toString();
+					int gia = (int) model.getValueAt(i, 10); 
+					int tinhtrang = (int) model.getValueAt(i, 11);
+				  
+					DTO_SanPham sp = new DTO_SanPham(masp, tensp, image, cpu, ram, rom, card,
+				  manhinh , pin, hang, gia, tinhtrang); 
+					sp_bus.addSP(sp); 
+				 }
+				 
+				
+				
+				if(qlsp != null) {
+					qlsp.refresh();
+					JOptionPane.showMessageDialog(null, "Thêm thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Thêm thất bại", "Thông báo", JOptionPane.ERROR_MESSAGE);
+				}
+				
+				
+			}
+		});
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
