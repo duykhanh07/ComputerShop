@@ -134,6 +134,7 @@ public class ChiTietPhieuBaoHanhForm extends JFrame {
             FileOutputStream out = new FileOutputStream(filePath + ".docx");
             document.write(out);
             out.close();
+            System.out.println("File Word đã được tạo thành công!");
             JOptionPane.showMessageDialog(null, "Tạo file Word thành công!");
         } catch (Exception e) {
             e.printStackTrace();
