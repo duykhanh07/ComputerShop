@@ -45,6 +45,8 @@ import javax.swing.table.DefaultTableModel;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -438,31 +440,52 @@ public class QuanLySanPhamFrm extends JPanel {
 			FileInputStream fileInputStream = new FileInputStream(fileName);
 			XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
 			XSSFSheet sheet1 = workbook.getSheetAt(0);
+			DataFormatter formatter = new DataFormatter();
+			int columnIndex = 0;
 				
 			Iterator<Row> row_Iterator = sheet1.iterator();
 			Row firstRow = row_Iterator.next();
 			Cell firstCell = firstRow.getCell(0);
-			System.out.println(firstCell.getStringCellValue());
+		
 			newlistsp = new ArrayList<DTO_SanPham>();
 				
 			while(row_Iterator.hasNext()) {
 				Row currentRow = row_Iterator.next();
 				DTO_SanPham newsp = new DTO_SanPham();
-				newsp.setMasp(currentRow.getCell(0).getStringCellValue());
-				newsp.setTensp(currentRow.getCell(1).getStringCellValue());
-				newsp.setImage(currentRow.getCell(2).getStringCellValue());
-				newsp.setCpu(currentRow.getCell(3).getStringCellValue());
-				newsp.setRam(currentRow.getCell(4).getStringCellValue());
-				newsp.setRom(currentRow.getCell(5).getStringCellValue());
-				newsp.setCard(currentRow.getCell(6).getStringCellValue());
-				newsp.setManhinh(currentRow.getCell(7).getStringCellValue());
-				newsp.setPin(currentRow.getCell(8).getStringCellValue());
-				newsp.setHang(currentRow.getCell(9).getStringCellValue());
-				newsp.setGia(Integer.parseInt(currentRow.getCell(10).getStringCellValue()));
-				newsp.setTinhtrang(Integer.parseInt(currentRow.getCell(11).getStringCellValue()));
-				newlistsp.add(newsp);
 				
+				newsp.setMasp(currentRow.getCell(0).getStringCellValue());
+				
+				newsp.setTensp(currentRow.getCell(1).getStringCellValue());
+				
+				newsp.setImage(currentRow.getCell(2).getStringCellValue());
+				
+				newsp.setCpu(currentRow.getCell(3).getStringCellValue());
+				
+				newsp.setRam(currentRow.getCell(4).getStringCellValue());
+				
+				newsp.setRom(currentRow.getCell(5).getStringCellValue());
+				
+				newsp.setCard(currentRow.getCell(6).getStringCellValue());
+				
+				newsp.setManhinh(currentRow.getCell(7).getStringCellValue());
+				
+				newsp.setPin(currentRow.getCell(8).getStringCellValue());
+				
+				newsp.setHang(currentRow.getCell(9).getStringCellValue());
+				
+				Cell cellGia = currentRow.getCell(10);
+				String strGia = formatter.formatCellValue(cellGia);
+				newsp.setGia(Integer.parseInt(strGia));
+				
+				Cell cellTinhtrang = currentRow.getCell(11);
+				String strTinhtrang = formatter.formatCellValue(cellTinhtrang);
+				newsp.setTinhtrang(Integer.parseInt(strTinhtrang));
+				
+				newlistsp.add(newsp);
+				sp_bus.addSP(newsp);
+							
 			}
+			
 			JOptionPane.showMessageDialog(null, "Import thành công");
 			loadSanPhamExcel();
 			workbook.close();
@@ -478,13 +501,58 @@ public class QuanLySanPhamFrm extends JPanel {
 	public void loadSanPhamExcel() {
 		DecimalFormat df = new DecimalFormat("#,###₫");
 		model = (DefaultTableModel) table.getModel();
-		model.setRowCount(0);
+		
 		for (int i=0;i<newlistsp.size();i++) {
-			model.addRow(new Object[] {newlistsp.get(i).getMasp(), newlistsp.get(i).getTensp(),
-					newlistsp.get(i).getCpu(), newlistsp.get(i).getRam(), newlistsp.get(i).getRom(),newlistsp.get(i).getCard(),
-					newlistsp.get(i).getHang(),df.format(newlistsp.get(i).getGia()),
-					sp_bus.tonKhoMap.get(newlistsp.get(i).getMasp()), tinhTrangMap.get(newlistsp.get(i).getTinhtrang())});
+			model.addRow(new Object[] {newlistsp.get(i).getMasp(), newlistsp.get(i).getTensp(), newlistsp.get(i).getCpu(),
+					newlistsp.get(i).getRam(), newlistsp.get(i).getRom(),newlistsp.get(i).getCard(), newlistsp.get(i).getHang(),
+					df.format(newlistsp.get(i).getGia()), sp_bus.tonKhoMap.get(newlistsp.get(i).getMasp()),
+					tinhTrangMap.get(newlistsp.get(i).getTinhtrang())});
 		}
+	}
+	
+	public int validateData(Sheet sheet, int cellIndex) {
+		int flag = 1;
+		for (Row row : sheet) {
+	        // Skip the header row
+	        if (row.getRowNum() == 0) {
+	            continue;
+	        }
+
+	        Cell cell = row.getCell(cellIndex);
+
+	        // Check if the cell is not empty
+	        if (cell == null || cell.getCellType() == CellType.BLANK) {
+	            System.out.println("Có ô dữ liệu bị trống ở hàng " + row.getRowNum());
+	            flag = 0;
+	        } 
+	        else {
+	            
+	            switch (cell.getCellType()) {
+	                case STRING:
+	                    String stringValue = cell.getStringCellValue();
+	                    // Example: Check if a string is not too long
+	                    if (stringValue.length() > 50) {
+	                        System.out.println("Chuỗi kí tự quá dài ở hàng " + row.getRowNum());
+	                        flag = 0;
+	                    }
+	                    // Add more string-specific validation as needed
+	                    break;
+
+	                case NUMERIC:
+	                    double numericValue = cell.getNumericCellValue();
+	                    // Example: Check if a numeric value is within a specific range
+	                    if (numericValue < 0) {
+	                        System.out.println("Giá bán phải là số dương ở hàng " + row.getRowNum());
+	                        flag = 0;
+	                    }
+	                    // Add more numeric-specific validation as needed
+	                    break;
+
+	                
+	            }
+	        }
+	    }
+		return flag;
 	}
 	
 }
