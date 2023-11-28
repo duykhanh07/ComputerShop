@@ -9,6 +9,9 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.Toolkit;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+
 import javax.swing.JLabel;
 import java.awt.Rectangle;
 import javax.swing.border.LineBorder;
@@ -23,6 +26,19 @@ public class ChiTietSanPham extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	public JLabel maSanPhamLbl;
+	public JLabel tenSanPhamLbl;
+	public JLabel CPULbl;
+	public JLabel ramLbl;
+	public JLabel romLbl;
+	public JLabel cardLbl;
+	public JLabel manHinhLbl;
+	public JLabel pinLbl;
+	public JLabel hangLbl;
+	public JLabel giaLbl;
+	public JLabel tinhTrangLbl;
+	public JLabel lblHnhnh;
+	public JLabel lblNewLabel;
 
 	/**
 	 * Launch the application.
@@ -51,20 +67,21 @@ public class ChiTietSanPham extends JFrame {
 		            break;
 		        }
 		    }
+			
 		} catch (Exception e) {}
 		
 		setBackground(new Color(102, 102, 102));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ChiTietSanPham.class.getResource("/assets/Laptop_Login.png")));
 		setTitle("Chi tiết sản phẩm");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setSize(440, 551);
 		setLocationRelativeTo(null);
-		setSize(366, 551);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(102, 102, 102));
 
 		setContentPane(contentPane);
 		
-		JLabel lblNewLabel = new JLabel("Hinh anh");
+		lblNewLabel = new JLabel("");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblNewLabel.setForeground(new Color(128, 255, 255));
@@ -74,47 +91,47 @@ public class ChiTietSanPham extends JFrame {
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblNewLabel_1.setForeground(new Color(0, 255, 255));
 		
-		JLabel maSanPhamLbl = new JLabel("mã sản phẩm : <masp>");
+		maSanPhamLbl = new JLabel("mã sản phẩm : <masp>");
 		maSanPhamLbl.setForeground(Color.CYAN);
 		maSanPhamLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		JLabel tenSanPhamLbl = new JLabel("tên sản phẩm : <tensp>");
+		tenSanPhamLbl = new JLabel("tên sản phẩm : <tensp>");
 		tenSanPhamLbl.setForeground(Color.CYAN);
 		tenSanPhamLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		JLabel CPULbl = new JLabel("CPU : <cpu>");
+		CPULbl = new JLabel("CPU : <cpu>");
 		CPULbl.setForeground(Color.CYAN);
 		CPULbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		JLabel ramLbl = new JLabel("RAM : <ram>");
+		ramLbl = new JLabel("RAM : <ram>");
 		ramLbl.setForeground(Color.CYAN);
 		ramLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		JLabel romLbl = new JLabel("bộ nhớ : <ROM>");
+		romLbl = new JLabel("bộ nhớ : <ROM>");
 		romLbl.setForeground(Color.CYAN);
 		romLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		JLabel cardLbl = new JLabel("card đồ hoa : <card>");
+		cardLbl = new JLabel("card đồ hoa : <card>");
 		cardLbl.setForeground(Color.CYAN);
 		cardLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		JLabel manHinhLbl = new JLabel("màn hình: <manhinh>");
+		manHinhLbl = new JLabel("màn hình: <manhinh>");
 		manHinhLbl.setForeground(Color.CYAN);
 		manHinhLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		JLabel pinLbl = new JLabel("Pin : <pin>");
+		pinLbl = new JLabel("Pin : <pin>");
 		pinLbl.setForeground(Color.CYAN);
 		pinLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		JLabel hangLbl = new JLabel("Hãng : <hang>");
+		hangLbl = new JLabel("Hãng : <hang>");
 		hangLbl.setForeground(Color.CYAN);
 		hangLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		JLabel giaLbl = new JLabel("giá  : <gia>");
+		giaLbl = new JLabel("giá  : <gia>");
 		giaLbl.setForeground(Color.CYAN);
 		giaLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		JLabel tinhTrangLbl = new JLabel("tình trang : <đang kinh doanh hay ngưng>");
+		tinhTrangLbl = new JLabel("tình trang : <đang kinh doanh hay ngưng>");
 		tinhTrangLbl.setForeground(Color.CYAN);
 		tinhTrangLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
@@ -122,7 +139,7 @@ public class ChiTietSanPham extends JFrame {
 		
 		JLabel autoIncreaseSpace2 = new JLabel("");
 		
-		JLabel lblHnhnh = new JLabel("hình ảnh : <image>");
+		lblHnhnh = new JLabel("hình ảnh : <image>");
 		lblHnhnh.setForeground(Color.CYAN);
 		lblHnhnh.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -132,28 +149,28 @@ public class ChiTietSanPham extends JFrame {
 					.addGap(10)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(auIncreaseSpace1, GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+							.addComponent(auIncreaseSpace1, GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
 							.addGap(10)
 							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 168, GroupLayout.PREFERRED_SIZE)
 							.addGap(10)
-							.addComponent(autoIncreaseSpace2, GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+							.addComponent(autoIncreaseSpace2, GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
 							.addGap(4))
-						.addComponent(giaLbl, GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
-						.addComponent(cardLbl, GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
-						.addComponent(tinhTrangLbl, GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
-						.addComponent(hangLbl, GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
-						.addComponent(tenSanPhamLbl, GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
-						.addComponent(CPULbl, GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
-						.addComponent(lblNewLabel_1, GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
-						.addComponent(ramLbl, GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
-						.addComponent(romLbl, GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
-						.addComponent(pinLbl, GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
-						.addComponent(manHinhLbl, GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
-						.addComponent(maSanPhamLbl, GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE))
+						.addComponent(giaLbl, GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+						.addComponent(cardLbl, GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+						.addComponent(tinhTrangLbl, GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+						.addComponent(hangLbl, GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+						.addComponent(tenSanPhamLbl, GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+						.addComponent(CPULbl, GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+						.addComponent(lblNewLabel_1, GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+						.addComponent(ramLbl, GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+						.addComponent(romLbl, GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+						.addComponent(pinLbl, GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+						.addComponent(manHinhLbl, GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+						.addComponent(maSanPhamLbl, GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE))
 					.addGap(10))
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(lblHnhnh, GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+					.addComponent(lblHnhnh, GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
 					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
@@ -202,7 +219,7 @@ public class ChiTietSanPham extends JFrame {
 							.addComponent(maSanPhamLbl, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(lblHnhnh, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(18, Short.MAX_VALUE))
+					.addContainerGap(20, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}

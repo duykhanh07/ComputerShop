@@ -11,13 +11,13 @@ public class DTO_SanPham {
 	private String manhinh;
 	private String pin;
 	private String hang;
-	private String gia;
+	private int gia;
 	private int tinhtrang;
 	
 	public DTO_SanPham() {}
 
 	public DTO_SanPham(String masp, String tensp, String image, String cpu, String ram, String rom, String card,
-			String manhinh, String pin, String hang, String gia, int tinhtrang) {
+			String manhinh, String pin, String hang, int gia, int tinhtrang) {
 		this.masp = masp;
 		this.tensp = tensp;
 		this.image = image;
@@ -112,11 +112,11 @@ public class DTO_SanPham {
 		this.hang = hang;
 	}
 
-	public String getGia() {
+	public int getGia() {
 		return gia;
 	}
 
-	public void setGia(String gia) {
+	public void setGia(int gia) {
 		this.gia = gia;
 	}
 

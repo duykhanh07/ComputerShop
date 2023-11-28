@@ -321,7 +321,7 @@ public class MainForm extends JFrame {
 					public void actionPerformed(ActionEvent e) {
 						if(!getTitle().equalsIgnoreCase(chucvu + " - Thông tin cá nhân")) {
 							setTitle(chucvu + " - Thông tin cá nhân");
-							splitPane.setRightComponent(new Information());
+							splitPane.setRightComponent(new Information(manv));
 							splitPane.setDividerLocation(175);
 						}
 					}
