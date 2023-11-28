@@ -9,12 +9,12 @@ public class DTO_HoaDon {
 	private Date ngaylaphd;
 	private String diachigiao;
 	private double tongtien;
-	private int trangthai;
+	private String trangthai;
 	
 	public DTO_HoaDon() {}
 
 	public DTO_HoaDon(String mahd, String makh, String manv, Date ngaylaphd, String diachigiao, double tongtien,
-			int trangthai) {
+			String trangthai) {
 		this.mahd = mahd;
 		this.makh = makh;
 		this.manv = manv;
@@ -72,11 +72,11 @@ public class DTO_HoaDon {
 		this.tongtien = tongtien;
 	}
 
-	public int getTrangthai() {
+	public String getTrangthai() {
 		return trangthai;
 	}
 
-	public void setTrangthai(int trangthai) {
+	public void setTrangthai(String trangthai) {
 		this.trangthai = trangthai;
 	}
 

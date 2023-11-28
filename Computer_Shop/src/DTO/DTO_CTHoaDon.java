@@ -1,11 +1,19 @@
 package DTO;
 
+import java.util.Date;
+
 public class DTO_CTHoaDon {
 	private String mahd;
 	private String masp;
 	private double dongia;
 	private int solg;
-	
+	private Date ngayHetHan;
+
+	public DTO_CTHoaDon(String mahd, String masp, Date ngayHetHan) {
+		this.mahd = mahd;
+		this.masp = masp;
+		this.ngayHetHan = ngayHetHan;
+	}
 	public DTO_CTHoaDon() {}
 	public DTO_CTHoaDon(String mahd, String masp, double dongia, int solg) {
 		this.mahd = mahd;
@@ -14,7 +22,12 @@ public class DTO_CTHoaDon {
 		this.solg = solg;
 	}
 	
-	
+	public Date getNgayHetHan() {
+		return ngayHetHan;
+	}
+	public void setNgayHetHan(Date ngayHetHan) {
+		this.ngayHetHan = ngayHetHan;
+	}
 	public String getMahd() {
 		return mahd;
 	}

@@ -181,7 +181,7 @@ public class MyDateChooser extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private MyTextfield myTextfield1;
+    public MyTextfield myTextfield1;
     // End of variables declaration//GEN-END:variables
    
     public Date getDate() {

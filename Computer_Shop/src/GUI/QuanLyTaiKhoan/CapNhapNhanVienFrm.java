@@ -4,49 +4,65 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import BUS.NhanVienBUS;
+import DTO.DTO_NhanVien;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+
 import MyDesign.MyComponents.MyTextfield;
 import javax.swing.JComboBox;
 import MyDesign.MyComponents.MyButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractButton;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.UIManager.LookAndFeelInfo;
+
 import java.awt.Toolkit;
-
+import GUI.QuanLyTaiKhoan.QuanLyNhanVienFrm;
 public class CapNhapNhanVienFrm extends JFrame {
-
 	private static final long serialVersionUID = 1L;
+	
+	
 	private JPanel contentPane;
+	private DTO_NhanVien nv;
+	private NhanVienBUS nv_bus;
+	private JComboBox chucVuCmbx;
+	private MyTextfield diaChiTxt;
+	private MyTextfield emailTxt;
+	private MyTextfield tenNhanVienTxt;
+	private JLabel maNhanVienLbl;
+	private MyTextfield soDienThoaiTxt;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CapNhapNhanVienFrm frame = new CapNhapNhanVienFrm();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public CapNhapNhanVienFrm() {
+	public CapNhapNhanVienFrm(DTO_NhanVien nv, NhanVienBUS nvbus) {
+		this.nv = nv;
+		this.nv_bus = nvbus;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(CapNhapNhanVienFrm.class.getResource("/assets/Laptop_Login.png")));
+		try {
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {}
 		setTitle("cập nhật thông tin sinh viên");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(367, 371);
@@ -57,7 +73,6 @@ public class CapNhapNhanVienFrm extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-		
 		JLabel lblNewLabel_1 = new JLabel("----------Thông tin tài khoản----------");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setForeground(Color.CYAN);
@@ -67,7 +82,7 @@ public class CapNhapNhanVienFrm extends JFrame {
 		lblTnSnPhm_1_1.setForeground(Color.CYAN);
 		lblTnSnPhm_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		MyTextfield tenNhanVienTxt = new MyTextfield();
+		tenNhanVienTxt = new MyTextfield();
 		tenNhanVienTxt.setColumns(10);
 		tenNhanVienTxt.setBorder(null);
 		tenNhanVienTxt.setBackground(new Color(77, 77, 77));
@@ -76,7 +91,7 @@ public class CapNhapNhanVienFrm extends JFrame {
 		lblTnSnPhm_1_1_1.setForeground(Color.CYAN);
 		lblTnSnPhm_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		MyTextfield soDienThoaiTxt = new MyTextfield();
+		soDienThoaiTxt = new MyTextfield();
 		soDienThoaiTxt.setColumns(10);
 		soDienThoaiTxt.setBorder(null);
 		soDienThoaiTxt.setBackground(new Color(77, 77, 77));
@@ -85,7 +100,7 @@ public class CapNhapNhanVienFrm extends JFrame {
 		lblTnSnPhm_1_1_2.setForeground(Color.CYAN);
 		lblTnSnPhm_1_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		MyTextfield emailTxt = new MyTextfield();
+		emailTxt = new MyTextfield();
 		emailTxt.setColumns(10);
 		emailTxt.setBorder(null);
 		emailTxt.setBackground(new Color(77, 77, 77));
@@ -94,12 +109,13 @@ public class CapNhapNhanVienFrm extends JFrame {
 		lblTnSnPhm_1_1_3.setForeground(Color.CYAN);
 		lblTnSnPhm_1_1_3.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		MyTextfield diaChiTxt = new MyTextfield();
+		diaChiTxt = new MyTextfield();
 		diaChiTxt.setColumns(10);
 		diaChiTxt.setBorder(null);
 		diaChiTxt.setBackground(new Color(77, 77, 77));
 		
-		JComboBox chucVuCmbx = new JComboBox();
+		chucVuCmbx = new JComboBox();
+		chucVuCmbx.setModel(new DefaultComboBoxModel(new String[] {"admin", "quản lý", "bán hàng", "thủ kho", "kĩ thuật"}));
 		chucVuCmbx.setForeground(Color.CYAN);
 		chucVuCmbx.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		chucVuCmbx.setBackground(new Color(102, 102, 102));
@@ -110,13 +126,25 @@ public class CapNhapNhanVienFrm extends JFrame {
 		
 		MyButton capNhatBtn = new MyButton();
 		capNhatBtn.addActionListener(new ActionListener() {
+		
 			public void actionPerformed(ActionEvent e) {
+				if(tenNhanVienTxt.getText().strip().equalsIgnoreCase("") || soDienThoaiTxt.getText().strip().equalsIgnoreCase("") || diaChiTxt.getText().strip().equalsIgnoreCase("")
+						|| emailTxt.getText().strip().equalsIgnoreCase("")) {
+					JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin");
+				}else {
+					nv.setTennv(tenNhanVienTxt.getText());
+					nv.setDiachi(diaChiTxt.getText());
+					nv.setEmail(emailTxt.getText());
+					nv.setSdt(soDienThoaiTxt.getText());
+					nv.setChucvu(chucVuCmbx.getSelectedItem().toString());
+					nv_bus.suaNV(nv);
+				}
 			}
 		});
 		capNhatBtn.setText("cập nhật");
 		capNhatBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
-		JLabel maNhanVienLbl = new JLabel("mã nhân viên : <manv>");
+		maNhanVienLbl = new JLabel("mã nhân viên : <manv>");
 		maNhanVienLbl.setForeground(Color.CYAN);
 		maNhanVienLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
@@ -212,5 +240,14 @@ public class CapNhapNhanVienFrm extends JFrame {
 					.addContainerGap())
 		);
 		contentPane.setLayout(gl_contentPane);
+		hienThongTin();
+	}
+	public void hienThongTin() {
+		maNhanVienLbl.setText("Mã nhân viên :" + nv.getManv());
+		tenNhanVienTxt.setText(nv.getTennv());
+		soDienThoaiTxt.setText(nv.getSdt());
+		diaChiTxt.setText(nv.getDiachi());
+		emailTxt.setText(nv.getEmail());
+		chucVuCmbx.setSelectedItem(nv.getChucvu());
 	}
 }
