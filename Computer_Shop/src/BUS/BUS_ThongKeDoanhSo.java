@@ -1,6 +1,8 @@
 package BUS;
 
 import java.util.List;
+import java.util.Map;
+
 import DAO.DAO_ThongKeDoanhSo;
 import DTO.DTO_CTHoaDon;
 
@@ -30,4 +32,7 @@ public class BUS_ThongKeDoanhSo {
         return DAO_ThongKeDoanhSo.getSalesData();
     }
 
+    public static Map<Integer, Double> calculateProfitByMonth(int year) {
+        return DAO_ThongKeDoanhSo.calculateProfitByMonth(year);
+    }
 }

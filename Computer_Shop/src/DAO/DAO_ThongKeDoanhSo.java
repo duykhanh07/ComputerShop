@@ -1,7 +1,10 @@
 package DAO;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import DTO.DTO_CTHoaDon;
 import java.sql.*;
 import java.text.DecimalFormat;
@@ -265,6 +268,68 @@ public class DAO_ThongKeDoanhSo {
         }
 
         return salesData;
+    }
+
+    
+    public static Map<Integer, Double> calculateProfitByMonth(int year) {
+        Map<Integer, Double> profits = new HashMap<>();
+        Connection conn = getConnection();
+        if (conn != null) {
+            try {
+                // Tạo các câu truy vấn để tính toán lợi nhuận cho từng tháng trong năm
+                String query = "SELECT MONTH(ngaylaphd) AS month, SUM(tongtien) AS total_sales " +
+                        "FROM hoadon " +
+                        "WHERE YEAR(ngaylaphd) = ? " +
+                        "GROUP BY MONTH(ngaylaphd)";
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, year);
+                ResultSet rs = pstmt.executeQuery();
+
+                // Tính lợi nhuận từ hóa đơn
+                while (rs.next()) {
+                    int month = rs.getInt("month");
+                    double totalSales = Double.parseDouble(rs.getString("total_sales"));
+
+                    if (!profits.containsKey(month)) {
+                        profits.put(month, totalSales);
+                    } else {
+                        double currentProfit = profits.get(month);
+                        profits.put(month, currentProfit + totalSales);
+                    }
+                }
+
+                // Lấy tổng tiền từ đơn nhập và trừ đi lợi nhuận
+                String queryDonNhap = "SELECT MONTH(ngaynhap) AS month, SUM(tongtien) AS total_expenses " +
+                        "FROM donnhap " +
+                        "WHERE YEAR(ngaynhap) = ? " +
+                        "GROUP BY MONTH(ngaynhap)";
+                PreparedStatement pstmtDonNhap = conn.prepareStatement(queryDonNhap);
+                pstmtDonNhap.setInt(1, year);
+                ResultSet rsDonNhap = pstmtDonNhap.executeQuery();
+
+                while (rsDonNhap.next()) {
+                    int month = rsDonNhap.getInt("month");
+                    double totalExpenses = rsDonNhap.getDouble("total_expenses");
+
+                    if (profits.containsKey(month)) {
+                        double currentProfit = profits.get(month);
+                        profits.put(month, currentProfit - totalExpenses);
+                    } else {
+                        profits.put(month, -totalExpenses);
+                    }
+                }
+
+                // Đóng kết nối
+                rs.close();
+                pstmt.close();
+                rsDonNhap.close();
+                pstmtDonNhap.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return profits;
     }
 
 }

@@ -21,12 +21,18 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.FileOutputStream;
+import java.text.DateFormatSymbols;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Map;
 import java.awt.FileDialog;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -35,6 +41,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import MyDesign.MyTabPane.MyTabbedPaneCustom;
@@ -53,6 +62,8 @@ public class ThongKeDoanhSo extends JPanel {
 	JComboBox yearCmbx_1 = new JComboBox();
 	JComboBox yearCmbx_1_1 = new JComboBox();
 	JPanel bieuDoLoiNhuan = new JPanel();
+	JPanel panel = new JPanel();
+	private String[] monthNames = new DateFormatSymbols().getMonths(); // Lấy tên của các tháng
 
 	private BUS_ThongKeDoanhSo busThongKe = new BUS_ThongKeDoanhSo();
 
@@ -62,7 +73,6 @@ public class ThongKeDoanhSo extends JPanel {
 	public ThongKeDoanhSo() {
 		setBackground(new Color(102, 102, 102));
 
-		JPanel panel = new JPanel();
 		panel.setBackground(new Color(77, 77, 77));
 		panel.setBorder(new LineBorder(new Color(0, 255, 255)));
 
@@ -518,8 +528,10 @@ public class ThongKeDoanhSo extends JPanel {
 		model.setRowCount(0);
 
 		if (!selectedYear.equals("---")) {
+
+			hienThiBieuDoLoiNhuanTheoThang(Integer.parseInt(selectedYear));
+
 			if (selectedQuarter.equals("---") && selectedMonth.equals("---")) {
-				hienThiBieuDoSanPhamDaBanTrongNam(Integer.parseInt(selectedYear));
 				List<Object[]> danhSach = DAO_ThongKeDoanhSo.getSanPhamDaBanTheoNam(Integer.parseInt(selectedYear));
 				hienThiDanhSachSanPhamLenBang(danhSach);
 			} else if (!selectedQuarter.equals("---") && selectedMonth.equals("---")) {
@@ -548,32 +560,49 @@ public class ThongKeDoanhSo extends JPanel {
 		}
 	}
 
-	private void hienThiBieuDoSanPhamDaBanTrongNam(int selectedYear) {
+	private void hienThiBieuDoLoiNhuanTheoThang(int selectedYear) {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-		List<Object[]> danhSachSanPham = busThongKe.getSanPhamDaBanTheoNam(selectedYear);
+		// Tạo một Map để lưu lợi nhuận theo tháng từ dữ liệu đã có
+		Map<Integer, Double> profits = BUS_ThongKeDoanhSo.calculateProfitByMonth(selectedYear);
 
-		for (Object[] sanPham : danhSachSanPham) {
-			String maSP = (String) sanPham[0];
-			int soLuong = (int) sanPham[2];
-
-			dataset.addValue(soLuong, "Mã Sản phẩm", maSP);
+		// Thêm dữ liệu lợi nhuận từ Map vào dataset
+		for (int month = 1; month <= 12; month++) {
+			double profit = profits.getOrDefault(month, 0.0);
+			dataset.addValue(profit, "Lợi nhuận", getMonthName(month));
 		}
 
+		// Tạo biểu đồ cột
 		JFreeChart barChart = ChartFactory.createBarChart(
-				"Sản phẩm đã bán trong năm " + selectedYear,
-				"Mã sản phẩm",
-				"Số lượng bán ra",
+				"Lợi nhuận theo tháng trong năm " + selectedYear,
+				"Tháng",
+				"Lợi nhuận",
 				dataset,
 				PlotOrientation.VERTICAL,
 				true, true, false);
 
+		// Thiết lập định dạng của trục y để hiển thị số nguyên
+		CategoryPlot plot = barChart.getCategoryPlot();
+		NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
+
+		// Thiết lập định dạng số nguyên cho trục y
+		yAxis.setNumberFormatOverride(NumberFormat.getIntegerInstance());
+		yAxis.setAutoRangeIncludesZero(true); // Bắt buộc trục y bắt đầu từ 0
+
 		ChartPanel chartPanel = new ChartPanel(barChart);
 		chartPanel.setPreferredSize(new Dimension(800, 400));
 		bieuDoLoiNhuan.removeAll();
-
 		bieuDoLoiNhuan.add(chartPanel, BorderLayout.CENTER);
 		bieuDoLoiNhuan.validate();
+	}
+
+	// Hàm này để lấy tên tháng từ số tháng (vd: 1 -> "Tháng 1")
+	private String getMonthName(int month) {
+		String[] monthNames = {
+				"Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+				"Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
+		};
+		return monthNames[month - 1];
 	}
 
 }
