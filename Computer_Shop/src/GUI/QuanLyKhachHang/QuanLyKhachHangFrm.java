@@ -41,6 +41,7 @@ public class QuanLyKhachHangFrm extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTable table;
 	private QuanLyKhachHangBUS qlkh;
+	private QuanLyKhachHangFrm self = this;
 
 	/**
 	 * Create the panel.
@@ -130,7 +131,7 @@ public class QuanLyKhachHangFrm extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				// cập nhật khách hàng được chọn trong bảng
 				if(table.getSelectedRow() > -1) {
-					new updateKhachHangFrm(qlkh.ds_hienThi.get(table.getSelectedRow()), qlkh).setVisible(true);
+					new updateKhachHangFrm(self,qlkh.ds_hienThi.get(table.getSelectedRow()), qlkh).setVisible(true);
 				}else {
 					JOptionPane.showMessageDialog(null,"Bạn phải chọn 1 khách hàng trong bảng");
 				}
@@ -157,8 +158,7 @@ public class QuanLyKhachHangFrm extends JPanel {
 		MyButton mbtnLmMi = new MyButton();
 		mbtnLmMi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				qlkh = new QuanLyKhachHangBUS();
-				loadKhachHangTable();
+				refresh();
 			}
 		});
 		mbtnLmMi.setIcon(new ImageIcon(QuanLyKhachHangFrm.class.getResource("/assets/reset.png")));
@@ -243,5 +243,9 @@ public class QuanLyKhachHangFrm extends JPanel {
 			qlkh.timKiemKhachHang(thongtin, selectedIndex);
 			loadKhachHangTable();
 		}
+	}
+	public void refresh() {
+		qlkh = new QuanLyKhachHangBUS();
+		loadKhachHangTable();
 	}
 }
