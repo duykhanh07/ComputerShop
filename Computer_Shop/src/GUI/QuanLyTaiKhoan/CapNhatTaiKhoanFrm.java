@@ -5,13 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import BUS.TaiKhoanBUS;
-import DTO.DTO_TaiKhoan;
-
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -27,28 +21,37 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.ImageIcon;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class CapNhatTaiKhoanFrm extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private DTO_TaiKhoan tk;
-	private TaiKhoanBUS tk_bus;
-	private JLabel maTaiKhoanLbl;
-	private JLabel passwordLbl;
-	private JComboBox maNhanVienCmbx;
-	private JLabel lblTnSnPhm_1_1;
-	private JComboBox tinhTrangCmbx;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					CapNhatTaiKhoanFrm frame = new CapNhatTaiKhoanFrm();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
 	
 	/* TODO : Chức năng cập nhật tài khoản
 	 * Chỉ hiển thị mã tài khoản và tên tài khoản không cho sửa 2 thông tin này
 	 * không hiện password nhưng có thể chọn nút bên cạnh để reset lại mật khẩu ban đầu
 	 * Các thông tin còn lại có thể sửa*/
-	public CapNhatTaiKhoanFrm(DTO_TaiKhoan tk, TaiKhoanBUS tkbus) {
-		this.tk = tk;
-		this.tk_bus = tkbus;
+	public CapNhatTaiKhoanFrm() {
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
@@ -78,18 +81,18 @@ public class CapNhatTaiKhoanFrm extends JFrame {
 		lblTnSnPhm_1.setForeground(Color.CYAN);
 		lblTnSnPhm_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		maNhanVienCmbx = new JComboBox();
+		JComboBox maNhanVienCmbx = new JComboBox();
 		maNhanVienCmbx.setModel(new DefaultComboBoxModel(new String[] {"AD", "NV", "QL"}));
 		maNhanVienCmbx.setForeground(Color.CYAN);
 		maNhanVienCmbx.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		maNhanVienCmbx.setBackground(new Color(102, 102, 102));
 		
-		lblTnSnPhm_1_1 = new JLabel("tên tài khoản : <tentk>");
+		JLabel lblTnSnPhm_1_1 = new JLabel("tên tài khoản : <tentk>");
 		lblTnSnPhm_1_1.setForeground(Color.CYAN);
 		lblTnSnPhm_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		tinhTrangCmbx = new JComboBox();
-		tinhTrangCmbx.setModel(new DefaultComboBoxModel(new String[] {"đang hoạt động ", "đã khóa"}));
+		JComboBox tinhTrangCmbx = new JComboBox();
+		tinhTrangCmbx.setModel(new DefaultComboBoxModel(new String[] {"đang hoạt động", "đã khóa"}));
 		tinhTrangCmbx.setForeground(Color.CYAN);
 		tinhTrangCmbx.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		tinhTrangCmbx.setBackground(new Color(102, 102, 102));
@@ -99,32 +102,14 @@ public class CapNhatTaiKhoanFrm extends JFrame {
 		tnhtrgtxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		MyButton capNhatTaiKhoanBtn = new MyButton();
-		capNhatTaiKhoanBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(maNhanVienCmbx.getSelectedIndex() == -1 || tinhTrangCmbx.getSelectedIndex() == -1) {
-					JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin");
-				}else {
-					if(tinhTrangCmbx.getSelectedItem() == "đang hoạt động") {
-						tk.setManv(maNhanVienCmbx.getSelectedItem().toString());
-						tk.setTinhtrang(1);
-						tk_bus.suaTK(tk);
-					}else {
-						tk.setManv(maNhanVienCmbx.getSelectedItem().toString());
-						tk.setTinhtrang(0);
-						tk_bus.suaTK(tk);
-					}
-					JOptionPane.showMessageDialog(null, "Cập nhật thành công");
-				}
-			}
-		});
 		capNhatTaiKhoanBtn.setText("cập nhật");
 		capNhatTaiKhoanBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
-		maTaiKhoanLbl = new JLabel("mã tài khoản  : <matk>");
+		JLabel maTaiKhoanLbl = new JLabel("mã tài khoản  : <matk>");
 		maTaiKhoanLbl.setForeground(Color.CYAN);
 		maTaiKhoanLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		passwordLbl = new JLabel("password : ********");
+		JLabel passwordLbl = new JLabel("password : ********");
 		passwordLbl.setForeground(Color.CYAN);
 		passwordLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
@@ -199,20 +184,5 @@ public class CapNhatTaiKhoanFrm extends JFrame {
 						.addComponent(autoIncreaseSize, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)))
 		);
 		contentPane.setLayout(gl_contentPane);
-		layDsNhanVienKoTK();
-		hienThongTin();
-	}
-	
-	public void hienThongTin() {
-		maTaiKhoanLbl.setText("mã tài khoản :" + tk.getMatk());
-		maNhanVienCmbx.setSelectedItem(tk.getManv());
-		lblTnSnPhm_1_1.setText("tên tài khoản :"+tk.getUsername());
-		passwordLbl.setText("password :" + tk.getPassword());
-		tinhTrangCmbx.setSelectedItem(tk_bus.taikhoan_status_map.get(tk.getTinhtrang()));
-	}
-	
-	public void layDsNhanVienKoTK() {
-		maNhanVienCmbx.setModel(new DefaultComboBoxModel(this.tk_bus.layDanhSachMaNhanVienChuaCoTaiKhoan()));
-		maNhanVienCmbx.addItem(tk.getManv());
 	}
 }

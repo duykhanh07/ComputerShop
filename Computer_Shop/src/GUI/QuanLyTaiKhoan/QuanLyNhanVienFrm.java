@@ -39,14 +39,12 @@ public class QuanLyNhanVienFrm extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
-	private NhanVienBUS nv_bus = new NhanVienBUS();
+	private NhanVienBUS qlnv = new NhanVienBUS();
 
 	/**
 	 * Create the panel.
 	 */
 	public QuanLyNhanVienFrm() {
-		nv_bus = new NhanVienBUS();
-		QuanLyNhanVienFrm self = this;
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
@@ -56,7 +54,7 @@ public class QuanLyNhanVienFrm extends JPanel {
 		    }
 		} catch (Exception e) {}
 		
-		nv_bus = new NhanVienBUS();
+		qlnv = new NhanVienBUS();
 		setBackground(new Color(102, 102, 102));
 		setSize(835,525);
 		
@@ -123,7 +121,7 @@ public class QuanLyNhanVienFrm extends JPanel {
 		MyButton themNhanVienBtn = new MyButton();
 		themNhanVienBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new ThemNhanVienFrm(self,nv_bus).setVisible(true);
+				new ThemNhanVienFrm().setVisible(true);
 			}
 		});
 		themNhanVienBtn.setText("Thêm");
@@ -132,9 +130,7 @@ public class QuanLyNhanVienFrm extends JPanel {
 		MyButton capNhatNhanVienBtn = new MyButton();
 		capNhatNhanVienBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(table.getSelectedRow() >= 0) {
-					new CapNhapNhanVienFrm(nv_bus.ds_hienThi.get(table.getSelectedRow()), nv_bus).setVisible(true);;
-				}
+				new CapNhapNhanVienFrm().setVisible(true);
 			}
 		});
 		capNhatNhanVienBtn.setText("Sửa");
@@ -149,7 +145,7 @@ public class QuanLyNhanVienFrm extends JPanel {
 		MyButton mbtnLmMi = new MyButton();
 		mbtnLmMi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				nv_bus = new NhanVienBUS();
+				qlnv = new NhanVienBUS();
 				loadNhanVienTable();
 			}
 		});
@@ -226,27 +222,24 @@ public class QuanLyNhanVienFrm extends JPanel {
 	public void loadNhanVienTable() {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setRowCount(0);
-		for(int i = 0; i<nv_bus.ds_hienThi.size(); i++) {
-			model.addRow(new Object[]{nv_bus.ds_hienThi.get(i).getManv(), nv_bus.ds_hienThi.get(i).getTennv(), 
-					nv_bus.ds_hienThi.get(i).getSdt(), nv_bus.ds_hienThi.get(i).getEmail(),  nv_bus.ds_hienThi.get(i).getDiachi(),  nv_bus.ds_hienThi.get(i).getChucvu()});
+		for(int i = 0; i<qlnv.ds_hienThi.size(); i++) {
+			model.addRow(new Object[]{qlnv.ds_hienThi.get(i).getManv(), qlnv.ds_hienThi.get(i).getTennv(), 
+					qlnv.ds_hienThi.get(i).getSdt(), qlnv.ds_hienThi.get(i).getEmail(),  qlnv.ds_hienThi.get(i).getDiachi(),  qlnv.ds_hienThi.get(i).getChucvu()});
 		}
 	}
 	
 	public void sapXepNhanVien(int selectedIndex) {
-		nv_bus.sapXepNhanVien(selectedIndex);
+		qlnv.sapXepNhanVien(selectedIndex);
 		loadNhanVienTable();
 	}
 	public void timKiemNhanVien(String thongtin, int selectedIndex) {
 		if(thongtin.equalsIgnoreCase("")) {
 			JOptionPane.showMessageDialog(null, "Vui lòng nhập thông tin tìm kiếm");
 		}else {
-			nv_bus.timKiemNhanVien(thongtin, selectedIndex);
+			qlnv.timKiemNhanVien(thongtin, selectedIndex);
 			loadNhanVienTable();
 		}
 	}
-	public void Refresh() {
-		this.nv_bus = new NhanVienBUS();
-		loadNhanVienTable();
-	}
+	
 	
 }

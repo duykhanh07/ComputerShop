@@ -50,8 +50,4 @@ public class QuanLyKhachHangBUS {
 			}
 		}
 	}
-	
-	public int capNhatKhachHang(DTO_KhachHang khachhang) {
-		return QuanLyKhachHangDAO.capNhatKhachHang(khachhang);
-	}
 }

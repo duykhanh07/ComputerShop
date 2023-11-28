@@ -26,7 +26,6 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import BUS.NhanVienBUS;
 import BUS.TaiKhoanBUS;
 
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -38,7 +37,7 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
-	private TaiKhoanBUS tk_bus = new TaiKhoanBUS();
+	private TaiKhoanBUS qltk = new TaiKhoanBUS();
 
 	/**
 	 * Create the panel.
@@ -46,8 +45,6 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 	
 	// TODO : LƯU Ý : KHÔNG HIỂN THỊ MẬT KHẨU LÊN FORM
 	public QuanLyTaiKhoanFrm() {
-		tk_bus = new TaiKhoanBUS();
-		QuanLyTaiKhoanFrm self = this;
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
@@ -112,7 +109,7 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 		MyButton timKiemBtn_1_1 = new MyButton();
 		timKiemBtn_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new ThemTaiKhoanFrm(self, tk_bus).setVisible(true);
+				new ThemTaiKhoanFrm().setVisible(true);
 			}
 		});
 		timKiemBtn_1_1.setText("Thêm");
@@ -121,11 +118,7 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 		MyButton timKiemBtn_1_1_1 = new MyButton();
 		timKiemBtn_1_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(table.getSelectedRow() >= 0) {
-					new CapNhatTaiKhoanFrm(tk_bus.ds_hienThi.get(table.getSelectedRow()), tk_bus).setVisible(true);
-				}else {
-					JOptionPane.showMessageDialog(null, "Bạn phải chọn 1 tài khoản trong bảng");
-				}
+				new CapNhatTaiKhoanFrm().setVisible(true);
 			}
 		});
 		timKiemBtn_1_1_1.setText("Sửa");
@@ -142,7 +135,7 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tk_bus = new TaiKhoanBUS();
+				qltk = new TaiKhoanBUS();
 				loadTaiKhoanTable();
 				
 			}
@@ -249,27 +242,22 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 	public void loadTaiKhoanTable() {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setRowCount(0);
-		for(int i = 0; i<tk_bus.ds_hienThi.size(); i++) {
-			model.addRow(new Object[]{tk_bus.ds_hienThi.get(i).getMatk(), tk_bus.ds_hienThi.get(i).getManv(), 
-					tk_bus.ds_hienThi.get(i).getUsername(),  tk_bus.taikhoan_status_map.get(tk_bus.ds_hienThi.get(i).getTinhtrang())});
+		for(int i = 0; i<qltk.ds_hienThi.size(); i++) {
+			model.addRow(new Object[]{qltk.ds_hienThi.get(i).getMatk(), qltk.ds_hienThi.get(i).getManv(), 
+					qltk.ds_hienThi.get(i).getUsername(), qltk.ds_hienThi.get(i).getPassword(),  qltk.ds_hienThi.get(i).getTinhtrang()});
 		}
 	}
 	
 	public void sapXepTaiKhoan(int selectedIndex) {
-		tk_bus.sapXepTaiKhoan(selectedIndex);
+		qltk.sapXepTaiKhoan(selectedIndex);
 		loadTaiKhoanTable();
 	}
 	public void timKiemTaiKhoan(String thongtin, int selectedIndex) {
 		if(thongtin.equalsIgnoreCase("")) {
 			JOptionPane.showMessageDialog(null, "Vui lòng nhập thông tin tìm kiếm");
 		}else {
-			tk_bus.timKiemTaiKhoan(thongtin, selectedIndex);
+			qltk.timKiemTaiKhoan(thongtin, selectedIndex);
 			loadTaiKhoanTable();
 		}
-	}
-	
-	public void Refresh() {
-		this.tk_bus = new TaiKhoanBUS();
-		loadTaiKhoanTable();
 	}
 }

@@ -62,7 +62,6 @@ public class CapNhatSanPhamFrm extends JFrame {
 		setMinimumSize(new Dimension(370, 740));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 368, 745);
-		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);
 		contentPane.setBackground(new Color(102, 102, 102));
@@ -212,10 +211,6 @@ public class CapNhatSanPhamFrm extends JFrame {
 		imageLinkTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		MyButton mbtnCpNht = new MyButton();
-		mbtnCpNht.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		mbtnCpNht.setText("Cập nhật");
 		mbtnCpNht.setHorizontalTextPosition(SwingConstants.LEADING);
 		

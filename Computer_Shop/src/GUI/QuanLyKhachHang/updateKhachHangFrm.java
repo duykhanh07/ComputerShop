@@ -5,13 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import BUS.QuanLyKhachHangBUS;
-import DTO.DTO_KhachHang;
-
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -21,8 +15,6 @@ import MyDesign.MyComponents.MyTextfield;
 import javax.swing.JButton;
 import MyDesign.MyComponents.MyButton;
 import java.awt.event.ActionListener;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -33,19 +25,27 @@ public class updateKhachHangFrm extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private DTO_KhachHang kh;
-	private QuanLyKhachHangBUS qlkh;
-	private JLabel lblMKhchHng;
-	private JLabel lblimTchLy;
-	private MyTextfield tenKhachHangTxt;
-	private MyTextfield tenKhachHangTxt_1;
-	private QuanLyKhachHangFrm qlkh_f;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					updateKhachHangFrm frame = new updateKhachHangFrm();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 
 	/**
 	 * Create the frame.
 	 */
-	public updateKhachHangFrm(QuanLyKhachHangFrm qlkh_f,DTO_KhachHang khachHang, QuanLyKhachHangBUS qlkh) {
-		
+	public updateKhachHangFrm() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(updateKhachHangFrm.class.getResource("/assets/Laptop_Login.png")));
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -55,14 +55,9 @@ public class updateKhachHangFrm extends JFrame {
 		        }
 		    }
 		} catch (Exception e) {}
-		
-		this.kh = khachHang;
-		this.qlkh = qlkh;
-		this.qlkh_f = qlkh_f;
 		setTitle("cập nhật thông tin khách hàng");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setSize(538, 288);
-		setLocationRelativeTo(null);
+		setBounds(100, 100, 538, 288);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(102, 102, 102));
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -74,7 +69,7 @@ public class updateKhachHangFrm extends JFrame {
 		lblNewLabel_1_1_2_1.setForeground(Color.CYAN);
 		lblNewLabel_1_1_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		lblMKhchHng = new JLabel("mã khách hàng : <<makh>>");
+		JLabel lblMKhchHng = new JLabel("mã khách hàng : <<makh>>");
 		lblMKhchHng.setForeground(Color.CYAN);
 		lblMKhchHng.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
@@ -82,8 +77,7 @@ public class updateKhachHangFrm extends JFrame {
 		lblTnKhchHng.setForeground(Color.CYAN);
 		lblTnKhchHng.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		tenKhachHangTxt = new MyTextfield();
-		tenKhachHangTxt.setBackground(new Color(77, 77, 77));
+		MyTextfield tenKhachHangTxt = new MyTextfield();
 		tenKhachHangTxt.setColumns(10);
 		tenKhachHangTxt.setBorder(null);
 		
@@ -91,22 +85,20 @@ public class updateKhachHangFrm extends JFrame {
 		lblSinThoi.setForeground(Color.CYAN);
 		lblSinThoi.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		tenKhachHangTxt_1 = new MyTextfield();
-		tenKhachHangTxt_1.setBackground(new Color(77, 77, 77));
+		MyTextfield tenKhachHangTxt_1 = new MyTextfield();
 		tenKhachHangTxt_1.setColumns(10);
 		tenKhachHangTxt_1.setBorder(null);
 		
-		lblimTchLy = new JLabel("điểm tích lũy : <diem>");
+		JLabel lblimTchLy = new JLabel("điểm tích lũy : <diem>");
 		lblimTchLy.setForeground(Color.CYAN);
 		lblimTchLy.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		MyButton themPhieuNhapItemBtn = new MyButton();
 		themPhieuNhapItemBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				capNhatKhachHang();
 			}
 		});
-		themPhieuNhapItemBtn.setText("cập nhật");
+		themPhieuNhapItemBtn.setText("Thêm");
 		themPhieuNhapItemBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
 		JLabel autoIncreaseSpace_Lbl = new JLabel("");
@@ -200,56 +192,5 @@ public class updateKhachHangFrm extends JFrame {
 						.addComponent(lblimTchLy, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))
 		);
 		contentPane.setLayout(gl_contentPane);
-		hienThiThongTinKhachHang();
-	}
-	
-	public void hienThiThongTinKhachHang() {
-		this.lblMKhchHng.setText("mã khách hàng : "+this.kh.getMakh());
-		this.tenKhachHangTxt.setText(this.kh.getTenkh());
-		this.tenKhachHangTxt_1.setText(this.kh.getSdt());
-		this.lblimTchLy.setText("điểm tích lũy : "+this.kh.getDiem());
-	}
-	
-	public void capNhatKhachHang() {
-		
-		int xacnhan = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn cập nhật thông tin khách hàng?");
-		if(xacnhan != 0) {
-			return;
-		}
-		
-		// TODO : xác minh
-		String ten = tenKhachHangTxt.getText();
-		for(int i =0; i<10; i++) {
-			if(ten.contains(i+"")) {
-				JOptionPane.showMessageDialog( null, "Tên không thể chứa kí tự số");
-				return;
-			}
-		}
-		
-		String sdt = tenKhachHangTxt_1.getText();
-		String regexPattern_sdt = "^0\\d{9}$";
-		Pattern pattern = Pattern.compile(regexPattern_sdt);
-		Matcher matcher = pattern.matcher(sdt);
-		if(!matcher.matches()) {
-			JOptionPane.showMessageDialog( null, "Vui lòng nhập số điện thoại hợp lệ");
-			return;
-		}
-		
-		for(int i = 0; i<qlkh.ds_khachHang.size(); i++) {
-			if(qlkh.ds_khachHang.get(i).getSdt().equalsIgnoreCase(sdt)) {
-				JOptionPane.showMessageDialog( null, "Số điện thoại đã được sử dụng");
-				return;
-			}
-		}
-		
-		DTO_KhachHang khach = new DTO_KhachHang(this.kh.getMakh(), ten, sdt, this.kh.getDiem());
-		int kq = qlkh.capNhatKhachHang(khach);
-		if(kq == 1) {
-			JOptionPane.showMessageDialog( null,"Cập nhật khách hàng thành công");
-			this.qlkh_f.refresh();
-			dispose();
-		}else {
-			JOptionPane.showMessageDialog( null,"Cập nhật thất bại, liên hệ với kĩ thuật nếu tình trạng tiếp tục xảy ra");
-		}
 	}
 }

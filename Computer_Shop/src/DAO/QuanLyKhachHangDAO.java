@@ -65,21 +65,4 @@ public class QuanLyKhachHangDAO {
 		}
 		return ds_lanCuoiMua;
 	}
-	
-	public static int capNhatKhachHang(DTO_KhachHang khachHang) {
-		try {
-			Connection conn = getConnection();
-			Statement sta = conn.createStatement();
-			String query = "Update KhachHang "
-					+ "set "
-					+ "tenkh = '"+ khachHang.getTenkh()+"',"
-					+ "sdt= '"+khachHang.getSdt()+"' "
-					+ "where makh = '"+ khachHang.getMakh()+"'";
-			int kq = sta.executeUpdate(query);
-			return kq;
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		return -1;
-	}
 }
