@@ -19,8 +19,10 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import MyDesign.MyComponents.MyButton;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.ScrollPaneConstants;
 
 public class ThongKeDoanhSo extends JPanel {
@@ -33,6 +35,14 @@ public class ThongKeDoanhSo extends JPanel {
 	 * Create the panel.
 	 */
 	public ThongKeDoanhSo() {
+		try {
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {}
 		setBackground(new Color(102, 102, 102));
 		
 		JPanel panel = new JPanel();

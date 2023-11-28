@@ -39,12 +39,13 @@ public class updateKhachHangFrm extends JFrame {
 	private JLabel lblimTchLy;
 	private MyTextfield tenKhachHangTxt;
 	private MyTextfield tenKhachHangTxt_1;
-
+	private QuanLyKhachHangFrm qlkh_f;
 
 	/**
 	 * Create the frame.
 	 */
-	public updateKhachHangFrm(DTO_KhachHang khachHang, QuanLyKhachHangBUS qlkh) {
+	public updateKhachHangFrm(QuanLyKhachHangFrm qlkh_f,DTO_KhachHang khachHang, QuanLyKhachHangBUS qlkh) {
+		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(updateKhachHangFrm.class.getResource("/assets/Laptop_Login.png")));
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -57,6 +58,7 @@ public class updateKhachHangFrm extends JFrame {
 		
 		this.kh = khachHang;
 		this.qlkh = qlkh;
+		this.qlkh_f = qlkh_f;
 		setTitle("cập nhật thông tin khách hàng");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(538, 288);
@@ -209,6 +211,12 @@ public class updateKhachHangFrm extends JFrame {
 	}
 	
 	public void capNhatKhachHang() {
+		
+		int xacnhan = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn cập nhật thông tin khách hàng?");
+		if(xacnhan != 0) {
+			return;
+		}
+		
 		// TODO : xác minh
 		String ten = tenKhachHangTxt.getText();
 		for(int i =0; i<10; i++) {
@@ -236,8 +244,10 @@ public class updateKhachHangFrm extends JFrame {
 		
 		DTO_KhachHang khach = new DTO_KhachHang(this.kh.getMakh(), ten, sdt, this.kh.getDiem());
 		int kq = qlkh.capNhatKhachHang(khach);
-		if(kq > 1) {
+		if(kq == 1) {
 			JOptionPane.showMessageDialog( null,"Cập nhật khách hàng thành công");
+			this.qlkh_f.refresh();
+			dispose();
 		}else {
 			JOptionPane.showMessageDialog( null,"Cập nhật thất bại, liên hệ với kĩ thuật nếu tình trạng tiếp tục xảy ra");
 		}
