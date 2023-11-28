@@ -10,6 +10,7 @@ import DTO.DTO_CTDonNhap;
 
 
 
+
 public class ChiTietDonNhapBUS {
 	
 DAO_ChiTietDonNhap daoChiTietDonNhap;
@@ -29,4 +30,5 @@ DAO_ChiTietDonNhap daoChiTietDonNhap;
 			model_table.addRow(rowData);
 		}
 	}
+	
 }
