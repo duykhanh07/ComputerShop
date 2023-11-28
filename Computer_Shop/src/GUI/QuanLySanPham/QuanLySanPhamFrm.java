@@ -448,50 +448,110 @@ public class QuanLySanPhamFrm extends JPanel {
 			Cell firstCell = firstRow.getCell(0);
 		
 			newlistsp = new ArrayList<DTO_SanPham>();
-				
+			
+			String ds_sp_loi = "Mã các sản phẩm lỗi thông tin : ";
+			
 			while(row_Iterator.hasNext()) {
 				Row currentRow = row_Iterator.next();
 				DTO_SanPham newsp = new DTO_SanPham();
 				
-				if (validateData(sheet1, 0) == 1) 
+				if (validateData(sheet1,currentRow.getRowNum(), 0)) {
 					newsp.setMasp(currentRow.getCell(0).getStringCellValue());
-				if (validateData(sheet1, 1) == 1)	
+					System.out.println(currentRow.getCell(0).getStringCellValue());
+				}else
+					continue;
+				
+				if (validateData(sheet1,currentRow.getRowNum(), 1))	
 					newsp.setTensp(currentRow.getCell(1).getStringCellValue());
-				if (validateData(sheet1, 2) == 1)	
-					newsp.setImage(currentRow.getCell(2).getStringCellValue());
-				if (validateData(sheet1, 3) == 1) 	
-					newsp.setCpu(currentRow.getCell(3).getStringCellValue());
-				if (validateData(sheet1, 4) == 1)	
-					newsp.setRam(currentRow.getCell(4).getStringCellValue());
-				if (validateData(sheet1, 5) == 1)	
-					newsp.setRom(currentRow.getCell(5).getStringCellValue());
-				if (validateData(sheet1, 6) == 1)
-					newsp.setCard(currentRow.getCell(6).getStringCellValue());
-				if (validateData(sheet1, 7) == 1)	
-					newsp.setManhinh(currentRow.getCell(7).getStringCellValue());
-				if (validateData(sheet1, 8) == 1)
-					newsp.setPin(currentRow.getCell(8).getStringCellValue());
-				if (validateData(sheet1, 9) == 1)	
-					newsp.setHang(currentRow.getCell(9).getStringCellValue());
-					
-				if (validateData(sheet1, 10) == 1) {
-				Cell cellGia = currentRow.getCell(10);
-				String strGia = formatter.formatCellValue(cellGia);
-				newsp.setGia(Integer.parseInt(strGia));
+				else {
+					ds_sp_loi += currentRow.getCell(0).getStringCellValue()+" ";
+					continue;
 				}
-				if (validateData(sheet1, 11) == 1) {
+				
+				if (validateData(sheet1,currentRow.getRowNum(), 2))	
+					newsp.setImage(currentRow.getCell(2).getStringCellValue());
+				else {
+					ds_sp_loi += currentRow.getCell(0).getStringCellValue()+" ";
+					continue;
+				}
+				
+				if (validateData(sheet1,currentRow.getRowNum(), 3)) 	
+					newsp.setCpu(currentRow.getCell(3).getStringCellValue());
+				else {
+					ds_sp_loi += currentRow.getCell(0).getStringCellValue()+" ";
+					continue;
+				}
+				
+				if (validateData(sheet1,currentRow.getRowNum(), 4))	
+					newsp.setRam(currentRow.getCell(4).getStringCellValue());
+				else {
+					ds_sp_loi += currentRow.getCell(0).getStringCellValue()+" ";
+					continue;
+				}
+				
+				if (validateData(sheet1,currentRow.getRowNum(), 5))	
+					newsp.setRom(currentRow.getCell(5).getStringCellValue());
+				else {
+					ds_sp_loi += currentRow.getCell(0).getStringCellValue()+" ";
+					continue;
+				}
+				
+				if (validateData(sheet1,currentRow.getRowNum(), 6))
+					newsp.setCard(currentRow.getCell(6).getStringCellValue());
+				else {
+					ds_sp_loi += currentRow.getCell(0).getStringCellValue()+" ";
+					continue;
+				}
+				
+				if (validateData(sheet1,currentRow.getRowNum(), 7))	
+					newsp.setManhinh(currentRow.getCell(7).getStringCellValue());
+				else {
+					ds_sp_loi += currentRow.getCell(0).getStringCellValue()+" ";
+					continue;
+				}
+				
+				if (validateData(sheet1,currentRow.getRowNum(), 8))
+					newsp.setPin(currentRow.getCell(8).getStringCellValue());
+				else {
+					ds_sp_loi += currentRow.getCell(0).getStringCellValue()+" ";
+					continue;
+				}
+				
+				if (validateData(sheet1,currentRow.getRowNum(), 9))	
+					newsp.setHang(currentRow.getCell(9).getStringCellValue());
+				else {
+					ds_sp_loi += currentRow.getCell(0).getStringCellValue()+" ";
+					continue;
+				}
+					
+				if (validateData(sheet1,currentRow.getRowNum(), 10)) {
+					Cell cellGia = currentRow.getCell(10);
+					String strGia = formatter.formatCellValue(cellGia);
+					newsp.setGia(Integer.parseInt(strGia));
+				}
+				else {
+					ds_sp_loi += currentRow.getCell(0).getStringCellValue()+" ";
+					continue;
+				}
+				
+				
+				if (validateData(sheet1,currentRow.getRowNum(), 11)) {
 				Cell cellTinhtrang = currentRow.getCell(11);
 				String strTinhtrang = formatter.formatCellValue(cellTinhtrang);
 				newsp.setTinhtrang(Integer.parseInt(strTinhtrang));
+				}else {
+					ds_sp_loi += currentRow.getCell(0).getStringCellValue()+" ";
+					continue;
 				}
 				
 				newlistsp.add(newsp);
-				sp_bus.addSP(newsp);
+				//sp_bus.addSP(newsp);
 				}
 				
 				
 				
 				JOptionPane.showMessageDialog(null, "Import thành công");
+				JOptionPane.showMessageDialog(null, ds_sp_loi);
 				loadSanPhamExcel();
 				workbook.close();
 			
@@ -515,20 +575,14 @@ public class QuanLySanPhamFrm extends JPanel {
 		}
 	}
 	
-	public int validateData(Sheet sheet, int cellIndex) {
-		int flag = 1;
-		for (Row row : sheet) {
-	        // Skip the header row
-	        if (row.getRowNum() == 0) {
-	            continue;
-	        }
-
+	public boolean validateData(Sheet sheet,int rowIndex, int cellIndex) {
+			Row row = sheet.getRow(rowIndex);
 	        Cell cell = row.getCell(cellIndex);
 
 	        // Check if the cell is not empty
 	        if (cell == null || cell.getCellType() == CellType.BLANK) {
 	            System.out.println("Có ô dữ liệu bị trống ở hàng " + row.getRowNum());
-	            flag = 0;
+	            return false;
 	        } 
 	        else {
 	            
@@ -538,7 +592,7 @@ public class QuanLySanPhamFrm extends JPanel {
 	                    // Example: Check if a string is not too long
 	                    if (stringValue.length() > 50) {
 	                        System.out.println("Chuỗi kí tự quá dài ở hàng " + row.getRowNum());
-	                        flag = 0;
+	                        return false;
 	                    }
 	                    // Add more string-specific validation as needed
 	                    break;
@@ -548,18 +602,15 @@ public class QuanLySanPhamFrm extends JPanel {
 	                    // Example: Check if a numeric value is within a specific range
 	                    if (numericValue < 0) {
 	                        System.out.println("Giá bán phải là số dương ở hàng " + row.getRowNum());
-	                        flag = 0;
+	                        return false;
 	                    }
 	                    // Add more numeric-specific validation as needed
 	                    break;
 
 	                
 	            }
-	        }
-	        	        
-	    }
-		return flag;
-		
+	        }    
+		return true;
 	}
 	
 }

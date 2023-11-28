@@ -28,6 +28,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class LoginForm extends JFrame {
 
@@ -70,6 +72,7 @@ public class LoginForm extends JFrame {
 		setSize(440, 360);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(102, 102, 102));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -93,6 +96,14 @@ public class LoginForm extends JFrame {
 		textField.setColumns(10);
 		
 		textField_1 = new MyPasswordField();
+		textField_1.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyChar() == KeyEvent.VK_ENTER) {
+					btnNewButton.doClick();
+				}
+			}
+		});
 		textField_1.setBackground(new Color(77, 77, 77));
 		textField_1.setBorder(new EmptyBorder(0, 10, 0, 46));
 		textField_1.setBounds(100, 241, 220, 30);
