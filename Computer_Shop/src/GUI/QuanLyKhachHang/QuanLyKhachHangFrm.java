@@ -129,7 +129,11 @@ public class QuanLyKhachHangFrm extends JPanel {
 		timKiemBtn_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// cập nhật khách hàng được chọn trong bảng
-				new updateKhachHangFrm().setVisible(true);
+				if(table.getSelectedRow() > -1) {
+					new updateKhachHangFrm(qlkh.ds_hienThi.get(table.getSelectedRow()), qlkh).setVisible(true);
+				}else {
+					JOptionPane.showMessageDialog(null,"Bạn phải chọn 1 khách hàng trong bảng");
+				}
 			}
 		});
 		timKiemBtn_1_1.setText("Cập nhật");
