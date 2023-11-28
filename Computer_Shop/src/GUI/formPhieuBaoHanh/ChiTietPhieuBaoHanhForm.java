@@ -1,8 +1,10 @@
 package GUI.formPhieuBaoHanh;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -19,13 +21,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import javax.swing.BorderFactory;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfWriter;
 import java.io.FileOutputStream;
-
-import com.itextpdf.text.Font;
 
 public class ChiTietPhieuBaoHanhForm extends JFrame {
     private JTextField txtMaPhieu, txtMaNV, txtMaHD, txtMaSP, txtTenSP, txtLoi, txtGiaiQuyet, txtNgayNhan, txtNgayTra;
@@ -33,7 +29,7 @@ public class ChiTietPhieuBaoHanhForm extends JFrame {
     public ChiTietPhieuBaoHanhForm(Object[] thongTinPhieu) {
         setTitle("Thông tin chi tiết phiếu bảo hành");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 400, 400);
+        setBounds(100, 100, 650, 400);
 
         JPanel contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout());
@@ -41,6 +37,21 @@ public class ChiTietPhieuBaoHanhForm extends JFrame {
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(9, 2));
+
+        // Lấy kích thước màn hình
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int screenWidth = screenSize.width;
+        int screenHeight = screenSize.height;
+
+        // Tính toán vị trí để căn giữa màn hình
+        int frameWidth = this.getSize().width;
+        int frameHeight = this.getSize().height;
+
+        int x = (screenWidth - frameWidth) / 2;
+        int y = (screenHeight - frameHeight) / 2;
+
+        // Đặt vị trí của frame
+        setLocation(x, y);
 
         txtMaPhieu = new JTextField();
         txtMaNV = new JTextField();
