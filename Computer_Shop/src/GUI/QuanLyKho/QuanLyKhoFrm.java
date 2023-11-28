@@ -3,7 +3,11 @@ package GUI.QuanLyKho;
 import javax.swing.JPanel;
 import java.awt.Dimension;
 import java.awt.Color;
+
+import java.awt.Desktop;
+
 import java.awt.Cursor;
+
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -60,6 +64,7 @@ import BUS.QuanLyTonKhoBUS;
 import DTO.DTO_NhaCungCap;
 
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.Document;
 
 import com.google.protobuf.Message;
 
@@ -72,12 +77,29 @@ import javax.swing.ImageIcon;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
+
+
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+
 import java.text.*;
 import java.awt.print.*;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+
 
 
 public class QuanLyKhoFrm extends JPanel {
@@ -127,6 +149,14 @@ public class QuanLyKhoFrm extends JPanel {
 		}
 		return true;
 	}
+	private static void openPDFWithEdge(String pdfFilePath) {
+        try {
+            File file = new File(pdfFilePath);
+            Desktop.getDesktop().open(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 	public QuanLyKhoFrm(String manv) {
 		this.manv = manv;
 		try {
@@ -318,18 +348,24 @@ public class QuanLyKhoFrm extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				MessageFormat header = new MessageFormat("Báo cáo");
-				MessageFormat footer = new MessageFormat("Page{0,number,integer}");
-				
-				try {
-					donNhapTable.print(JTable.PrintMode.FIT_WIDTH,header,footer);
-				} catch (Exception e2) {
-					// TODO: handle exception
-					JOptionPane.showMessageDialog(null,"In thất bại");
+				int selectedRow = donNhapTable.getSelectedRow(); // Lấy chỉ số của hàng đang được chọn
+				if (selectedRow != -1) { // Kiểm tra xem có hàng nào được chọn không	
+					String madn = donNhapTable.getValueAt(selectedRow, 0)+"";
+					String tennvl = busDonNhap.getTenNhanVien(donNhapTable.getValueAt(selectedRow, 1).toString());
+					String tenncc = busDonNhap.getTenNCC(donNhapTable.getValueAt(selectedRow, 2).toString());
+					String tennvi = busDonNhap.getTenNhanVien(manv);
+					String tong = donNhapTable.getValueAt(selectedRow, 3)+"";
+					String ngayNhap = donNhapTable.getValueAt(selectedRow, 4)+"";
+					String pdfFilePath = "DonNhap_"+madn+".pdf";
+					busDonNhap.generatePDF(madn,tennvl,tennvi,tenncc, tong , ngayNhap ,pdfFilePath);
+					openPDFWithEdge(pdfFilePath); 
+					
+				} else {
+				    JOptionPane.showMessageDialog(null, "Không có hàng nào được chọn");
+				} 
 				}
 			}
-		});
+		);
 		
 		MyButton chiTietBtn = new MyButton();
 		//Nút chi tiết

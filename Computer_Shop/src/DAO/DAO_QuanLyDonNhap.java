@@ -158,5 +158,40 @@ private static Connection conn = null;
 		}
 		return listDonNhap_Ngay;
 	}
-
+	public static String getTenNhanVien(String manv) {
+		openData();
+		String tennv=null;
+		openData();
+		try {
+			Statement stmt = (Statement) conn.createStatement();
+			String sql = "select tennv from nhanvien where manv='"+manv+"'";
+			ResultSet rs  = stmt.executeQuery(sql);
+			while(rs.next()) {		
+				tennv = rs.getString("tennv");
+			}
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tennv;
+	}
+	public static String getTenNCC(String mancc) {
+		openData();
+		String tenncc=null;
+		openData();
+		try {
+			Statement stmt = (Statement) conn.createStatement();
+			String sql = "select tenncc from nhacungcap where mancc='"+mancc+"'";
+			ResultSet rs  = stmt.executeQuery(sql);
+			while(rs.next()) {		
+				tenncc = rs.getString("tenncc");
+			}
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tenncc;
+	}
 }
