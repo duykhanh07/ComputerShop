@@ -59,22 +59,23 @@ public class XemTruocKhoFrm extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					XemTruocKhoFrm frame = new XemTruocKhoFrm();
-					frame.setVisible(true);
-					frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					XemTruocKhoFrm frame = new XemTruocKhoFrm();
+//					frame = new XemTruocKhoFrm();
+//					frame.setVisible(true);
+//					frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+//					
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
-	private JTable table_2;
+	//private JTable table_2;
 	private ThemDonNhapBUS themDonNhapBUS = new ThemDonNhapBUS();
 	/**
 	 * Launch the application.
