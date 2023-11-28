@@ -441,7 +441,7 @@ public class QuanLySanPhamFrm extends JPanel {
 			XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
 			XSSFSheet sheet1 = workbook.getSheetAt(0);
 			DataFormatter formatter = new DataFormatter();
-			int columnIndex = 0;
+			
 				
 			Iterator<Row> row_Iterator = sheet1.iterator();
 			Row firstRow = row_Iterator.next();
@@ -453,42 +453,47 @@ public class QuanLySanPhamFrm extends JPanel {
 				Row currentRow = row_Iterator.next();
 				DTO_SanPham newsp = new DTO_SanPham();
 				
-				newsp.setMasp(currentRow.getCell(0).getStringCellValue());
-				
-				newsp.setTensp(currentRow.getCell(1).getStringCellValue());
-				
-				newsp.setImage(currentRow.getCell(2).getStringCellValue());
-				
-				newsp.setCpu(currentRow.getCell(3).getStringCellValue());
-				
-				newsp.setRam(currentRow.getCell(4).getStringCellValue());
-				
-				newsp.setRom(currentRow.getCell(5).getStringCellValue());
-				
-				newsp.setCard(currentRow.getCell(6).getStringCellValue());
-				
-				newsp.setManhinh(currentRow.getCell(7).getStringCellValue());
-				
-				newsp.setPin(currentRow.getCell(8).getStringCellValue());
-				
-				newsp.setHang(currentRow.getCell(9).getStringCellValue());
-				
+				if (validateData(sheet1, 0) == 1) 
+					newsp.setMasp(currentRow.getCell(0).getStringCellValue());
+				if (validateData(sheet1, 1) == 1)	
+					newsp.setTensp(currentRow.getCell(1).getStringCellValue());
+				if (validateData(sheet1, 2) == 1)	
+					newsp.setImage(currentRow.getCell(2).getStringCellValue());
+				if (validateData(sheet1, 3) == 1) 	
+					newsp.setCpu(currentRow.getCell(3).getStringCellValue());
+				if (validateData(sheet1, 4) == 1)	
+					newsp.setRam(currentRow.getCell(4).getStringCellValue());
+				if (validateData(sheet1, 5) == 1)	
+					newsp.setRom(currentRow.getCell(5).getStringCellValue());
+				if (validateData(sheet1, 6) == 1)
+					newsp.setCard(currentRow.getCell(6).getStringCellValue());
+				if (validateData(sheet1, 7) == 1)	
+					newsp.setManhinh(currentRow.getCell(7).getStringCellValue());
+				if (validateData(sheet1, 8) == 1)
+					newsp.setPin(currentRow.getCell(8).getStringCellValue());
+				if (validateData(sheet1, 9) == 1)	
+					newsp.setHang(currentRow.getCell(9).getStringCellValue());
+					
+				if (validateData(sheet1, 10) == 1) {
 				Cell cellGia = currentRow.getCell(10);
 				String strGia = formatter.formatCellValue(cellGia);
 				newsp.setGia(Integer.parseInt(strGia));
-				
+				}
+				if (validateData(sheet1, 11) == 1) {
 				Cell cellTinhtrang = currentRow.getCell(11);
 				String strTinhtrang = formatter.formatCellValue(cellTinhtrang);
 				newsp.setTinhtrang(Integer.parseInt(strTinhtrang));
+				}
 				
 				newlistsp.add(newsp);
 				sp_bus.addSP(newsp);
-							
-			}
-			
-			JOptionPane.showMessageDialog(null, "Import thành công");
-			loadSanPhamExcel();
-			workbook.close();
+				}
+				
+				
+				
+				JOptionPane.showMessageDialog(null, "Import thành công");
+				loadSanPhamExcel();
+				workbook.close();
 			
 		} 
 		catch (Exception e) {
@@ -539,7 +544,7 @@ public class QuanLySanPhamFrm extends JPanel {
 	                    break;
 
 	                case NUMERIC:
-	                    double numericValue = cell.getNumericCellValue();
+	                    int numericValue = (int) cell.getNumericCellValue();
 	                    // Example: Check if a numeric value is within a specific range
 	                    if (numericValue < 0) {
 	                        System.out.println("Giá bán phải là số dương ở hàng " + row.getRowNum());
@@ -551,8 +556,10 @@ public class QuanLySanPhamFrm extends JPanel {
 	                
 	            }
 	        }
+	        	        
 	    }
 		return flag;
+		
 	}
 	
 }
