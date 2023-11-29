@@ -11,7 +11,7 @@ public class ThongTinCaNhanDAO {
 	public Connection Connect_mySQL() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			return (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/quanlycuahang", "cuahangmaytinh", "123456");
+			return (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/quanlycuahang", "root", "");
 		}
 		catch(Exception e) {
 			e.printStackTrace();
