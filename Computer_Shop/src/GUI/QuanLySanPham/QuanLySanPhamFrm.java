@@ -545,7 +545,7 @@ public class QuanLySanPhamFrm extends JPanel {
 				}
 				
 				newlistsp.add(newsp);
-				//sp_bus.addSP(newsp);
+				sp_bus.addSP(newsp);
 				}
 				
 				

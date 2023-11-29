@@ -534,9 +534,13 @@ public class ThemSanPhamFrm extends JFrame {
 		}
 		
 		//kiem tra dau vao cua gia san pham co phai la so hay khong
-		if (!(giaTxt.getText().matches("[0-9]+"))) {
+		else if (!(giaTxt.getText().matches("[0-9]+"))) {
 			JOptionPane.showMessageDialog(null, "Giá bán phải là số!");
 			flag=0;
+			if (Integer.parseInt(giaTxt.getText()) < 0) {
+				JOptionPane.showMessageDialog(null, "Giá bán phải là số dương");
+				flag = 0;
+			}
 		}
 		
 		return flag;
