@@ -133,6 +133,11 @@ public class CapNhatTaiKhoanFrm extends JFrame {
 		JLabel autoIncreaseSize_1 = new JLabel("");
 		
 		MyButton resetPasswordBtn = new MyButton();
+		resetPasswordBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					resetMatKhau();
+			}
+		});
 		resetPasswordBtn.setIcon(new ImageIcon(CapNhatTaiKhoanFrm.class.getResource("/assets/reset.png")));
 		resetPasswordBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -214,5 +219,14 @@ public class CapNhatTaiKhoanFrm extends JFrame {
 	public void layDsNhanVienKoTK() {
 		maNhanVienCmbx.setModel(new DefaultComboBoxModel(this.tk_bus.layDanhSachMaNhanVienChuaCoTaiKhoan()));
 		maNhanVienCmbx.addItem(tk.getManv());
+	}
+	private void resetMatKhau() {
+		int xacNhan = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn tạo lại mật khẩu?");
+		if(xacNhan!=0) {
+			return;
+		}
+		tk.setPassword("888888888");
+		tk_bus.suaTK(tk);
+		JOptionPane.showMessageDialog(null, "tạo lại mật khẩu thành công");
 	}
 }
