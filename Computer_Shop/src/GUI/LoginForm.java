@@ -42,10 +42,7 @@ public class LoginForm extends JFrame {
 	private boolean revealPass = false;
 
 	private LoginBUS login_bus;
-	private char echochar;
-	public JLabel lblNewLabel;
-	public JLabel lblNewLabel_1;
-	
+	private char echochar; 
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -82,12 +79,12 @@ public class LoginForm extends JFrame {
 
 		setContentPane(contentPane);
 		
-		lblNewLabel = new JLabel("Username :");
+		JLabel lblNewLabel = new JLabel("Username :");
 		lblNewLabel.setForeground(new Color(0, 255, 255));
 		lblNewLabel.setBounds(10, 200, 88, 30);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		lblNewLabel_1 = new JLabel("Password :");
+		JLabel lblNewLabel_1 = new JLabel("Password :");
 		lblNewLabel_1.setForeground(new Color(0, 255, 255));
 		lblNewLabel_1.setBounds(10, 241, 80, 30);
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 16));

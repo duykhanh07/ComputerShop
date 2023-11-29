@@ -18,37 +18,28 @@ import MyDesign.MyComponents.MyButton;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 import javax.swing.ScrollPaneConstants;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-
-import BUS.QuanLyKhachHangBUS;
-
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ImageIcon;
-import javax.swing.DefaultComboBoxModel;
 
 public class QuanLyKhachHangFrm extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
-	private QuanLyKhachHangBUS qlkh;
-	private QuanLyKhachHangFrm self = this;
 
 	/**
 	 * Create the panel.
 	 */
 	
 // 	TODO : câu lệnh lấy ra thuộc tính ngày cuối cùng mua hàng
-//	SELECT kh.*,MAX(ngaylaphd) AS lancuoi
+//	SELECT kh.*,MAX(ngaylaphd) AS lan_cuoi_mua_hang
 //	FROM khachhang AS kh JOIN hoadon AS hd ON kh.makh = hd.makh
 //	GROUP BY kh.makh
 	
@@ -62,8 +53,6 @@ public class QuanLyKhachHangFrm extends JPanel {
 		    }
 		} catch (Exception e) {}
 		
-		qlkh = new QuanLyKhachHangBUS();
-		
 		setBackground(new Color(102, 102, 102));
 		
 		JPanel QLKhachHangPanel = new JPanel();
@@ -76,16 +65,10 @@ public class QuanLyKhachHangFrm extends JPanel {
 		timKiemKhachHangTxt.setBackground(new Color(77, 77, 77));
 		
 		JComboBox timKiemTypeCmbx_1 = new JComboBox();
-		timKiemTypeCmbx_1.setModel(new DefaultComboBoxModel(new String[] {"tên khách hàng", "số điện thoại", "mã khách hàng"}));
 		timKiemTypeCmbx_1.setForeground(Color.CYAN);
 		timKiemTypeCmbx_1.setBackground(new Color(102, 102, 102));
 		
 		MyButton timKiemBtn_1 = new MyButton();
-		timKiemBtn_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				timKiemKhachHang(timKiemKhachHangTxt.getText(), timKiemTypeCmbx_1.getSelectedIndex());
-			}
-		});
 		timKiemBtn_1.setText("Lọc");
 		timKiemBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
 		
@@ -96,15 +79,8 @@ public class QuanLyKhachHangFrm extends JPanel {
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		JComboBox sortCmbx_1 = new JComboBox();
-		sortCmbx_1.setModel(new DefaultComboBoxModel(new String[] {"----------", "tên khách hàng (A -> Z)", "tên khách hàng (Z -> A)", "điểm (thấp -> cao)", "điểm (cao -> thấp)", "lần cuối mua (từ lâu)", "lần cuối mua (gần đây)"}));
 		sortCmbx_1.setForeground(Color.CYAN);
 		sortCmbx_1.setBackground(new Color(102, 102, 102));
-		sortCmbx_1.addActionListener(new ActionListener() {			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sapXepKhachHang(sortCmbx_1.getSelectedIndex());
-			}
-		});
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.getViewport().setBackground(new Color(51,51,51));
@@ -130,11 +106,7 @@ public class QuanLyKhachHangFrm extends JPanel {
 		timKiemBtn_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// cập nhật khách hàng được chọn trong bảng
-				if(table.getSelectedRow() > -1) {
-					new updateKhachHangFrm(self,qlkh.ds_hienThi.get(table.getSelectedRow()), qlkh).setVisible(true);
-				}else {
-					JOptionPane.showMessageDialog(null,"Bạn phải chọn 1 khách hàng trong bảng");
-				}
+				new updateKhachHangFrm().setVisible(true);
 			}
 		});
 		timKiemBtn_1_1.setText("Cập nhật");
@@ -156,11 +128,6 @@ public class QuanLyKhachHangFrm extends JPanel {
 		);
 		
 		MyButton mbtnLmMi = new MyButton();
-		mbtnLmMi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				refresh();
-			}
-		});
 		mbtnLmMi.setIcon(new ImageIcon(QuanLyKhachHangFrm.class.getResource("/assets/reset.png")));
 		mbtnLmMi.setText("làm mới");
 		mbtnLmMi.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -171,27 +138,22 @@ public class QuanLyKhachHangFrm extends JPanel {
 					.addGap(10)
 					.addGroup(gl_QLKhachHangPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_QLKhachHangPanel.createSequentialGroup()
+							.addComponent(timKiemKhachHangTxt, GroupLayout.PREFERRED_SIZE, 275, GroupLayout.PREFERRED_SIZE)
 							.addGap(10)
-							.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 840, Short.MAX_VALUE)
-							.addContainerGap())
-						.addGroup(gl_QLKhachHangPanel.createSequentialGroup()
-							.addGroup(gl_QLKhachHangPanel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_QLKhachHangPanel.createSequentialGroup()
-									.addComponent(timKiemKhachHangTxt, GroupLayout.PREFERRED_SIZE, 275, GroupLayout.PREFERRED_SIZE)
-									.addGap(10)
-									.addComponent(timKiemTypeCmbx_1, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)
-									.addGap(4)
-									.addComponent(timKiemBtn_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addGap(8)
-									.addComponent(mbtnLmMi, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addGap(4)
-									.addComponent(auto_increase_spaceLbl_3, GroupLayout.DEFAULT_SIZE, 1, Short.MAX_VALUE)
-									.addGap(10)
-									.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
-									.addGap(10)
-									.addComponent(sortCmbx_1, GroupLayout.PREFERRED_SIZE, 154, GroupLayout.PREFERRED_SIZE))
-								.addComponent(timKiemBtn_1_1, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE))
-							.addGap(10))))
+							.addComponent(timKiemTypeCmbx_1, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)
+							.addGap(4)
+							.addComponent(timKiemBtn_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(8)
+							.addComponent(mbtnLmMi, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(4)
+							.addComponent(auto_increase_spaceLbl_3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addGap(10)
+							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+							.addGap(10)
+							.addComponent(sortCmbx_1, GroupLayout.PREFERRED_SIZE, 154, GroupLayout.PREFERRED_SIZE))
+						.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 840, Short.MAX_VALUE)
+						.addComponent(timKiemBtn_1_1, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE))
+					.addGap(10))
 		);
 		gl_QLKhachHangPanel.setVerticalGroup(
 			gl_QLKhachHangPanel.createParallelGroup(Alignment.LEADING)
@@ -211,41 +173,14 @@ public class QuanLyKhachHangFrm extends JPanel {
 						.addGroup(gl_QLKhachHangPanel.createSequentialGroup()
 							.addGap(3)
 							.addComponent(sortCmbx_1, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGap(8)
+					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
+					.addGap(4)
 					.addComponent(timKiemBtn_1_1, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
 					.addGap(9))
 		);
 		QLKhachHangPanel.setLayout(gl_QLKhachHangPanel);
 		setLayout(groupLayout);
-		
-		loadKhachHangTable();
-	}
-	public void loadKhachHangTable() {
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		SimpleDateFormat df = new SimpleDateFormat("dd/MM/YYYY 		HH:mm:ss");
-		model.setRowCount(0);
-		for(int i = 0; i<qlkh.ds_hienThi.size(); i++) {
-			String lancuoi_str = df.format(qlkh.ds_lanCuoi.get(qlkh.ds_hienThi.get(i).getMakh()));
-			model.addRow(new Object[]{qlkh.ds_hienThi.get(i).getMakh(), qlkh.ds_hienThi.get(i).getTenkh(), 
-					qlkh.ds_hienThi.get(i).getSdt(), qlkh.ds_hienThi.get(i).getDiem(), lancuoi_str});
-		}
-	}
-	public void sapXepKhachHang(int selectedIndex) {
-		qlkh.sapXepKhachHang(selectedIndex);
-		loadKhachHangTable();
-	}
-	public void timKiemKhachHang(String thongtin, int selectedIndex) {
-		if(thongtin.equalsIgnoreCase("")) {
-			JOptionPane.showMessageDialog(null, "Vui lòng nhập thông tin tìm kiếm");
-		}else {
-			qlkh.timKiemKhachHang(thongtin, selectedIndex);
-			loadKhachHangTable();
-		}
-	}
-	public void refresh() {
-		qlkh = new QuanLyKhachHangBUS();
-		loadKhachHangTable();
+			
 	}
 }

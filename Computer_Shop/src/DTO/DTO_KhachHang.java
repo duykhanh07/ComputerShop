@@ -54,13 +54,5 @@ public class DTO_KhachHang {
 		return "DTO_KhachHang [makh=" + makh + ", tenkh=" + tenkh + ", sdt=" + sdt + ", diem=" + diem + "]";
 	}
 	
-	public int compareByName(DTO_KhachHang other) {
-		String[] name_1st_split = this.tenkh.split(" ");
-		String[] name_2nd_split = other.getTenkh().split(" ");
-		if(!name_1st_split[name_1st_split.length-1].equalsIgnoreCase(name_2nd_split[name_2nd_split.length-1])) {
-			return name_1st_split[name_1st_split.length-1].compareToIgnoreCase(name_2nd_split[name_2nd_split.length-1]);
-		}else {
-			return this.tenkh.compareToIgnoreCase(other.getTenkh());
-		}
-	}
+	
 }

@@ -18,7 +18,7 @@ public class Welcome extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JLabel imageWelcome;
 	private JLabel tenNhanVienLbl;
-	public JLabel maNhanVienLbl;
+	private JLabel maNhanVienLbl;
 	private JLabel chucVuLbl;
 
 	/**
@@ -48,7 +48,6 @@ public class Welcome extends JPanel {
 			break;
 		}
 	}
-	
 	public void initComponent() {
 		setBackground(new Color(102, 102, 102));
 		

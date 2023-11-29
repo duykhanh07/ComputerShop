@@ -9,7 +9,6 @@ import MyDesign.MyTabPane.MyTabbedPaneCustom;
 import MyDesign.MyTable.CustomTableCellRenderer;
 import MyDesign.MyTable.CustomTableHeaderUI;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import MyDesign.MyComponents.MyTextfield;
@@ -25,27 +24,12 @@ import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
-
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.text.DecimalFormat;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.JCheckBox;
 import MyDesign.Calendar.MyDateChooser;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-
-import BUS.HoaDonBUS;
-import DTO.DTO_HoaDon;
-
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -445,13 +429,10 @@ public class QuanLyBanHangFrm extends JPanel {
 				{null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"m\u00E3 h\u00F3a \u0111\u01A1n", "m\u00E3 kh\u00E1ch h\u00E0ng", "m\u00E3 nh\u00E2n vi\u00EAn", "ng\u00E0y l\u1EADp", "địa chỉ giao hàng", "t\u1ED5ng ti\u1EC1n", "tr\u1EA1ng th\u00E1i"
+				"m\u00E3 h\u00F3a \u0111\u01A1n", "m\u00E3 kh\u00E1ch h\u00E0ng", "m\u00E3 nh\u00E2n vi\u00EAn", "ng\u00E0y l\u1EADp", "d\u1ECBa ch\u1EC9 giao h\u00E0ng", "t\u1ED5ng ti\u1EC1n", "tr\u1EA1ng th\u00E1i"
 			}
 		));
 		scrollPane_2.setViewportView(table);
-		
-		//Hiển thị danh sách hóa đơn
-		loadHoaDon();
 		
 		MyTextfield timKiemDonHangTxt = new MyTextfield();
 		timKiemDonHangTxt.setPreferredSize(new Dimension(180, 35));
@@ -460,14 +441,12 @@ public class QuanLyBanHangFrm extends JPanel {
 		timKiemDonHangTxt.setBackground(new Color(77, 77, 77));
 		
 		JComboBox timKiemTypeCmbx = new JComboBox();
-		timKiemTypeCmbx.setModel(new DefaultComboBoxModel(new String[] {"theo mã hóa đơn", "theo mã khách hàng", "theo mã nhân viên", "theo địa chỉ giao hàng", "theo trạng thái"}));
 		timKiemTypeCmbx.setForeground(Color.CYAN);
 		timKiemTypeCmbx.setBackground(new Color(102, 102, 102));
 		
 		MyButton timKiemBtn = new MyButton();
 		timKiemBtn.setText("Lọc");
 		timKiemBtn.setHorizontalTextPosition(SwingConstants.LEADING);
-		
 		
 		JLabel auto_increase_spaceLbl = new JLabel("");
 		auto_increase_spaceLbl.setBackground(new Color(102, 102, 102));
@@ -477,17 +456,8 @@ public class QuanLyBanHangFrm extends JPanel {
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		JComboBox sortCmbx = new JComboBox();
-		sortCmbx.setModel(new DefaultComboBoxModel(new String[] {"----------", "ngày lập hóa đơn tăng dần", "ngày lập hóa đơn giảm dần", "tổng tiền tăng dần", "tổng tiền giảm dần"}));
 		sortCmbx.setForeground(Color.CYAN);
 		sortCmbx.setBackground(new Color(102, 102, 102));
-		//Xử lý sự kiện khi chọn JComboBox
-		sortCmbx.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				sapXepHoaDon(sortCmbx.getSelectedIndex());
-			}
-		});
 		
 		JLabel lblT = new JLabel("Từ :");
 		lblT.setForeground(Color.CYAN);
@@ -495,12 +465,6 @@ public class QuanLyBanHangFrm extends JPanel {
 		
 		MyDateChooser fromDateChooser = new MyDateChooser();
 		fromDateChooser.setBackground(new Color(102, 102, 102));
-//		fromDateChooser.addMouseListener(new MouseAdapter() {
-//			public void mouseEntered(MouseEvent e) {
-//                JOptionPane.showMessageDialog(null, "hi");
-//                System.out.println("hi");
-//            }
-//		});
 		
 		JLabel lbln = new JLabel("Đến :");
 		lbln.setForeground(Color.CYAN);
@@ -509,44 +473,14 @@ public class QuanLyBanHangFrm extends JPanel {
 		MyDateChooser toDateChooser = new MyDateChooser();
 		toDateChooser.setBackground(new Color(102, 102, 102));
 		
-		//Xử lý sự kiện nhấn vào nút "lọc" form hóa đơn
-				timKiemBtn.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e)
-					{
-						timKiemHoaDon(timKiemDonHangTxt.getText().toLowerCase(), timKiemTypeCmbx.getSelectedIndex(), fromDateChooser.getDate(), toDateChooser.getDate());
-					}
-				});
-		
 		MyButton InHoaDonBtn = new MyButton();
 		InHoaDonBtn.setText("in hóa đơn");
 		InHoaDonBtn.setHorizontalTextPosition(SwingConstants.LEADING);
-		//Xử lý sự kiện khi nhấn vào nút "In"
-		InHoaDonBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				MessageFormat header = new MessageFormat("Hóa đơn bán hàng");
-				MessageFormat footer = new MessageFormat("Page{0, number, integer}");	
-				try {
-					table.print(JTable.PrintMode.FIT_WIDTH, header, footer);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 		
 		// Nút này để cập nhật trạng thái, ví dụ từ : đang giao hàng -> đã thanh toán
 		MyButton InHoaDonBtn_1 = new MyButton();
 		InHoaDonBtn_1.setToolTipText("cập nhật trạng thái hóa đơn");
 		InHoaDonBtn_1.setText("cập nhật");
-		//Xử lý khi nhấn vào nút "cập nhật" để cập nhật trạng thái hóa đơn
-		InHoaDonBtn_1.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				updateTrangThaiHoaDon(table.getSelectedRow());
-			}
-		});
-		
 		InHoaDonBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
 		GroupLayout gl_donHangPanel = new GroupLayout(donHangPanel);
 		gl_donHangPanel.setHorizontalGroup(
@@ -642,90 +576,5 @@ public class QuanLyBanHangFrm extends JPanel {
 			ProductItemPanel.add(pi);
 			cartItemPanel.add(new CartItem());
 		}
-	}
-	
-	//Tạo instance của HoaDonBUS để thực thi các phương thức
-	HoaDonBUS hoadonbus = new HoaDonBUS();
-	
-	//Tạo ArrayList lưu trữ danh sách hóa đơn lấy từ Database
-	ArrayList <DTO_HoaDon> arr_hoadon = hoadonbus.get_AllHoaDon();
-	
-	//Hiển thị danh sách hóa đơn
-	public void loadHoaDon()
-	{
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		model.setRowCount(0);
-		
-		//Định dạng hiển thị ngày
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY      HH:mm:ss");
-		
-		//Định dạng hiển thị tiền tệ
-		String patternTongTien = "###,###";
-		DecimalFormat formatTongTien = new DecimalFormat(patternTongTien);
-		
-		for(DTO_HoaDon x: arr_hoadon)
-		{
-			String ngaylaphoadon = sdf.format(x.getNgaylaphd());
-			String tongtien = formatTongTien.format(x.getTongtien());
-			model.addRow(new Object [] {x.getMahd(), x.getMakh(), x.getManv(), ngaylaphoadon, x.getDiachigiao(), tongtien, x.getTrangthai()});
-		}
-	}
-	
-	//Tìm kiếm hóa đơn
-	public void timKiemHoaDon(String timKiemStr, int selectedIndex, Date fromDate, Date toDate)
-	{
-		if(timKiemStr.equalsIgnoreCase(""))
-			JOptionPane.showMessageDialog(null, "Bạn phải điền thông tin muốn tìm");
-		else
-		{
-			arr_hoadon = hoadonbus.timKiemHoaDon(timKiemStr, selectedIndex, fromDate, toDate);
-		}
-		loadHoaDon();
-	}
-	
-	//Sắp xếp danh sách hóa đơn
-	public void sapXepHoaDon(int selectedIndex)
-	{
-		switch (selectedIndex)
-		{
-		case 1:
-			Collections.sort(arr_hoadon, Comparator.comparing(DTO_HoaDon -> DTO_HoaDon.getNgaylaphd()));
-			loadHoaDon();
-			break;
-		case 2:
-			Collections.sort(arr_hoadon, Comparator.comparing(DTO_HoaDon -> ((DTO.DTO_HoaDon) DTO_HoaDon).getNgaylaphd()).reversed());
-			loadHoaDon();
-			break;
-		case 3:
-			Collections.sort(arr_hoadon, Comparator.comparingDouble(DTO_HoaDon -> DTO_HoaDon.getTongtien()));
-			loadHoaDon();
-			break;
-		case 4:
-			Collections.sort(arr_hoadon, Comparator.comparingDouble((DTO_HoaDon -> ((DTO.DTO_HoaDon) DTO_HoaDon).getTongtien())).reversed());
-			loadHoaDon();
-			break;
-		default:
-			arr_hoadon = hoadonbus.get_AllHoaDon();
-			loadHoaDon();
-		}
-	}
-	
-	//Cập nhật trạng thái hóa đơn
-	public void updateTrangThaiHoaDon(int selectedRow)
-	{
-		if(arr_hoadon.get(selectedRow).getTrangthai().equalsIgnoreCase("đã thanh toán"))
-		{
-			JOptionPane.showMessageDialog(null, "Hóa đơn này đã thanh toán");
-			return;
-		}
-		
-		arr_hoadon.get(selectedRow).setTrangthai("đã thanh toán");
-		int check = -1;
-		check = hoadonbus.update_TrangThaiHoaDon(arr_hoadon.get(selectedRow));
-		if(check != -1)
-			JOptionPane.showMessageDialog(null, "Cập nhật trạng thái hóa đơn thành công!!!");
-		else
-			JOptionPane.showMessageDialog(null, "Lỗi!!! Cập nhật trạng thái hóa đơn không thành công!!!");
-		loadHoaDon();
 	}
 }

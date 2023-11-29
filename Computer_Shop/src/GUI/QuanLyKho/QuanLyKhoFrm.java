@@ -3,12 +3,6 @@ package GUI.QuanLyKho;
 import javax.swing.JPanel;
 import java.awt.Dimension;
 import java.awt.Color;
-
-import java.awt.Desktop;
-
-import java.awt.Cursor;
-
-
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
@@ -21,86 +15,23 @@ import MyDesign.MyTable.CustomTableHeaderUI;
 
 import javax.swing.border.EmptyBorder;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager.LookAndFeelInfo;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collections;
-
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.sql.Date;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Comparator;
-
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-
-import javax.swing.table.TableModel;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-
-import com.mysql.cj.x.protobuf.MysqlxCrud.Collection;
-
-import BUS.NhaCungCapBUS;
-import BUS.QuanLyTonKhoBUS;
-import DTO.DTO_NhaCungCap;
-
-import javax.swing.table.TableRowSorter;
-import javax.swing.text.Document;
-
-import com.google.protobuf.Message;
-
-import BUS.QuanLyDonNhapHangBUS;
-
-
 import javax.swing.border.LineBorder;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.ImageIcon;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-
-
-
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-
-import java.text.*;
-import java.awt.print.*;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
-
 
 public class QuanLyKhoFrm extends JPanel {
 
@@ -113,52 +44,11 @@ public class QuanLyKhoFrm extends JPanel {
 	private JTable tonKhoTable;
 	private JTable table;
 
-
-	private QuanLyTonKhoBUS qltk_bus = new QuanLyTonKhoBUS();
-
-	private QuanLyDonNhapHangBUS busDonNhap = new QuanLyDonNhapHangBUS();
-	private String manv;
-	private JComboBox sortCmbx;
-	private MyDateChooser toDateChooser;
-
 	/**
 	 * Create the panel.
 	 */
-	public boolean checkNgay() {
-		String stringFM = "dd/MM/yyyy";
-        SimpleDateFormat df= new SimpleDateFormat(stringFM);
-		if(fromDateChooser.getDate().after(Date.valueOf(LocalDate.now()))) {
-			JOptionPane.showMessageDialog(null, "Ngày bắt đầu không được lớn hơn ngày hôm nay");
-			fromDateChooser.setDate(Date.valueOf(LocalDate.now()));
-			fromDateChooser.myTextfield1.setText(df.format(Date.valueOf(LocalDate.now())));
-			return false;
-		}
-		if(toDateChooser.getDate().after(Date.valueOf(LocalDate.now()))) {
-			JOptionPane.showMessageDialog(null, "Ngày kết thúc không được lớn hơn ngày hôm nay");
-			toDateChooser.setDate(Date.valueOf(LocalDate.now()));
-			toDateChooser.myTextfield1.setText(df.format(Date.valueOf(LocalDate.now())));
-			return false;
-		}
-		if(toDateChooser.getDate().before(fromDateChooser.getDate())) {
-			JOptionPane.showMessageDialog(null, "Ngày bắt đầu không được lớn hơn ngày kết thúc");
-			toDateChooser.setDate(Date.valueOf(LocalDate.now()));
-			toDateChooser.myTextfield1.setText(df.format(Date.valueOf(LocalDate.now())));
-			fromDateChooser.setDate(Date.valueOf(LocalDate.now()));
-			fromDateChooser.myTextfield1.setText(df.format(Date.valueOf(LocalDate.now())));
-			return false;
-		}
-		return true;
-	}
-	private static void openPDFWithEdge(String pdfFilePath) {
-        try {
-            File file = new File(pdfFilePath);
-            Desktop.getDesktop().open(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-	public QuanLyKhoFrm(String manv) {
-		this.manv = manv;
+	
+	public QuanLyKhoFrm() {
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
@@ -186,8 +76,6 @@ public class QuanLyKhoFrm extends JPanel {
 					.addGap(22))
 		);
 		
-		
-		
 		JPanel donNhapPanel = new JPanel();
 		donNhapPanel.setBackground(new Color(102, 102, 102));
 		tabbedPane.addTab("Đơn nhập", null, donNhapPanel, null);
@@ -201,108 +89,18 @@ public class QuanLyKhoFrm extends JPanel {
 		JComboBox timKiemTypeCmbx = new JComboBox();
 		timKiemTypeCmbx.setForeground(new Color(0, 255, 255));
 		timKiemTypeCmbx.setBackground(new Color(102, 102, 102));
-		timKiemTypeCmbx.addItem("Mã đơn nhập");
-		timKiemTypeCmbx.addItem("Mã nhân viên");
-		timKiemTypeCmbx.addItem("Mã nhà cung cấp");
-		timKiemTypeCmbx.addItem("Ngày nhập");
 		
 		timKiemBtn = new MyButton();
 		timKiemBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		timKiemBtn.setText("Lọc");
 		timKiemBtn.addActionListener(new ActionListener() {
-			//Lọc
 			public void actionPerformed(ActionEvent e) {
-				if(timKiemDonNhapTxt.getText().isEmpty() && timKiemTypeCmbx.getSelectedItem().equals("Ngày nhập") == false ) {
-					JOptionPane.showMessageDialog(null, "Ô tìm kiếm trống!");
-				}else {
-					if(timKiemTypeCmbx.getSelectedItem().equals("Mã đơn nhập")) {
-						DefaultTableModel model_table =(DefaultTableModel) donNhapTable.getModel();
-						model_table.setRowCount(0);
-						busDonNhap.selectDonNhap_MaDN(donNhapTable, timKiemDonNhapTxt.getText());
-					}
-					if(timKiemTypeCmbx.getSelectedItem().equals("Mã nhân viên")) {
-						DefaultTableModel model_table =(DefaultTableModel) donNhapTable.getModel();
-						model_table.setRowCount(0);
-						busDonNhap.selectDonNhap_MaNV(donNhapTable, timKiemDonNhapTxt.getText());;
-					}
-					if(timKiemTypeCmbx.getSelectedItem().equals("Mã nhà cung cấp")) {
-						DefaultTableModel model_table =(DefaultTableModel) donNhapTable.getModel();
-						model_table.setRowCount(0);
-						busDonNhap.selectDonNhap_MaNCC(donNhapTable, timKiemDonNhapTxt.getText());
-					}
-					if(timKiemTypeCmbx.getSelectedItem().equals("Ngày nhập")) {
-						if(checkNgay()) {
-							String stringFM = "yyyy-MM-dd";
-					        SimpleDateFormat df= new SimpleDateFormat(stringFM);
-							DefaultTableModel model_table =(DefaultTableModel) donNhapTable.getModel();
-							model_table.setRowCount(0);
-							busDonNhap.selectDonNhap_Ngay(donNhapTable, df.format(fromDateChooser.getDate()),df.format(toDateChooser.getDate()));
-						}
-					}
-				}
 			}
 		});
 		
-		sortCmbx = new JComboBox();
+		JComboBox sortCmbx = new JComboBox();
 		sortCmbx.setBackground(new Color(102, 102, 102));
 		sortCmbx.setForeground(new Color(0, 255, 255));
-		sortCmbx.addItem("Mã đơn nhập");
-		sortCmbx.addItem("Mã nhân viên");
-		sortCmbx.addItem("Mã nhà cung cấp");
-		sortCmbx.addItem("Tổng tiền");
-		sortCmbx.addItem("Ngày nhập");
-		sortCmbx.addItemListener(new ItemListener() {
-			private int columnIndexToSort;
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				// TODO Auto-generated method stub
-				 // Tạo mô hình dữ liệu
-                DefaultTableModel model = (DefaultTableModel) donNhapTable.getModel();
-
-                // Tạo TableRowSorter
-                TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-
-                if(sortCmbx.getSelectedItem().equals("Mã đơn nhập")) {
-                	columnIndexToSort = 0;
-                }
-                if(sortCmbx.getSelectedItem().equals("Mã nhân viên")) {
-                	columnIndexToSort = 1;
-                }
-                if(sortCmbx.getSelectedItem().equals("Mã nhà cung cấp")) {
-                	columnIndexToSort = 2;
-                }
-                if(sortCmbx.getSelectedItem().equals("Tổng tiền")) {
-                	columnIndexToSort = 3;
-                }
-                if(sortCmbx.getSelectedItem().equals("Ngày nhập")) {
-                	columnIndexToSort = 4;
-                }
-                Comparator<Double> doubleComparator = new Comparator<Double>() {
-                    public int compare(Double d1, Double d2) {
-                        return Double.compare(d1, d2);
-                    }
-                };
-                Comparator<Date> dateComparator = new Comparator<Date>() {
-                    public int compare(Date date1, Date date2) {
-                        return date1.compareTo(date2);
-                    }
-                };
-
-                sorter.setSortable(columnIndexToSort, true);
-                if(columnIndexToSort == 3) {
-                	sorter.setComparator(columnIndexToSort, doubleComparator);
-                }else if(columnIndexToSort == 4) {
-                	sorter.setComparator(columnIndexToSort, dateComparator);
-                }
-                else {
-                	sorter.setComparator(columnIndexToSort, String.CASE_INSENSITIVE_ORDER);
-                }
-                sorter.toggleSortOrder(columnIndexToSort); 
-
-                // Đặt TableRowSorter vào JTable
-                donNhapTable.setRowSorter(sorter);
-			}
-		});
 		
 		JLabel lblNewLabel = new JLabel("Sắp xếp :");
 		lblNewLabel.setForeground(new Color(0, 255, 255));
@@ -321,8 +119,7 @@ public class QuanLyKhoFrm extends JPanel {
 		fromDateChooser = new MyDateChooser();
 		fromDateChooser.setBackground(new Color(102, 102, 102));
 		
-		
-		toDateChooser = new MyDateChooser();
+		MyDateChooser toDateChooser = new MyDateChooser();
 		toDateChooser.setBackground(new Color(102, 102, 102));
 		
 		scrollPane = new JScrollPane();
@@ -331,11 +128,11 @@ public class QuanLyKhoFrm extends JPanel {
 		scrollPane.getViewport().setBackground(new Color(51,51,51));
 		
 		JLabel auto_increase_spaceLbl_1 = new JLabel("");
-		//thêm đơn nhập hàng
+		
 		MyButton themDonNhapBtn = new MyButton();
 		themDonNhapBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new ThemDonNhapFrm(manv).setVisible(true);
+				new ThemDonNhapFrm().setVisible(true);
 			}
 		});
 		themDonNhapBtn.setText("Thêm");
@@ -344,45 +141,11 @@ public class QuanLyKhoFrm extends JPanel {
 		MyButton inBtn = new MyButton();
 		inBtn.setText("In");
 		inBtn.setHorizontalTextPosition(SwingConstants.LEADING);
-		inBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int selectedRow = donNhapTable.getSelectedRow(); // Lấy chỉ số của hàng đang được chọn
-				if (selectedRow != -1) { // Kiểm tra xem có hàng nào được chọn không	
-					String madn = donNhapTable.getValueAt(selectedRow, 0)+"";
-					String tennvl = busDonNhap.getTenNhanVien(donNhapTable.getValueAt(selectedRow, 1).toString());
-					String tenncc = busDonNhap.getTenNCC(donNhapTable.getValueAt(selectedRow, 2).toString());
-					String tennvi = busDonNhap.getTenNhanVien(manv);
-					String tong = donNhapTable.getValueAt(selectedRow, 3)+"";
-					String ngayNhap = donNhapTable.getValueAt(selectedRow, 4)+"";
-					String pdfFilePath = "DonNhap_"+madn+".pdf";
-					busDonNhap.generatePDF(madn,tennvl,tennvi,tenncc, tong , ngayNhap ,pdfFilePath);
-					openPDFWithEdge(pdfFilePath); 
-					
-				} else {
-				    JOptionPane.showMessageDialog(null, "Không có hàng nào được chọn");
-				} 
-				}
-			}
-		);
 		
 		MyButton chiTietBtn = new MyButton();
-		//Nút chi tiết
 		chiTietBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int selectedRow = donNhapTable.getSelectedRow(); // Lấy chỉ số của hàng đang được chọn
-				if (selectedRow != -1) { // Kiểm tra xem có hàng nào được chọn không
-					String madn = donNhapTable.getValueAt(selectedRow, 0)+"";
-					String manv = donNhapTable.getValueAt(selectedRow, 1)+"";
-					String mancc = donNhapTable.getValueAt(selectedRow, 2)+"";
-					String tong = donNhapTable.getValueAt(selectedRow, 3)+"";
-					String ngayNhap = donNhapTable.getValueAt(selectedRow, 4)+"";
-					new ChiTietDonNhap(madn, manv, mancc, tong, ngayNhap).setVisible(true);
-					
-				} else {
-				    JOptionPane.showMessageDialog(null, "Không có hàng nào được chọn");
-				}
+				new ChiTietDonNhap().setVisible(true);
 			}
 		});
 		chiTietBtn.setText("Chi tiết");
@@ -401,46 +164,22 @@ public class QuanLyKhoFrm extends JPanel {
 		donNhapTable = new JTable();
 		donNhapTable.setModel(new DefaultTableModel(
 			new Object[][] {
-				
+				{"DN001", "NV00001", "NCC002", "15000000", "15/6/2023 16:31:32"},
 			},
 			new String[] {
 				"m\u00E3 \u0111\u01A1n nh\u1EADp", "m\u00E3 nh\u00E2n vi\u00EAn", "m\u00E3 nh\u00E0 cung c\u1EA5p", "t\u1ED5ng ti\u1EC1n", "ng\u00E0y nh\u1EADp"
 			}
 		));
-		
-		
-		
 		donNhapTable.getColumnModel().getColumn(2).setPreferredWidth(100);
 		donNhapTable.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		donNhapTable.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
 		
 		scrollPane.setViewportView(donNhapTable);
-		//Load data
-		busDonNhap.hienThiDonNhapHang(donNhapTable);
 		
 		MyButton mbtnLmMi = new MyButton();
 		mbtnLmMi.setIcon(new ImageIcon(QuanLyKhoFrm.class.getResource("/assets/reset.png")));
 		mbtnLmMi.setText("làm mới");
 		mbtnLmMi.setHorizontalTextPosition(SwingConstants.LEADING);
-		mbtnLmMi.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				DefaultTableModel model_table = (DefaultTableModel) donNhapTable.getModel();
-				model_table.setRowCount(0);
-				busDonNhap.hienThiDonNhapHang(donNhapTable);
-				sortCmbx.setSelectedIndex(0);
-				timKiemTypeCmbx.setSelectedIndex(0);
-				String stringFM = "dd/MM/yyyy";
-		        SimpleDateFormat df= new SimpleDateFormat(stringFM);
-				toDateChooser.setDate(Date.valueOf(LocalDate.now()));
-				toDateChooser.myTextfield1.setText(df.format(Date.valueOf(LocalDate.now())));
-				fromDateChooser.setDate(Date.valueOf(LocalDate.now()));
-				fromDateChooser.myTextfield1.setText(df.format(Date.valueOf(LocalDate.now())));
-			}
-		});
-		
 		GroupLayout gl_donNhapPanel = new GroupLayout(donNhapPanel);
 		gl_donNhapPanel.setHorizontalGroup(
 			gl_donNhapPanel.createParallelGroup(Alignment.LEADING)
@@ -580,29 +319,14 @@ public class QuanLyKhoFrm extends JPanel {
 		MyTextfield timKiemTonKhoTxt = new MyTextfield();
 		timKiemTonKhoTxt.setPreferredSize(new Dimension(180, 35));
 		timKiemTonKhoTxt.setColumns(10);
-		timKiemTonKhoTxt.setBorder(new EmptyBorder(0, 10, 0, 0));
+		timKiemTonKhoTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
 		timKiemTonKhoTxt.setBackground(new Color(77, 77, 77));
 		
 		JComboBox timKiemTypeCmbx_1 = new JComboBox();
-		timKiemTypeCmbx_1.setModel(new DefaultComboBoxModel(new String[] {"----------", "theo mã sản phẩm", "theo tên sản phẩm"}));
 		timKiemTypeCmbx_1.setForeground(Color.CYAN);
 		timKiemTypeCmbx_1.setBackground(new Color(102, 102, 102));
 		
 		MyButton timKiemBtn_1 = new MyButton();
-		timKiemBtn_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				timKiemTonKho(timKiemTonKhoTxt.getText().toLowerCase(), timKiemTypeCmbx_1.getSelectedIndex());
-			}
-		});
-		
-		timKiemTonKhoTxt.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-					timKiemTonKho(timKiemTonKhoTxt.getText().toLowerCase(), timKiemTypeCmbx_1.getSelectedIndex());
-				}
-			}
-		});
 		timKiemBtn_1.setText("Lọc");
 		timKiemBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
 		
@@ -611,17 +335,10 @@ public class QuanLyKhoFrm extends JPanel {
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		JComboBox sortCmbx_1 = new JComboBox();
-		sortCmbx_1.setModel(new DefaultComboBoxModel(new String[] {"----------", "tên sản phẩm(A->Z)", "tên sản phẩm(Z->A)", "số lượng (thấp -> cao)", "số lượng (cao -> thấp)"}));
 		sortCmbx_1.setForeground(Color.CYAN);
 		sortCmbx_1.setBackground(new Color(102, 102, 102));
 		
 		MyButton mbtnLmMi_1 = new MyButton();
-		mbtnLmMi_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				qltk_bus = new QuanLyTonKhoBUS();
-				loadTonKho();
-			}
-		});
 		mbtnLmMi_1.setIcon(new ImageIcon(QuanLyKhoFrm.class.getResource("/assets/reset.png")));
 		mbtnLmMi_1.setText("làm mới");
 		mbtnLmMi_1.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -655,7 +372,7 @@ public class QuanLyKhoFrm extends JPanel {
 					.addGroup(gl_tonKhoPanel.createParallelGroup(Alignment.LEADING)
 						.addComponent(timKiemTonKhoTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_tonKhoPanel.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGap(4)
 							.addComponent(timKiemTypeCmbx_1, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
 						.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
 						.addComponent(sortCmbx_1, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
@@ -673,7 +390,7 @@ public class QuanLyKhoFrm extends JPanel {
 		
 		JPanel donNhapPanel_1 = new JPanel();
 		donNhapPanel_1.setBackground(new Color(102, 102, 102));
-		tabbedPane.addTab("Nhà cung cấp", null, donNhapPanel_1, null);
+		tabbedPane.addTab("nhà cung cấp", null, donNhapPanel_1, null);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.getViewport().setBackground(new Color(51,51,51));
@@ -687,22 +404,12 @@ public class QuanLyKhoFrm extends JPanel {
 		timKiemDonNhapTxt_1.setBackground(new Color(77, 77, 77));
 		
 		JComboBox timKiemTypeCmbx_2 = new JComboBox();
-		timKiemTypeCmbx_2.setModel(new DefaultComboBoxModel(new String[] {"----------", "theo mã nhà cung cấp", "theo tên nhà cung cấp", "theo số điện thoại", "theo địa chỉ"}));
 		timKiemTypeCmbx_2.setForeground(Color.CYAN);
 		timKiemTypeCmbx_2.setBackground(new Color(102, 102, 102));
 		
 		MyButton timKiemBtn_2 = new MyButton();
 		timKiemBtn_2.setText("Lọc");
 		timKiemBtn_2.setHorizontalTextPosition(SwingConstants.LEADING);
-		//Xử lý sự kiện nhấn vào nút lọc form nhà cung cấp
-		timKiemBtn_2.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				timKiemNhaCungCap(timKiemDonNhapTxt_1.getText().toLowerCase(), timKiemTypeCmbx_2.getSelectedIndex());
-			}
-		});
-		
 		
 		JLabel auto_increase_spaceLbl_4 = new JLabel("");
 		
@@ -711,46 +418,16 @@ public class QuanLyKhoFrm extends JPanel {
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		JComboBox sortCmbx_2 = new JComboBox();
-		sortCmbx_2.setModel(new DefaultComboBoxModel(new String[] {"----------", "tên nhà cung cấp(A->Z)", "địa chỉ (A->Z)"}));
 		sortCmbx_2.setForeground(Color.CYAN);
 		sortCmbx_2.setBackground(new Color(102, 102, 102));
-		
-		//Xử lý sự kiện hiển thị danh sách nhà cung cấp theo kiểu sắp xếp đã chọn
-		sortCmbx_2.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				sapXepNhaCungCap(sortCmbx_2.getSelectedIndex());
-			}
-		});
 		
 		JLabel auto_increase_spaceLbl_1_1 = new JLabel("");
 		
 		MyButton themDonNhapBtn_1 = new MyButton();
 		themDonNhapBtn_1.setText("Thêm");
 		themDonNhapBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
-		//Hiển thị form thêm nhà cung cấp
-		themDonNhapBtn_1.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				new ThemNhaCungCap().setVisible(true);
-			}
-		});
 		
 		MyButton inBtn_1 = new MyButton();
-		//In thông tin trên JTable
-		inBtn_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				MessageFormat header = new MessageFormat("Nhà Cung Cấp");
-				MessageFormat footer = new MessageFormat("Page{0, number, integer}");	
-				try {
-					table.print(JTable.PrintMode.FIT_WIDTH, header, footer);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 		inBtn_1.setText("In");
 		inBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
 		
@@ -759,91 +436,11 @@ public class QuanLyKhoFrm extends JPanel {
 		MyButton importBtn_1 = new MyButton();
 		importBtn_1.setText("Nhập Excel");
 		importBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
-		//Nhập dữ liệu vào từ Excel
-		importBtn_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				//ArrayList lưu trữ các phần tử lấy từ Excel
-				ArrayList <DTO_NhaCungCap> arr_temp = new ArrayList<DTO_NhaCungCap>();
-				
-				//Arraylist chứa mã nhà cung cấp có trong Database
-				ArrayList <String> ds_mancc = nhacungcapbus.get_mancc();
-				
-				//Khởi tạo các instance để đọc dữ liệu từ file Excel
-				File excelFile;
-				Workbook wb;
-				Sheet sheet;
-				Row row;
-				Cell cell;
-				
-				//Khởi tạo instance xác định file Excel đầu vào
-				FileInputStream fis = null;
-				
-				//Khởi tạo instance cho phép chọn file
-				JFileChooser excelFileChooser = new JFileChooser("C:\\Users\\USER\\Desktop");
-				excelFileChooser.setDialogTitle("Chọn File Excel");
-				int excelChooser = excelFileChooser.showOpenDialog(null);
-				
-				if(excelChooser == JFileChooser.APPROVE_OPTION)
-				{
-					try {
-						excelFile = excelFileChooser.getSelectedFile();
-						fis = new FileInputStream(excelFile);
-						wb = WorkbookFactory.create(fis);
-						sheet = wb.getSheet("Sheet1");
-						
-						for(int i = 1; i <= sheet.getLastRowNum(); i++)
-						{
-							row = sheet.getRow(i);
-							cell = row.getCell(0);
-							String mancc = cell.getStringCellValue();
-							cell = row.getCell(1);
-							String tenncc = cell.getStringCellValue();
-							cell = row.getCell(2);
-							String sdt = cell.getStringCellValue();
-							cell = row.getCell(3);
-							String diachi = cell.getStringCellValue();
-							
-							if(ds_mancc.contains(mancc))
-							{
-								JOptionPane.showMessageDialog(null, "Nhập file Excel không thành công!!! Mã nhà cung cấp " + mancc + " ở dòng " + (i+1) + " đã tồn tại!!!");
-								return;
-							}
-							else
-								arr_temp.add(new DTO_NhaCungCap(mancc, tenncc, sdt, diachi));
-						}
-						
-						for(DTO_NhaCungCap x: arr_temp)
-							nhacungcapbus.insert_NhaCungCap(x);
-						
-						//Update dữ liệu từ Database cho biến arr_ncc sau khi nhập thêm nhà cung cấp
-						arr_ncc = nhacungcapbus.get_AllNhaCungCap();
-						loadNhaCungCap();
-						
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				;
-			}
-		});
 		
 		MyButton mbtnLmMi_2 = new MyButton();
 		mbtnLmMi_2.setIcon(new ImageIcon(QuanLyKhoFrm.class.getResource("/assets/reset.png")));
 		mbtnLmMi_2.setText("làm mới");
 		mbtnLmMi_2.setHorizontalTextPosition(SwingConstants.LEADING);
-		
-		//Làm mới form nhà cung cấp
-		mbtnLmMi_2.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				timKiemDonNhapTxt_1.setText("");
-				timKiemTypeCmbx_2.setSelectedIndex(0);
-				sortCmbx_2.setSelectedIndex(0);
-			}
-		});
-		
 		GroupLayout gl_donNhapPanel_1 = new GroupLayout(donNhapPanel_1);
 		gl_donNhapPanel_1.setHorizontalGroup(
 			gl_donNhapPanel_1.createParallelGroup(Alignment.LEADING)
@@ -930,92 +527,10 @@ public class QuanLyKhoFrm extends JPanel {
 		donNhapPanel_1.setLayout(gl_donNhapPanel_1);
 		setLayout(groupLayout);
 		
-		//Hiển thị danh sách nhà cung cấp
-		loadNhaCungCap();
-		
-		//Hiển thị danh sách tồn kho
 		initComponents();
-		loadTonKho();
-		
-		sortCmbx_1.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				sapXepTonKho(sortCmbx_1.getSelectedIndex());
-			}
-		});
 	}
 	public void initComponents() {
 		setMinimumSize(new Dimension(880, 595));
 		setSize(880,595);
-	}
-	public void loadTonKho() {
-		DefaultTableModel model = (DefaultTableModel)tonKhoTable.getModel();
-		model.setRowCount(0);
-		for(int i =0; i< qltk_bus.ds_hienThi.size(); i++) {
-			model.addRow(new Object[] {qltk_bus.ds_hienThi.get(i).getMasp(), qltk_bus.ds_hienThi.get(i).getTensp(), qltk_bus.ds_hienThi.get(i).getSoluongton()});
-		}
-	}
-	public void sapXepTonKho(int selectedIndex) {
-		qltk_bus.sapXepTonKho(selectedIndex);
-		loadTonKho();
-	}
-	public void timKiemTonKho(String timkiemStr, int selectedIndex) {
-		if(timkiemStr.equalsIgnoreCase("")) {
-			JOptionPane.showMessageDialog(null, "Bạn phải điền thông tin muốn tìm");
-		}else {
-			qltk_bus.timKiemTonKho(timkiemStr, selectedIndex);
-			loadTonKho();
-		}
-	}
-	
-	//Khởi tạo instance NhaCungCapBUS để thực thi phương thức
-	NhaCungCapBUS nhacungcapbus = new NhaCungCapBUS();
-	//Biến lưu trữ dữ liệu hiện tại trên bảng danh sách nhà cung cấp
-	ArrayList <DTO_NhaCungCap> arr_ncc = nhacungcapbus.get_AllNhaCungCap();
-	
-	
-	//Form nhà cung cấp
-	//Hiển thị danh sách nhà cung cấp
-	public void loadNhaCungCap()
-	{
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		model.setRowCount(0);
-		for(DTO_NhaCungCap x: arr_ncc)
-		{
-			model.addRow(new Object[] {x.getMancc(), x.getTenncc(), x.getSdt(), x.getDiachi()});
-		}
-	}
-	
-	//Tìm kiếm nhà cung cấp
-	public void timKiemNhaCungCap(String timKiemStr, int selectedIndex)
-	{
-		if(timKiemStr.equalsIgnoreCase(""))
-			JOptionPane.showMessageDialog(null, "Bạn phải điền thông tin muốn tìm");
-		else
-		{
-			arr_ncc = nhacungcapbus.timKiemNhaCungCap(timKiemStr, selectedIndex);
-		}
-		loadNhaCungCap();
-	}
-	
-	//Sắp xếp danh sách nhà cung cấp
-	public void sapXepNhaCungCap(int selectedIndex)
-	{		
-		switch (selectedIndex)
-		{
-		case 1:
-			Collections.sort(arr_ncc, (o1, o2) -> o1.getTenncc().compareToIgnoreCase(o2.getTenncc()));
-			loadNhaCungCap();
-			break;
-		case 2:
-			Collections.sort(arr_ncc, (o1, o2) -> o1.getDiachi().compareToIgnoreCase(o2.getDiachi()));
-			loadNhaCungCap();
-			break;
-		default:
-			arr_ncc = nhacungcapbus.get_AllNhaCungCap();
-			loadNhaCungCap();
-		}
 	}
 }

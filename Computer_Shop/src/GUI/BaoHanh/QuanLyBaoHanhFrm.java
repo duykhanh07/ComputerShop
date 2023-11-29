@@ -14,8 +14,6 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import MyDesign.Calendar.MyDateChooser;
 import javax.swing.JScrollPane;
@@ -24,20 +22,8 @@ import javax.swing.JCheckBox;
 import java.awt.FlowLayout;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.awt.event.ActionEvent;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
-
-import BUS.ThemPhieuBaoHanhBUS;
-import DTO.DTO_CTPhieuBaoHanh;
-import DTO.DTO_PhieuBaoHanh;
-
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -49,53 +35,11 @@ public class QuanLyBaoHanhFrm extends JPanel {
 	private JTable table;
 	private JTable table_1;
 	private JTable table_2;
-	private ThemPhieuBaoHanhBUS themPhieuBaoHanhBUS = new ThemPhieuBaoHanhBUS();
-	private MyTextfield loiTxt;
-	private MyTextfield HuongGiaiQuyetTxt;
-	private MyTextfield timKiemChiTietHoaDon;
-	
-	public boolean CheckMa() {
-		if(table_2.getRowCount()==0) {
-			return true;
-		}else {
-			int countRow = table_2.getRowCount();
-			int selectRow = table_1.getSelectedRow();
-			DefaultTableModel model_table_1 = (DefaultTableModel) table_1.getModel();
-			DefaultTableModel model_table_2 = (DefaultTableModel) table_2.getModel();
-			for (int i = 0; i < countRow ;i++) {
-				if(model_table_2.getValueAt(i, 0).equals(model_table_1.getValueAt(selectRow, 0)) && model_table_2.getValueAt(i, 1).equals(model_table_1.getValueAt(selectRow, 1)) ) {
-					 int option = JOptionPane.showConfirmDialog(null, "Mã sản phẩm "+model_table_1.getValueAt(selectRow, 1)+" của hóa đơn "+model_table_1.getValueAt(selectRow, 0)+" bạn đã thêm vào rồi! Bạn có muốn xóa để thêm mới không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-					// Kiểm tra phản hồi của người dùng
-					 if (option == JOptionPane.YES_OPTION) {
-						 model_table_2.removeRow(i);
-				         return true; 
-				     }else {
-				    	 return false;
-				     }
-				}
-			}
-		}
-		return true;
-	}
-	
-	public String taoMaBH() {
-		ArrayList<DTO_PhieuBaoHanh> listPhieuBaoHanh = themPhieuBaoHanhBUS.selectAllPhieuBaoHanh();
-		int size = listPhieuBaoHanh.size()+1;
-		if(size<10) {
-			return "BH000"+size;
-		}else if(size<100) {
-			return "BH00"+size;
-		}else if(size<1000) {
-			return "BH0"+size;
-		}else {
-			return "BH"+size;
-		}
-	}
 
 	/**
 	 * Create the panel.
 	 */
-	public QuanLyBaoHanhFrm(String manv) {
+	public QuanLyBaoHanhFrm() {
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
@@ -287,7 +231,7 @@ public class QuanLyBaoHanhFrm extends JPanel {
 		LapPhieuBaoHanhPanel.setBackground(new Color(102, 102, 102));
 		tabbedPane.addTab("Lập phiếu", null, LapPhieuBaoHanhPanel, null);
 		
-		timKiemChiTietHoaDon = new MyTextfield();
+		MyTextfield timKiemChiTietHoaDon = new MyTextfield();
 		timKiemChiTietHoaDon.setPreferredSize(new Dimension(180, 35));
 		timKiemChiTietHoaDon.setColumns(10);
 		timKiemChiTietHoaDon.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -296,23 +240,10 @@ public class QuanLyBaoHanhFrm extends JPanel {
 		JComboBox timKiemTypeCmbx_1 = new JComboBox();
 		timKiemTypeCmbx_1.setForeground(Color.CYAN);
 		timKiemTypeCmbx_1.setBackground(new Color(102, 102, 102));
-		//Thêm dữ liệu cho Combobox
-		timKiemTypeCmbx_1.addItem("Mã hóa đơn");
-		timKiemTypeCmbx_1.addItem("Mã sản phẩm");
 		
 		MyButton timkiemBtn = new MyButton();
 		timkiemBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(timKiemTypeCmbx_1.getSelectedItem().equals("Mã hóa đơn")) {
-					DefaultTableModel model_table =(DefaultTableModel) table_1.getModel();
-					model_table.setRowCount(0);
-					themPhieuBaoHanhBUS.hienThiChiTiet_MaHD(table_1, timKiemChiTietHoaDon.getText());
-				}
-				if(timKiemTypeCmbx_1.getSelectedItem().equals("Mã sản phẩm")) {
-					DefaultTableModel model_table =(DefaultTableModel) table_1.getModel();
-					model_table.setRowCount(0);
-					themPhieuBaoHanhBUS.hienThiChiTiet_MaSP(table_1, timKiemChiTietHoaDon.getText());
-				}
 			}
 		});
 		timkiemBtn.setText("Lọc");
@@ -321,49 +252,6 @@ public class QuanLyBaoHanhFrm extends JPanel {
 		JComboBox sortCmbx_1 = new JComboBox();
 		sortCmbx_1.setForeground(Color.CYAN);
 		sortCmbx_1.setBackground(new Color(102, 102, 102));
-		sortCmbx_1.addItem("Mã hóa đơn");
-		sortCmbx_1.addItem("Mã sản phẩm");
-		sortCmbx_1.addItem("Hạn bảo hành");
-		sortCmbx_1.addItemListener(new ItemListener() {
-			
-			private int columnIndexToSort;
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				// TODO Auto-generated method stub
-				 // Tạo mô hình dữ liệu
-                DefaultTableModel model = (DefaultTableModel) table_1.getModel();
-
-                // Tạo TableRowSorter
-                TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-
-                if(sortCmbx_1.getSelectedItem().equals("Mã hóa đơn")) {
-                	columnIndexToSort = 0;
-                }
-                if(sortCmbx_1.getSelectedItem().equals("Mã sản phẩm")) {
-                	columnIndexToSort = 1;
-                }
-                if(sortCmbx_1.getSelectedItem().equals("Hạn bảo hành")) {
-                	columnIndexToSort = 2;
-                }
-                
-                Comparator<Date> dateComparator = new Comparator<Date>() {
-                    public int compare(Date date1, Date date2) {
-                        return date1.compareTo(date2);
-                    }
-                };
-                sorter.setSortable(columnIndexToSort, true);
-                if(columnIndexToSort == 2) {
-                	sorter.setComparator(columnIndexToSort, dateComparator);
-                }else {
-                	sorter.setComparator(columnIndexToSort, String.CASE_INSENSITIVE_ORDER);
-                }
-                sorter.toggleSortOrder(columnIndexToSort); // Sắp xếp cột "Name" theo thứ tự tăng dần
-
-                // Đặt TableRowSorter vào JTable
-                table_1.setRowSorter(sorter);
-			}
-		});
 		
 		JLabel lblNewLabel_1 = new JLabel("Sắp xếp :");
 		lblNewLabel_1.setForeground(Color.CYAN);
@@ -380,15 +268,12 @@ public class QuanLyBaoHanhFrm extends JPanel {
 		table_1.getTableHeader().setFont(new Font("Tahoma",Font.PLAIN,15));
 		table_1.setModel(new DefaultTableModel(
 			new Object[][] {
-				
+				{null, null, null},
 			},
 			new String[] {
 				"m\u00E3 h\u00F3a \u0111\u01A1n", "m\u00E3 s\u1EA3n ph\u1EA9m", "H\u1EA1n b\u1EA3o h\u00E0nh"
 			}
 		));
-		//Hiển thị chi tiết hóa đơn
-		themPhieuBaoHanhBUS.hienThiChiTiet(table_1);
-		
 		scrollPane_1.setViewportView(table_1);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
@@ -402,7 +287,7 @@ public class QuanLyBaoHanhFrm extends JPanel {
 		table_2.getTableHeader().setFont(new Font("Tahoma",Font.PLAIN, 15));
 		table_2.setModel(new DefaultTableModel(
 			new Object[][] {
-				
+				{null, null, null, null},
 			},
 			new String[] {
 				"m\u00E3 h\u00F3a \u0111\u01A1n", "m\u00E3 s\u1EA3n ph\u1EA9m", "l\u1ED7i", "h\u01B0\u1EDBng gi\u1EA3i quy\u1EBFt"
@@ -412,43 +297,11 @@ public class QuanLyBaoHanhFrm extends JPanel {
 		
 		MyButton themCTHDBtn = new MyButton();
 		themCTHDBtn.setText("Thêm");
-		themCTHDBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				if(CheckMa()) {
-					int selectRow = table_1.getSelectedRow();
-					Object[] rowData = {table_1.getValueAt(selectRow, 0), table_1.getValueAt(selectRow, 1),
-							loiTxt.getText(), HuongGiaiQuyetTxt.getText()};
-					DefaultTableModel model_table_2 = (DefaultTableModel) table_2.getModel();
-					model_table_2.addRow(rowData);
-					DefaultTableModel model_table_1 = (DefaultTableModel) table_1.getModel();
-					model_table_1.setRowCount(0);
-					themPhieuBaoHanhBUS.hienThiChiTiet_MaHD(table_1, model_table_2.getValueAt(0, 0).toString());
-				}else {
-					JOptionPane.showMessageDialog(null, "Thêm thất bại");
-				}
-				loiTxt.setText("");
-				HuongGiaiQuyetTxt.setText("");
-			}
-		});
 		themCTHDBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
 		MyButton xoaCTHDBtn = new MyButton();
 		xoaCTHDBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int selectRow = table_2.getSelectedRow();
-				DefaultTableModel model = (DefaultTableModel) table_2.getModel();
-				DefaultTableModel model_table_1 = (DefaultTableModel) table_1.getModel();
-				int option = JOptionPane.showConfirmDialog(null,"Bạn có chắc chắn xóa sản phẩm "+table_2.getValueAt(selectRow, 1)+" của hóa đơn "+table_2.getValueAt(selectRow, 0),"Xác nhận",JOptionPane.YES_NO_OPTION);
-				if(option == JOptionPane.YES_OPTION) {
-					model.removeRow(selectRow);
-					if(table_2.getRowCount()<1) {
-						model_table_1.setRowCount(0);
-						themPhieuBaoHanhBUS.hienThiChiTiet(table_1);
-					}
-				}
 			}
 		});
 		xoaCTHDBtn.setText("Xóa");
@@ -456,49 +309,9 @@ public class QuanLyBaoHanhFrm extends JPanel {
 		
 		MyButton themPhieuBaoHanhBtn = new MyButton();
 		themPhieuBaoHanhBtn.setText("thêm phiếu");
-		//Thêm phiếu bảo hành
-		themPhieuBaoHanhBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-				if(table_2.getRowCount()!=0) {
-					int dem = 0;
-					Date ngayNhan = Date.valueOf(LocalDate.now());
-					Date ngayTra = Date.valueOf(LocalDate.now().plusDays(7));
-					String maBaoHanh = taoMaBH();
-					DTO_PhieuBaoHanh phieuBaoHanh = new DTO_PhieuBaoHanh(maBaoHanh, ngayNhan, ngayTra, manv);
-					if(themPhieuBaoHanhBUS.insertBaoHanh(phieuBaoHanh)==0) {
-						JOptionPane.showMessageDialog(null, "Thêm phiếu bảo hành thất bại");
-					}else {
-						int rowCount = table_2.getRowCount();
-						for(int i=0; i < rowCount; i++) {
-							String maSanPham = String.valueOf(table_2.getValueAt(i, 1));
-							String maHoaDon = String.valueOf(table_2.getValueAt(i, 0));
-							String loi = String.valueOf(table_2.getValueAt(i, 2));
-							String giaiQuyet = String.valueOf(table_2.getValueAt(i, 3));
-							DTO_CTPhieuBaoHanh chiTietBaoHanh = new DTO_CTPhieuBaoHanh(maBaoHanh, maSanPham, maHoaDon, loi, giaiQuyet);
-							if(themPhieuBaoHanhBUS.insertChiTietBaoHanh(chiTietBaoHanh)!=0) {
-								dem+=1;
-							}
-						}
-					}
-					JOptionPane.showMessageDialog(null, "Có "+dem+" chi tiết phiếu thêm thành công");
-					DefaultTableModel model_table_1 = (DefaultTableModel) table_1.getModel();
-					model_table_1.setRowCount(0);
-					themPhieuBaoHanhBUS.hienThiChiTiet(table_1);
-					DefaultTableModel model_table_2 = (DefaultTableModel) table_2.getModel();
-					model_table_2.setRowCount(0);
-				}else {
-					JOptionPane.showMessageDialog(null, "Không có dữ liệu để thêm");
-				}
-				
-			}
-		});
 		themPhieuBaoHanhBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
-		loiTxt = new MyTextfield();
+		MyTextfield loiTxt = new MyTextfield();
 		loiTxt.setPreferredSize(new Dimension(180, 35));
 		loiTxt.setColumns(10);
 		loiTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -512,7 +325,7 @@ public class QuanLyBaoHanhFrm extends JPanel {
 		lblNewLabel_1_1_1.setForeground(Color.CYAN);
 		lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		HuongGiaiQuyetTxt = new MyTextfield();
+		MyTextfield HuongGiaiQuyetTxt = new MyTextfield();
 		HuongGiaiQuyetTxt.setPreferredSize(new Dimension(180, 35));
 		HuongGiaiQuyetTxt.setColumns(10);
 		HuongGiaiQuyetTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -522,35 +335,6 @@ public class QuanLyBaoHanhFrm extends JPanel {
 		
 		MyButton mbtnLmMi = new MyButton();
 		mbtnLmMi.setText("làm mới");
-		//Nút làm mới
-		mbtnLmMi.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				DefaultTableModel model_table_1 = (DefaultTableModel) table_1.getModel();
-				DefaultTableModel model_table_2 = (DefaultTableModel) table_2.getModel();
-				if(table_2.getRowCount()>0) {
-					int option = JOptionPane.showConfirmDialog(null, "Bạn chưa lưu dữ liệu vào cơ sở dữ liệu! Bạn có muốn tiếp tục không","Xác nhận",JOptionPane.YES_NO_OPTION);
-					if(option == JOptionPane.YES_OPTION) {
-						model_table_2.setRowCount(0);
-						model_table_1.setRowCount(0);
-						themPhieuBaoHanhBUS.hienThiChiTiet(table_1);
-						timKiemChiTietHoaDon.setText("");
-						timKiemTypeCmbx_1.setSelectedIndex(0);
-						sortCmbx_1.setSelectedIndex(0);
-					}else {
-						return;
-					}
-				}else {
-					model_table_1.setRowCount(0);
-					themPhieuBaoHanhBUS.hienThiChiTiet(table_1);
-					timKiemChiTietHoaDon.setText("");
-					timKiemTypeCmbx_1.setSelectedIndex(0);
-					sortCmbx_1.setSelectedIndex(0);
-				}
-			}
-		});
 		mbtnLmMi.setIcon(new ImageIcon(QuanLyBaoHanhFrm.class.getResource("/assets/reset.png")));
 		mbtnLmMi.setHorizontalTextPosition(SwingConstants.LEADING);
 		GroupLayout gl_LapPhieuBaoHanhPanel = new GroupLayout(LapPhieuBaoHanhPanel);

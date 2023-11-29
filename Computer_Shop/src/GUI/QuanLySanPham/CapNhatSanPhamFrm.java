@@ -267,10 +267,6 @@ public class CapNhatSanPhamFrm extends JFrame {
 		sp_bus = new SanPhamBUS();
 		
 		MyButton mbtnCpNht = new MyButton();
-		mbtnCpNht.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		mbtnCpNht.setText("Cập nhật");
 		mbtnCpNht.setHorizontalTextPosition(SwingConstants.LEADING);
 		mbtnCpNht.addActionListener(new ActionListener() {

@@ -5,13 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.Rectangle;
 import javax.swing.SwingConstants;
 import java.awt.Font;
@@ -28,21 +24,8 @@ import MyDesign.MyTable.CustomTableHeaderUI;
 
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.time.LocalDate;
-import java.util.ArrayList;
-//import java.util.Date;
-import java.util.Iterator;
 import java.awt.event.ActionEvent;
 import javax.swing.table.DefaultTableModel;
-import java.sql.Date;
-
-import BUS.ThemDonNhapBUS;
-import DAO.DAO_QuanLyDonNhap;
-import DTO.DTO_CTDonNhap;
-import DTO.DTO_DonNhap;
-
 import javax.swing.ScrollPaneConstants;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Toolkit;
@@ -54,16 +37,6 @@ public class ThemDonNhapFrm extends JFrame {
 	private JPanel contentPane;
 	private JTable chiTietPhieuNhapTable;
 	private MyTextfield donGiaTxt;
-	private ThemDonNhapBUS themDonNhapBUS = new ThemDonNhapBUS();
-	private JLabel maNhanVienPhieuNhapLbl;
-	private JLabel tenSanPhamTxt;
-	private Double tong = 0.0;
-	private DAO_QuanLyDonNhap daoQuanLyDonNhap = new DAO_QuanLyDonNhap();
-	private JComboBox maSanPhamCmbx;
-	private MyTextfield soLuongTxt;
-	private JLabel tongTienPhieuNhapLbl;
-	private JComboBox nhaCungCapCmbx;
-
 
 	/**
 	 * Launch the application.
@@ -72,7 +45,7 @@ public class ThemDonNhapFrm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ThemDonNhapFrm frame = new ThemDonNhapFrm("");
+					ThemDonNhapFrm frame = new ThemDonNhapFrm();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -80,63 +53,11 @@ public class ThemDonNhapFrm extends JFrame {
 			}
 		});
 	}
-	
-	//Hàm tạo mã
-	public String taoMaDonNhap() {
-		ArrayList<DTO_DonNhap> listDonNhap = daoQuanLyDonNhap.selectAllDonNhap();
-		int size = listDonNhap.size()+1;
-		if(size<10) {
-			return "DN0000"+size;
-		}else if(size<100) {
-			return "DN000"+size;
-		}else if(size<1000) {
-			return "DN00"+size;
-		}else if(size<10000) {
-			return "DN0"+size;
-		}
-		return "DN"+size;
-	}
-	
-	public boolean checkDonGia() {
-		if(donGiaTxt.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(null, "Đơn giá trống");
-			return false;
-		}
-		if(!donGiaTxt.getText().matches("\\d+")) {
-			JOptionPane.showMessageDialog(null, "Đơn giá có chữ hoặc kí tự");
-			return false;
-		}
-		if(Double.parseDouble(donGiaTxt.getText())==0.0) {
-			JOptionPane.showMessageDialog(null, "Đơn giá phải lớn hơn 0");
-			return false;
-		}
-		return true;
-	}
-	//check mã có trùng với mã đã thêm vào bảng chi tiết phiếu nhập
-	public boolean CheckMa() {
-		int countRow = chiTietPhieuNhapTable.getRowCount();
-		DefaultTableModel model = (DefaultTableModel) chiTietPhieuNhapTable.getModel();
-		for (int i = 0; i < countRow ;i++) {
-			if(maSanPhamCmbx.getSelectedItem().equals(model.getValueAt(i, 0))) {
-				 int option = JOptionPane.showConfirmDialog(null, "Mã sản phẩm "+maSanPhamCmbx.getSelectedItem()+" bạn đã thêm vào rồi! Bạn có muốn xóa để thêm mới không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-				// Kiểm tra phản hồi của người dùng
-				 if (option == JOptionPane.YES_OPTION) {
-					 tong = tong - Double.parseDouble(model.getValueAt(i, 4).toString());
-					 model.removeRow(i);
-			         return true; 
-			     }else {
-			    	 return false;
-			     }
-			}
-		}
-		return true;
-	}
 
 	/**
 	 * Create the frame.
 	 */
-
-	public ThemDonNhapFrm(String manv) {
+	public ThemDonNhapFrm() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ThemDonNhapFrm.class.getResource("/assets/Laptop_Login.png")));
 		setTitle("Thêm phiếu nhập hàng");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -151,7 +72,7 @@ public class ThemDonNhapFrm extends JFrame {
 
 		setContentPane(contentPane);
 		
-		maNhanVienPhieuNhapLbl = new JLabel("Mã nhân viên: "+manv);
+		JLabel maNhanVienPhieuNhapLbl = new JLabel("mã nhân viên : <<mavn>>");
 		maNhanVienPhieuNhapLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		maNhanVienPhieuNhapLbl.setForeground(new Color(0, 255, 255));
 		
@@ -164,7 +85,7 @@ public class ThemDonNhapFrm extends JFrame {
 		chiTietPhieuNhapTable.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
 		chiTietPhieuNhapTable.setModel(new DefaultTableModel(
 			new Object[][] {
-				
+				{"AC0003", "Laptop Acer Gaming Nitro 5 AN515 57 53F9", "30", "20000000", "600000000"},
 			},
 			new String[] {
 				"M\u00E3 s\u1EA3n ph\u1EA9m", "T\u00EAn s\u1EA3n ph\u1EA9m", "S\u1ED1 l\u01B0\u1EE3ng", "\u0110\u01A1n gi\u00E1", "Th\u00E0nh ti\u1EC1n"
@@ -179,14 +100,11 @@ public class ThemDonNhapFrm extends JFrame {
 		lblNewLabel_1_1.setForeground(Color.CYAN);
 		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		nhaCungCapCmbx = new JComboBox();
+		JComboBox nhaCungCapCmbx = new JComboBox();
 		nhaCungCapCmbx.setBackground(new Color(102, 102, 102));
 		nhaCungCapCmbx.setForeground(new Color(0, 255, 255));
 		
-		//Thêm mã nhà cung cấp vào comboBox
-		themDonNhapBUS.hienThiComboBoxMaNhaCungCap(nhaCungCapCmbx);
-
-		tongTienPhieuNhapLbl = new JLabel("Tổng cộng: "+tong);
+		JLabel tongTienPhieuNhapLbl = new JLabel("Tổng cộng : ..........");
 		tongTienPhieuNhapLbl.setHorizontalAlignment(SwingConstants.RIGHT);
 		tongTienPhieuNhapLbl.setForeground(Color.CYAN);
 		tongTienPhieuNhapLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -194,52 +112,15 @@ public class ThemDonNhapFrm extends JFrame {
 		MyButton xacNhanPhieuNhapBtn = new MyButton();
 		xacNhanPhieuNhapBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(chiTietPhieuNhapTable.getRowCount()!=0) {
-					int dem = 0;
-					String maNCC = String.valueOf(nhaCungCapCmbx.getSelectedItem());
-					String maDonNhap = taoMaDonNhap();
-					Double tongTien = tong;
-					Date ngayNhap = Date.valueOf(LocalDate.now());
-					DTO_DonNhap donNhap = new DTO_DonNhap(maDonNhap, manv, maNCC, tongTien, ngayNhap);
-					if(themDonNhapBUS.insertDonNhap(donNhap)==0) {
-						JOptionPane.showMessageDialog(null, "Thêm đơn nhập thất bại");
-					}else {
-						int rowCount = chiTietPhieuNhapTable.getRowCount();
-						for(int i=0; i < rowCount; i++) {
-							String maSanPham = String.valueOf(chiTietPhieuNhapTable.getValueAt(i, 0));
-							Double donGia = Double.parseDouble(chiTietPhieuNhapTable.getValueAt(i, 3).toString());
-							int soLuong = Integer.parseInt(chiTietPhieuNhapTable.getValueAt(i, 2).toString());
-							DTO_CTDonNhap chiTietDonNhap = new DTO_CTDonNhap(maDonNhap, maSanPham, null, donGia, soLuong, 0);
-							if(themDonNhapBUS.insertChiTietDonNhap(chiTietDonNhap)!=0) {
-								dem+=1;
-							}
-						}
-					}
-					JOptionPane.showMessageDialog(null, "Có "+dem+" chi tiết phiếu thêm thành công");
-					DefaultTableModel model_table = (DefaultTableModel) chiTietPhieuNhapTable.getModel();
-					model_table.setRowCount(0);
-					tong = 0.0;
-					tongTienPhieuNhapLbl.setText("Tổng cộng: "+tong);
-					nhaCungCapCmbx.setEnabled(true);
-					nhaCungCapCmbx.setSelectedIndex(0);
-					maSanPhamCmbx.setSelectedIndex(0);
-					donGiaTxt.setText("");
-					soLuongTxt.setText("1");
-				}else {
-					JOptionPane.showMessageDialog(null, "Không có dữ liệu để thêm");
-				}
 			}
 		});
 		xacNhanPhieuNhapBtn.setText("Xác nhận");
 		xacNhanPhieuNhapBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
 		MyButton xemTruocBtn = new MyButton();
-		//Nút xem trước
 		xemTruocBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String mancc = (String) nhaCungCapCmbx.getSelectedItem();
-				Date thoiGian = java.sql.Date.valueOf(LocalDate.now()) ;
-				new XemTruocKhoFrm(taoMaDonNhap(), manv, mancc, tong, thoiGian, chiTietPhieuNhapTable, tongTienPhieuNhapLbl,nhaCungCapCmbx,maSanPhamCmbx,donGiaTxt, soLuongTxt).setVisible(true);
+				new XemTruocKhoFrm().setVisible(true);
 			}
 			
 		});
@@ -250,45 +131,14 @@ public class ThemDonNhapFrm extends JFrame {
 		huyBtn.setText("hủy");
 		huyBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
-		//nút hủy
-		huyBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				DefaultTableModel model_table =(DefaultTableModel) chiTietPhieuNhapTable.getModel();
-				model_table.setRowCount(0);
-				tong = 0.0;
-				tongTienPhieuNhapLbl.setText("Tổng cộng: "+tong);
-				nhaCungCapCmbx.setEnabled(true);
-				nhaCungCapCmbx.setSelectedIndex(0);
-				maSanPhamCmbx.setSelectedIndex(0);
-				donGiaTxt.setText("");
-				soLuongTxt.setText("1");
-			}
-		});
-		
 		JLabel lblNewLabel_1_1_1 = new JLabel("mã sản phẩm :");
 		lblNewLabel_1_1_1.setForeground(Color.CYAN);
 		lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		maSanPhamCmbx = new JComboBox();
+		JComboBox maSanPhamCmbx = new JComboBox();
 		maSanPhamCmbx.setForeground(new Color(0, 255, 255));
 		maSanPhamCmbx.setBackground(new Color(102, 102, 102));
 		maSanPhamCmbx.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		
-		//Thêm tên sản phẩm vào Combobox
-		themDonNhapBUS.hienThiComboBoxMaSanPham(maSanPhamCmbx);
-		
-		//ten san pham
-		maSanPhamCmbx.addItemListener(new ItemListener() {
-			
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				// TODO Auto-generated method stub
-				themDonNhapBUS.layTenSanPham(maSanPhamCmbx, tenSanPhamTxt);
-			}
-		});
 		
 		JLabel lblNewLabel_1_1_1_1 = new JLabel("đơn giá :");
 		lblNewLabel_1_1_1_1.setForeground(Color.CYAN);
@@ -302,9 +152,9 @@ public class ThemDonNhapFrm extends JFrame {
 		lblNewLabel_1_1_1_2.setForeground(Color.CYAN);
 		lblNewLabel_1_1_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		soLuongTxt = new MyTextfield();
+		MyTextfield soLuongTxt = new MyTextfield();
 		soLuongTxt.setHorizontalAlignment(SwingConstants.CENTER);
-		soLuongTxt.setText("1");
+		soLuongTxt.setText("0");
 		soLuongTxt.setColumns(10);
 		soLuongTxt.setBorder(null);
 		
@@ -313,12 +163,6 @@ public class ThemDonNhapFrm extends JFrame {
 		truBtn.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		truBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(soLuongTxt.getText().equals("1")) {
-					JOptionPane.showMessageDialog(null, "Số lượng không được nhỏ hơn 1");
-				}
-				else {
-					soLuongTxt.setText((Integer.parseInt(soLuongTxt.getText()) - 1)+"");
-				}
 			}
 		});
 		truBtn.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -326,64 +170,14 @@ public class ThemDonNhapFrm extends JFrame {
 		MyButton congBtn = new MyButton();
 		congBtn.setIcon(new ImageIcon(ThemDonNhapFrm.class.getResource("/assets/add.png")));
 		congBtn.setHorizontalTextPosition(SwingConstants.CENTER);
-		congBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				soLuongTxt.setText((Integer.parseInt(soLuongTxt.getText()) + 1)+"");
-			}
-		});
 		
 		MyButton themPhieuNhapItemBtn = new MyButton();
 		themPhieuNhapItemBtn.setText("Thêm");
 		themPhieuNhapItemBtn.setHorizontalTextPosition(SwingConstants.LEADING);
-		//nút thêm chi tiết của hóa đơn
-		themPhieuNhapItemBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				//JOptionPane.showMessageDialog(null, nhaCungCapCmbx.isEnabled());
-				int option = JOptionPane.YES_OPTION;
-				if(nhaCungCapCmbx.isEnabled()) {
-					option = JOptionPane.showConfirmDialog(null, "Phiếu nhập này thuộc về nhà cung cấp "+nhaCungCapCmbx.getSelectedItem()+" phải không?","Xác nhận",JOptionPane.YES_NO_OPTION);
-					if(option == JOptionPane.YES_OPTION) {
-						nhaCungCapCmbx.setEnabled(false);
-					}else {
-						JOptionPane.showMessageDialog(null, "Nhập không thành công vì chưa chọn được nhà cung cấp cố định");
-					}
-				}
-				if(!nhaCungCapCmbx.isEnabled() && option == JOptionPane.YES_OPTION){
-					if(checkDonGia()&&CheckMa()) {
-						Double thanhTien = Double.parseDouble(soLuongTxt.getText())*Double.parseDouble(donGiaTxt.getText());
-						Object[] rowData = {maSanPhamCmbx.getSelectedItem().toString(), tenSanPhamTxt.getText(),
-								soLuongTxt.getText(), donGiaTxt.getText(), thanhTien+"" };
-						DefaultTableModel model_table = (DefaultTableModel) chiTietPhieuNhapTable.getModel();
-						model_table.addRow(rowData);
-						tong+=thanhTien;
-						tongTienPhieuNhapLbl.setText("Tổng cộng : "+tong);
-						maSanPhamCmbx.setSelectedIndex(0);
-						donGiaTxt.setText("");
-						soLuongTxt.setText("1");
-					}else {
-						JOptionPane.showMessageDialog(null, "Nhập không thành công");
-					}
-				}
-			}
-		});
 		
 		MyButton xoaPhieuNhapItemBtn = new MyButton();
 		xoaPhieuNhapItemBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int selectRow = chiTietPhieuNhapTable.getSelectedRow();
-				DefaultTableModel model = (DefaultTableModel) chiTietPhieuNhapTable.getModel();
-				int option = JOptionPane.showConfirmDialog(null,"Bạn có chắc chắn xóa sản phẩm "+chiTietPhieuNhapTable.getValueAt(selectRow, 1),"Xác nhận",JOptionPane.YES_NO_OPTION);
-				if(option == JOptionPane.YES_OPTION) {
-					tong = tong - Double.parseDouble(model.getValueAt(selectRow, 4).toString());
-					tongTienPhieuNhapLbl.setText("Tổng cộng : "+tong);
-					model.removeRow(selectRow);
-				}
 			}
 		});
 		xoaPhieuNhapItemBtn.setText("xóa");
@@ -399,23 +193,10 @@ public class ThemDonNhapFrm extends JFrame {
 		lblNewLabel_1_1_2_1.setForeground(Color.CYAN);
 		lblNewLabel_1_1_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		tenSanPhamTxt = new JLabel("<Tên sản phẩm khi chọn combobox>");
+		JLabel tenSanPhamTxt = new JLabel("<Tên sản phẩm khi chọn combobox>");
 		tenSanPhamTxt.setForeground(Color.CYAN);
 		tenSanPhamTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		//Ten san phẩm khi chọn Combobox
-		themDonNhapBUS.layTenSanPham(maSanPhamCmbx, tenSanPhamTxt);
-		DefaultTableModel model_changeTong = (DefaultTableModel) chiTietPhieuNhapTable.getModel();
-		model_changeTong.addTableModelListener(new TableModelListener() {
-			
-			@Override
-			public void tableChanged(TableModelEvent e) {
-				// TODO Auto-generated method stub
-				if(chiTietPhieuNhapTable.getRowCount()==0) {
-					tong = 0.0;
-				}
-			}
-		});
 		JLabel lblNewLabel_1 = new JLabel("");
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(

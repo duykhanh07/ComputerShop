@@ -51,21 +51,4 @@ public class DTO_TaiKhoan {
 		return "DTO_TaiKhoan [matk=" + matk + ", manv=" + manv + ", username=" + username + ", password=" + password
 				+ ", tinhtrang=" + tinhtrang + "]";
 	}
-	
-	public String insertString() {
-		String insertString = String.format("('%s','%s','%s','%s','%d')", matk, manv, username, password, tinhtrang);
-		return insertString;
-	}
-	
-	public int compareByName(DTO_TaiKhoan other) {
-		String[] name_1st_split = this.matk.split(" ");
-		String[] name_2nd_split = other.getMatk().split(" ");
-		if (!name_1st_split[name_1st_split.length - 1].equalsIgnoreCase(name_2nd_split[name_2nd_split.length - 1])) {
-			return name_1st_split[name_1st_split.length - 1]
-					.compareToIgnoreCase(name_2nd_split[name_2nd_split.length - 1]);
-		} else {
-			return this.matk.compareToIgnoreCase(other.getMatk());
-		}
-	}
-	
 }
