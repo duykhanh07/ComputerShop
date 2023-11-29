@@ -22,7 +22,7 @@ public class SanPhamDAO {
 	public Connection Connect_mySQL() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			this.conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/cuahangmaytinh", "root", "123456");
+			this.conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/quanlycuahang", "root", "");
 		}
 		catch(Exception e) {
 			e.printStackTrace();
