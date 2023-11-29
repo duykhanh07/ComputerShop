@@ -74,9 +74,6 @@ public class XemTruocKhoFrm extends JFrame {
 //			}
 //		});
 //	}
-
-	//private JTable table_2;
-	private ThemDonNhapBUS themDonNhapBUS = new ThemDonNhapBUS();
 	/**
 	 * Launch the application.
 	 */
@@ -202,6 +199,8 @@ public class XemTruocKhoFrm extends JFrame {
 		
 		MyButton xacNhanPhieuNhapBtn = new MyButton();
 		xacNhanPhieuNhapBtn.addActionListener(new ActionListener() {
+			private ThemDonNhapBUS themDonNhapBUS;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub

@@ -356,7 +356,7 @@ public class ThemDonNhapFrm extends JFrame {
 				}
 				if(!nhaCungCapCmbx.isEnabled() && option == JOptionPane.YES_OPTION){
 					if(checkDonGia()&&CheckMa()) {
-						Double thanhTien = Double.parseDouble(soLuongTxt.getText())*Double.parseDouble(donGiaTxt.getText());
+						Long thanhTien = Integer.parseInt(soLuongTxt.getText())*Long.parseLong(donGiaTxt.getText());
 						Object[] rowData = {maSanPhamCmbx.getSelectedItem().toString(), tenSanPhamTxt.getText(),
 								soLuongTxt.getText(), donGiaTxt.getText(), thanhTien+"" };
 						DefaultTableModel model_table = (DefaultTableModel) chiTietPhieuNhapTable.getModel();
