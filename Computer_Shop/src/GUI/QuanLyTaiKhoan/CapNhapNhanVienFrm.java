@@ -26,6 +26,8 @@ import javax.swing.JComboBox;
 import MyDesign.MyComponents.MyButton;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractButton;
@@ -131,13 +133,16 @@ public class CapNhapNhanVienFrm extends JFrame {
 				if(tenNhanVienTxt.getText().strip().equalsIgnoreCase("") || soDienThoaiTxt.getText().strip().equalsIgnoreCase("") || diaChiTxt.getText().strip().equalsIgnoreCase("")
 						|| emailTxt.getText().strip().equalsIgnoreCase("")) {
 					JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin");
+					return;
 				}else {
-					nv.setTennv(tenNhanVienTxt.getText());
-					nv.setDiachi(diaChiTxt.getText());
-					nv.setEmail(emailTxt.getText());
-					nv.setSdt(soDienThoaiTxt.getText());
-					nv.setChucvu(chucVuCmbx.getSelectedItem().toString());
-					nv_bus.suaNV(nv);
+					if(checkDupAdd() == 1 && checkField()==1) {
+						nv.setTennv(tenNhanVienTxt.getText());
+						nv.setDiachi(diaChiTxt.getText());
+						nv.setEmail(emailTxt.getText());
+						nv.setSdt(soDienThoaiTxt.getText());
+						nv.setChucvu(chucVuCmbx.getSelectedItem().toString());
+						nv_bus.suaNV(nv);
+					}
 				}
 			}
 		});
@@ -249,5 +254,55 @@ public class CapNhapNhanVienFrm extends JFrame {
 		diaChiTxt.setText(nv.getDiachi());
 		emailTxt.setText(nv.getEmail());
 		chucVuCmbx.setSelectedItem(nv.getChucvu());
+	}
+	public int checkField() {
+		int flag=1;
+		//kiem tra cac truong du lieu co trong hay khong
+		if (tenNhanVienTxt.getText().isEmpty()|| soDienThoaiTxt.getText().isEmpty() || emailTxt.getText().isEmpty()
+				|| diaChiTxt.getText().isEmpty()|| chucVuCmbx.getSelectedIndex() == -1){
+			
+			JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!");
+			flag=0;
+			return flag;
+		}
+		
+		String regexPattern = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$";
+
+        // Compile the pattern
+        Pattern pattern = Pattern.compile(regexPattern);
+
+        // Create a matcher
+        Matcher matcher = pattern.matcher(emailTxt.getText());
+        
+        if(!matcher.matches()) {
+        	flag = 0;
+        	JOptionPane.showMessageDialog(null,"Email không hợp lệ!");
+        	return flag;
+        }
+		
+		//kiem tra dau vao cua gia san pham co phai la so hay khong
+		if (!(soDienThoaiTxt.getText().matches("^0\\d{9}$"))) {
+			JOptionPane.showMessageDialog(null, "Số điện thoại phải hợp lệ!");
+			flag=0;
+			return flag;
+		}
+		
+		return flag;
+	}
+	
+	public int checkDupAdd() {
+		int flag=1;
+		for(int i=0; i<nv_bus.ds_nhanVien.size();i++) {
+			if (soDienThoaiTxt.getText().equals(nv_bus.ds_nhanVien.get(i).getSdt().trim()) && !nv.getManv().equals(nv_bus.ds_nhanVien.get(i).getManv())) {		
+				JOptionPane.showMessageDialog(null,"Số điện thoại nhân viên không thể trùng!");
+				flag=0;
+				return flag;
+			}else if(emailTxt.getText().equals(nv_bus.ds_nhanVien.get(i).getEmail().trim()) && !nv.getManv().equals(nv_bus.ds_nhanVien.get(i).getManv())) {
+				JOptionPane.showMessageDialog(null,"email nhân viên không thể trùng!");
+				flag=0;
+				return flag;
+			}
+		}
+		return flag;
 	}
 }

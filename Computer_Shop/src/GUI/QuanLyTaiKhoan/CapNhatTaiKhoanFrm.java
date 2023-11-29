@@ -212,7 +212,7 @@ public class CapNhatTaiKhoanFrm extends JFrame {
 		maTaiKhoanLbl.setText("mã tài khoản :" + tk.getMatk());
 		maNhanVienCmbx.setSelectedItem(tk.getManv());
 		lblTnSnPhm_1_1.setText("tên tài khoản :"+tk.getUsername());
-		passwordLbl.setText("password :" + tk.getPassword());
+		passwordLbl.setText("password :********");
 		tinhTrangCmbx.setSelectedItem(tk_bus.taikhoan_status_map.get(tk.getTinhtrang()));
 	}
 	
