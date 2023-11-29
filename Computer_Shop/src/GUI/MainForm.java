@@ -50,11 +50,7 @@ public class MainForm extends JFrame {
 	private JPanel contentPane;
 	
 	private ArrayList<MyButton2> ds_menu = new ArrayList<MyButton2>(); // TODO : DANH SÁCH MENU
-	
-	//Edit
-	private String tennv, chucvu;
-	public static String manv;
-	
+	private String manv, tennv, chucvu;
 	private JPanel menuPanel;
 
 	private JSplitPane splitPane;
