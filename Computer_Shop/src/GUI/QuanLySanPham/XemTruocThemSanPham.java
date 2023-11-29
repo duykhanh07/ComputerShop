@@ -25,10 +25,21 @@ import javax.swing.table.TableCellRenderer;
 import BUS.SanPhamBUS;
 import DAO.SanPhamDAO;
 import DTO.DTO_SanPham;
+import GUI.MainForm;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,7 +143,30 @@ public class XemTruocThemSanPham extends JFrame {
 				for (int i=listSP.size();i<model.getRowCount();i++) { 
 					String masp = model.getValueAt(i,0).toString();
 					String tensp = model.getValueAt(i, 1).toString(); 
-					String image = model.getValueAt(i, 2).toString(); 
+					String image = model.getValueAt(i, 2).toString();
+					
+					String[] image_split = image.split("\\\\");
+					String image_name = image_split[image_split.length - 1];
+					
+					
+					ProtectionDomain protectionDomain = XemTruocThemSanPham.class.getProtectionDomain();
+			        CodeSource codeSource = protectionDomain.getCodeSource();
+			        
+			        if (codeSource != null) {
+			        	
+		                try {
+		                	URL location = codeSource.getLocation();
+					        File desFile = new File(location.toURI().getPath() +"../src/assets/Image/" + image_name);
+							Path path = desFile.toPath();
+							Files.copy(Path.of(image),path, StandardCopyOption.COPY_ATTRIBUTES);
+							
+							System.out.println();
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+			        }
+			        image = "/assets/Image/"+image_name;
 					String cpu = model.getValueAt(i,3).toString(); 
 					String ram = model.getValueAt(i, 4).toString(); 
 					String rom =model.getValueAt(i, 5).toString(); 

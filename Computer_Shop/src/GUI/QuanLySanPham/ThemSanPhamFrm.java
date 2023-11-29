@@ -78,6 +78,7 @@ public class ThemSanPhamFrm extends JFrame {
 	public QuanLySanPhamFrm qlsp;
 	DefaultTableModel model;
 	int selectrow;
+	private File inputFile;
 	
 	
 
@@ -238,12 +239,12 @@ public class ThemSanPhamFrm extends JFrame {
 				if (checkField()== 1 && checkDupAdd() == 1) {
 					if (tinhTrangCmbx.getSelectedItem() == "đang kinh doanh")
 						tinhtrang=1;
-					DTO_SanPham sp = new DTO_SanPham(maSanPhamTxt.getText(), tenSanPhamTxt.getText(), relativePath, 
+					DTO_SanPham sp = new DTO_SanPham(maSanPhamTxt.getText(), tenSanPhamTxt.getText(), inputFile.getAbsolutePath(), 
 							CPUTxt.getText(), ramTxt.getText(), romTxt.getText(), cardTxt.getText(), manHinhTxt.getText(),
 							pinTxt.getText(),hangTxt.getText(), Integer.parseInt(giaTxt.getText()), tinhtrang); 
 					//sp_bus.addSP(sp);
 					listSP = sp_bus.importToTable(listSP);
-					Object[] newRow = {maSanPhamTxt.getText(), tenSanPhamTxt.getText(), relativePath, CPUTxt.getText(),
+					Object[] newRow = {maSanPhamTxt.getText(), tenSanPhamTxt.getText(), inputFile.getAbsolutePath(), CPUTxt.getText(),
 							ramTxt.getText(), romTxt.getText(), cardTxt.getText(), manHinhTxt.getText(), pinTxt.getText(),
 							hangTxt.getText(), df.format(Integer.parseInt(giaTxt.getText())), tinhtrang};
 					
@@ -273,6 +274,7 @@ public class ThemSanPhamFrm extends JFrame {
 		
 		MyButton chonHinhSanPhamBtn = new MyButton();
 		chonHinhSanPhamBtn.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 				String absolutePath, pathname;
 				// sử dụng File chooser lấy ra đường dẫn hoặc lấy ra tên rồi tạo đường dẫn cho hình ảnh
@@ -280,14 +282,16 @@ public class ThemSanPhamFrm extends JFrame {
 				openFileChooser.setDialogTitle("Open file");
 				
 				if (openFileChooser.showOpenDialog(null)==JFileChooser.APPROVE_OPTION) {
-					File inputFile=openFileChooser.getSelectedFile();
+					inputFile=openFileChooser.getSelectedFile();
 					
 					pathname= inputFile.getName();
 					relativePath += pathname;
 					System.out.println(relativePath);
 					
 					imageLinkTxt.setText("hình ảnh : " +relativePath);
-					lblNewLabel.setIcon(new ImageIcon(new ImageIcon(QuanLySanPhamFrm.class.getResource(relativePath)).getImage().getScaledInstance(168, 112, Image.SCALE_SMOOTH)));
+					lblNewLabel.setIcon(new ImageIcon(new ImageIcon(inputFile.getAbsolutePath()).getImage().getScaledInstance(168, 112, Image.SCALE_SMOOTH)));
+				
+					
 				}
 				else {
 					 System.out.println("Không thể mở file!");
