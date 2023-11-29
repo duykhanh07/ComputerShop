@@ -1,14 +1,12 @@
 package GUI.QuanLyBanHang;
 
 import java.awt.Color;
-
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import MyDesign.MyTabPane.MyTabbedPaneCustom;
 import MyDesign.MyTable.CustomTableCellRenderer;
 import MyDesign.MyTable.CustomTableHeaderUI;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -24,11 +22,8 @@ import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 import javax.swing.ScrollPaneConstants;
-<<<<<<< HEAD
-<<<<<<< HEAD
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
-
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -39,8 +34,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-=======
-
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -50,31 +43,16 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
->>>>>>> Hoang-Phat
-=======
 import javax.swing.JLayeredPane;
 import java.awt.event.ActionListener;
->>>>>>> parent of 7af6a36 (bán hàng)
 import java.awt.event.ActionEvent;
 import javax.swing.JCheckBox;
 import MyDesign.Calendar.MyDateChooser;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-<<<<<<< HEAD
-<<<<<<< HEAD
-
 import BUS.HoaDonBUS;
 import DTO.DTO_HoaDon;
-=======
 import javax.swing.table.TableColumnModel;
-
-import BUS.QuanLyBanHang.Cart;
-import BUS.QuanLyBanHang.CartItemBUS;
-import BUS.QuanLyBanHang.ProductItemBUS;
->>>>>>> Hoang-Phat
-
-=======
->>>>>>> parent of 7af6a36 (bán hàng)
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -479,18 +457,10 @@ public class QuanLyBanHangFrm extends JPanel {
 		));
 		scrollPane_2.setViewportView(table);
 		
-<<<<<<< HEAD
-<<<<<<< HEAD
 		//Hiển thị danh sách hóa đơn
 		loadHoaDon();
-		
+	
 		MyTextfield timKiemDonHangTxt = new MyTextfield();
-=======
-		timKiemDonHangTxt = new MyTextfield();
->>>>>>> Hoang-Phat
-=======
-		MyTextfield timKiemDonHangTxt = new MyTextfield();
->>>>>>> parent of 7af6a36 (bán hàng)
 		timKiemDonHangTxt.setPreferredSize(new Dimension(180, 35));
 		timKiemDonHangTxt.setColumns(10);
 		timKiemDonHangTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -558,8 +528,6 @@ public class QuanLyBanHangFrm extends JPanel {
 		MyButton InHoaDonBtn = new MyButton();
 		InHoaDonBtn.setText("in hóa đơn");
 		InHoaDonBtn.setHorizontalTextPosition(SwingConstants.LEADING);
-<<<<<<< HEAD
-<<<<<<< HEAD
 		//Xử lý sự kiện khi nhấn vào nút "In"
 		InHoaDonBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
@@ -572,22 +540,7 @@ public class QuanLyBanHangFrm extends JPanel {
 				}
 			}
 		});
-=======
-		InHoaDonBtn.addActionListener(new ActionListener() {
-		
-			public void actionPerformed(ActionEvent e) {
-							        if (GUI.QuanLyBanHang.QuanLyBanHangFrm.timKiemDonHangTxt != null) {
-			            String text1 = GUI.QuanLyBanHang.QuanLyBanHangFrm.timKiemDonHangTxt.getText();
-			            BUS.QuanLyBanHang.InHoaDonBUS.PrintHD(text1);
-			        } 
-			    
-			}
-		});
-		
->>>>>>> Hoang-Phat
-=======
->>>>>>> parent of 7af6a36 (bán hàng)
-		
+			
 		// Nút này để cập nhật trạng thái, ví dụ từ : đang giao hàng -> đã thanh toán
 		MyButton InHoaDonBtn_1 = new MyButton();
 		InHoaDonBtn_1.setToolTipText("cập nhật trạng thái hóa đơn");
@@ -697,9 +650,6 @@ public class QuanLyBanHangFrm extends JPanel {
 			cartItemPanel.add(new CartItem());
 		}
 	}
-<<<<<<< HEAD
-<<<<<<< HEAD
-	
 	//Tạo instance của HoaDonBUS để thực thi các phương thức
 	HoaDonBUS hoadonbus = new HoaDonBUS();
 	
@@ -784,53 +734,6 @@ public class QuanLyBanHangFrm extends JPanel {
 			JOptionPane.showMessageDialog(null, "Lỗi!!! Cập nhật trạng thái hóa đơn không thành công!!!");
 		loadHoaDon();
 	}
-=======
 	// Method to update the table with new data
-    public static void updateTable() {
-        // Clear the existing rows in the model
-        model.setRowCount(0);
-
-        DecimalFormat decimalFormat1 = new DecimalFormat("#");
-        
-        // Thêm hàng vào model với các giá trị truyền vào
-        for (int i = 0; i < BUS.QuanLyBanHang.CartItemBUS.cart.size(); i++) {
-            Cart ct = BUS.QuanLyBanHang.CartItemBUS.cart.get(i);
-            Object[] row = new Object[]{ct.masp, ct.tensp, decimalFormat1.format(ct.dongia),
-            		ct.soluong, decimalFormat1.format(ct.thanhtien)};
-            model.addRow(row);
-            DecimalFormat decimalFormat = new DecimalFormat("#");
-    		//lblTngCng.setText("Tổng cộng: "+decimalFormat.format(CartItemBUS.TongCong()));
-        }
-
-        // Revalidate and repaint the panel to update the displayed table
-        table_1.revalidate();
-        table_1.repaint();
-    }
-	
- // Phương thức cập nhật dữ liệu trong ArrayList dựa trên thay đổi từ JTable
-    private static void updateArrayList(int row, String columnName, Object value) {
-        Cart ct = BUS.QuanLyBanHang.CartItemBUS.cart.get(row);
-
-        switch (columnName) {
-            case "Mã SP":
-                ct.masp = (String) value;
-                break;
-            case "Tên SP":
-                ct.tensp = (String) value;
-                break;
-            case "Đơn giá":
-                ct.dongia = (Double) value;
-                break;
-            case "Số lượng":
-                ct.soluong = (Integer) value;
-                ct.thanhtien = ct.dongia * ct.soluong; // Cập nhật thành tiền khi số lượng thay đổi
-                break;
-            case "Thành tiền":
-                // Bạn có thể xử lý theo nhu cầu cụ thể
-                break;
-        }
-    }
->>>>>>> Hoang-Phat
-=======
->>>>>>> parent of 7af6a36 (bán hàng)
+    
 }
