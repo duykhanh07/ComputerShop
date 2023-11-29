@@ -151,13 +151,17 @@ public class ThemTaiKhoanFrm extends JFrame {
 		xoaBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				luaChonDong = table.getSelectedRow();
-				int reply = JOptionPane.showConfirmDialog(null, "Bạn có muốn xóa không?", "Xóa",
-						JOptionPane.YES_NO_OPTION);
-				if (reply == JOptionPane.YES_OPTION) {
-					String manv = (String) model.getValueAt(luaChonDong, 0);
-					model.removeRow(luaChonDong);
-					maNhanVienCmbx.addItem(manv);
-					tk_bus.ds_taiKhoan_temp.remove(luaChonDong);
+				if(luaChonDong > -1) {
+					int reply = JOptionPane.showConfirmDialog(null, "Bạn có muốn xóa không?", "Xóa",
+							JOptionPane.YES_NO_OPTION);
+					if (reply == JOptionPane.YES_OPTION) {
+						String manv = (String) model.getValueAt(luaChonDong, 0);
+						model.removeRow(luaChonDong);
+						maNhanVienCmbx.addItem(manv);
+						tk_bus.ds_taiKhoan_temp.remove(luaChonDong);
+					}
+				}else {
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn 1 tài khoản trong bảng");
 				}
 			}
 		});
@@ -273,6 +277,16 @@ public class ThemTaiKhoanFrm extends JFrame {
 	
 	public void themTaiKhoanVaoBang() {
 		int tinhtrang = 0;
+		if(maNhanVienCmbx.getSelectedIndex()>=0) {
+			JOptionPane.showMessageDialog(null,"vui lòng chọn mã nhân viên muốn cấp tài khoản");
+			return;
+		}
+		
+		if(tenTaiKhoanTxt.getText().length() < 6) {
+			JOptionPane.showMessageDialog(null,"tên tài khoản ít nhất phải có 6 thứ tự");
+			return;
+		}
+		
 		if(tinhTrangCmbx.getSelectedItem().toString().equalsIgnoreCase("đang hoạt động")) {
 			tinhtrang = 1;
 		}

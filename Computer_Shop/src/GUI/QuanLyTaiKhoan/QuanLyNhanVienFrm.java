@@ -140,10 +140,6 @@ public class QuanLyNhanVienFrm extends JPanel {
 		capNhatNhanVienBtn.setText("Sửa");
 		capNhatNhanVienBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
-		MyButton themTaiKhoanExcelBtn = new MyButton();
-		themTaiKhoanExcelBtn.setText("Thêm tài khoản với Excel");
-		themTaiKhoanExcelBtn.setHorizontalTextPosition(SwingConstants.LEADING);
-		
 		JLabel autoIncreaseSizeLbl_1 = new JLabel("");
 		
 		MyButton mbtnLmMi = new MyButton();
@@ -167,13 +163,12 @@ public class QuanLyNhanVienFrm extends JPanel {
 							.addGap(10)
 							.addComponent(capNhatNhanVienBtn, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)
 							.addGap(97)
-							.addComponent(autoIncreaseSizeLbl_1, GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
-							.addGap(141)
-							.addComponent(themTaiKhoanExcelBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(autoIncreaseSizeLbl_1, GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+							.addGap(339))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(10)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 843, Short.MAX_VALUE)
+								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 817, Short.MAX_VALUE)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addComponent(timKiemTaiKhoanTxt, GroupLayout.PREFERRED_SIZE, 275, GroupLayout.PREFERRED_SIZE)
 									.addGap(10)
@@ -214,8 +209,7 @@ public class QuanLyNhanVienFrm extends JPanel {
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
 						.addComponent(autoIncreaseSizeLbl_1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(themNhanVienBtn, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-						.addComponent(capNhatNhanVienBtn, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-						.addComponent(themTaiKhoanExcelBtn, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+						.addComponent(capNhatNhanVienBtn, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		

@@ -36,6 +36,8 @@ import javax.swing.GroupLayout.Alignment;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 
 public class ThemNhanVienFrm extends JFrame {
@@ -209,7 +211,7 @@ public class ThemNhanVienFrm extends JFrame {
 					}
 					
 					if(chucVuCmbx.getSelectedItem()=="bán hàng" || chucVuCmbx.getSelectedItem()=="thủ kho" || chucVuCmbx.getSelectedItem()=="kĩ thuật") {
-						chucVu="nhân viên";
+						chucVu=chucVuCmbx.getSelectedItem().toString();
 						manv = "NV";
 						if(maso < 1000) {
 							manv+="0";
@@ -244,7 +246,7 @@ public class ThemNhanVienFrm extends JFrame {
 					chucVuCmbx.setSelectedIndex(-1);
 					model.addRow(newRow);
 				}else {
-					System.out.println("Failure");
+//					System.out.println("Failure");
 				}
 				
 			}
@@ -354,24 +356,44 @@ public class ThemNhanVienFrm extends JFrame {
 			
 			JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!");
 			flag=0;
+			return flag;
 		}
 		
 		//kiem tra dau vao cua gia san pham co phai la so hay khong
-		if (!(soDienThoaiTxt.getText().matches("[0-9]+"))) {
-			JOptionPane.showMessageDialog(null, "Số điện thoại phải là số!");
+		if (!(soDienThoaiTxt.getText().matches("^0\\d{9}$"))) {
+			JOptionPane.showMessageDialog(null, "Số điện thoại phải hợp lệ!");
 			flag=0;
+			return flag;
 		}
+				
 		
+		String regexPattern = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$";
+
+        // Compile the pattern
+        Pattern pattern = Pattern.compile(regexPattern);
+
+        // Create a matcher
+        Matcher matcher = pattern.matcher(emailTxt.getText());
+        
+        if(!matcher.matches()) {
+        	flag = 0;
+        	JOptionPane.showMessageDialog(null,"Email không hợp lệ!");
+        	return flag;
+        }
 		return flag;
 	}
 	
 	public int checkDupAdd() {
 		int flag=1;
-		for(int i=0; i<ds_nv.getNhanVien_mainList().size();i++) {
-			if (tenTaiKhoanTxt.getText().equals(ds_nv.getNhanVien_mainList().get(i).getTennv().trim())) {
-				
-				JOptionPane.showMessageDialog(null,"Tên nhân viên không thể trùng!");
+		for(int i=0; i<nv_bus.ds_nhanVien.size();i++) {
+			if(emailTxt.getText().equals(nv_bus.ds_nhanVien.get(i).getEmail().trim())) {
+				JOptionPane.showMessageDialog(null,"email nhân viên không thể trùng!");
 				flag=0;
+				return flag;
+			}else if (soDienThoaiTxt.getText().equals(nv_bus.ds_nhanVien.get(i).getSdt().trim())) {		
+				JOptionPane.showMessageDialog(null,"Số điện thoại nhân viên không thể trùng!");
+				flag=0;
+				return flag;
 			}
 		}
 		return flag;
