@@ -304,6 +304,7 @@ public class ThongKeDoanhThu extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				type = 1;
 				yearCmbx_1.setEnabled(true);
+				yearCmbx_1.setSelectedIndex(0);
 				yearCmbx_1_1.setEnabled(false);
 				thongKeTheoQuy(yearCmbx.getSelectedItem().toString(), yearCmbx_1.getSelectedItem().toString());
 			}
@@ -314,6 +315,7 @@ public class ThongKeDoanhThu extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				type = 2;
 				yearCmbx_1_1.setEnabled(true);
+				yearCmbx_1_1.setSelectedIndex(0);
 				yearCmbx_1.setEnabled(false);
 				thongKeTheoThang(yearCmbx.getSelectedItem().toString(), yearCmbx_1_1.getSelectedItem().toString());
 			}
@@ -418,8 +420,8 @@ public class ThongKeDoanhThu extends JPanel {
 		case 1:
 			tongDoanhThuLbl.setText( String.format("Tổng doanh thu năm %s : %sđ",yearCmbx.getSelectedItem().toString(),format.format(pieChart.getTotalvalue())));break;
 		case 2:
-			tongDoanhThuLbl.setText( String.format("Tổng doanh thu năm %s : %sđ",yearCmbx.getSelectedItem().toString(),
-					yearCmbx_1.getSelectedItem().toString(),format.format(pieChart.getTotalvalue())));break;	
+			tongDoanhThuLbl.setText( String.format("Tổng doanh thu năm %s : %sđ",
+					yearCmbx.getSelectedItem().toString(),format.format(pieChart.getTotalvalue())));break;	
 		case 3:
 			tongDoanhThuLbl.setText( String.format("Tổng doanh thu năm %s quý %s: %sđ",yearCmbx.getSelectedItem().toString(),
 					yearCmbx_1.getSelectedItem().toString(),format.format(pieChart.getTotalvalue())));break;
