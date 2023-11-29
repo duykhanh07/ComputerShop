@@ -181,5 +181,40 @@ public class LoginForm extends JFrame {
 				}
 			}
 		});
+		
+		// Trong hàm constructor của lớp LoginForm, sau khi khởi tạo các thành phần giao diện
+		textField.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        login();
+		    }
+		});
+
+		textField_1.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        login();
+		    }
+		});
+
+		// Phương thức để xử lý đăng nhập
+		
+
+	}
+	private void login() {
+	    if(textField.getText().equalsIgnoreCase("") || textField_1.getText().equalsIgnoreCase("")) {
+	        nortifyLabel.setText("Tài khoản và mật khẩu không được để trống");
+	    } else {
+	        int kq_DangNhap =  login_bus.Login(textField.getText(), textField_1.getText());
+	        if(kq_DangNhap == 1) {
+	            dispose(); // Đăng nhập thành công, đóng cửa sổ đăng nhập
+	        } else {
+	            if(kq_DangNhap == -1) {
+	                nortifyLabel.setText("Sai mật khẩu");
+	            } else {
+	                nortifyLabel.setText("Tài khoản không tồn tại hoặc đã bị khóa");
+	            }   
+	        }
+	    }
 	}
 }
