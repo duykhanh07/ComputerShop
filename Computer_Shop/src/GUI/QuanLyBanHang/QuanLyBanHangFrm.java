@@ -25,6 +25,8 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.ScrollPaneConstants;
@@ -32,12 +34,16 @@ import javax.swing.ScrollPaneConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Flow;
 import java.awt.event.ActionEvent;
 import javax.swing.JCheckBox;
 import MyDesign.Calendar.MyDateChooser;
@@ -46,9 +52,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-import BUS.QuanLyBanHang.Cart;
-import BUS.QuanLyBanHang.CartItemBUS;
-import BUS.QuanLyBanHang.ProductItemBUS;
+import BUS.QuanLyBanHang.BanHangInterface;
+import BUS.QuanLyBanHang.QuanLyBanHangBUS;
+import DTO.DTO_SanPham;
 
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.FlowLayout;
@@ -57,6 +63,8 @@ import javax.swing.ImageIcon;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JTextField;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 
 
@@ -68,8 +76,8 @@ public class QuanLyBanHangFrm extends JPanel {
 	public static JCheckBox giaoHangChck;
 	//public static JComboBox<String> teniKhachHangTxt;
 	public static MyTextfield soDienThoaiKHTxt;
-	public static MyTextfield teniKhachHangTxt;
-	public static MyTextfield timKiemTonKhoTxt;
+	public static MyTextfield tenKhachHangTxt;
+	public static MyTextfield timKiemSanPhamTxt;
 	public static MyTextfield diaChiTxt;
 	private JTable table;
 	public static JRadioButton chckbxNewCheckBox;
@@ -79,17 +87,23 @@ public class QuanLyBanHangFrm extends JPanel {
 	public static JRadioButton chckbxNewCheckBox_1_3;
 	public static JPanel cartItemPanel;
 	public static JPanel ProductItemPanel;
-	public final static ButtonGroup GroupModel = new ButtonGroup();
 	public static JLabel lblTngCng;
 	public static MyTextfield timKiemDonHangTxt ;
-
 	private static DefaultTableModel model;
-    private static JTable table_1;
     
-	/**
-	 * Create the panel.
-	 */
-	public QuanLyBanHangFrm() {
+	private ArrayList<JCheckBox> ds_HangBtn;
+	private QuanLyBanHangBUS qlbh_bus;
+	private JPanel HangSXPanel;
+	private MyButton mbtnLmMi;
+	private JScrollPane scrollPane_1;
+	
+	//CART
+	private AddToCart cuaSoGioHang;
+	public String manv;
+	private BanHangInterface banHangInter;
+	
+	public QuanLyBanHangFrm(String manv) {
+		
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
@@ -100,6 +114,38 @@ public class QuanLyBanHangFrm extends JPanel {
 		} catch (Exception e) {}
 		setBackground(new Color(102, 102, 102));
 		
+		this.manv = manv;
+		ds_HangBtn = new ArrayList<JCheckBox>();
+		qlbh_bus = new QuanLyBanHangBUS();
+		banHangInter = new BanHangInterface() {			
+			@Override
+			public void moCuaSoGioHang(DTO_SanPham sp) {
+				if(cuaSoGioHang != null) {
+					cuaSoGioHang.dispose();
+				}
+				cuaSoGioHang = new AddToCart(sp, banHangInter);
+				cuaSoGioHang.setVisible(true);
+			}
+			
+			@Override
+			public void capNhatGioHang(DTO_SanPham sp, int soluong) {
+				int kq_them = qlbh_bus.themVaoGioHang(sp, soluong);	
+				if(kq_them<0) {
+					JOptionPane.showMessageDialog(null, "Cập nhật giỏ hàng thất bại");
+				}else {
+					JOptionPane.showMessageDialog(null, "Cập nhật giỏ hàng thành công");
+				}
+				hienThiGioHang();
+			}
+
+			@Override
+			public void boKhoiGioHang(String masp) {
+				qlbh_bus.boKhoiGioHang(masp);
+				hienThiGioHang();
+			}
+		};
+		
+		
 		MyTabbedPaneCustom tabbedPane = new MyTabbedPaneCustom();
 		
 		JPanel banHangPanel = new JPanel();
@@ -107,28 +153,18 @@ public class QuanLyBanHangFrm extends JPanel {
 		tabbedPane.addTab("bán hàng", null, banHangPanel, null);
 		
 		//Edit
-		timKiemTonKhoTxt = new MyTextfield();
-		timKiemTonKhoTxt.setPreferredSize(new Dimension(180, 35));
-		timKiemTonKhoTxt.setColumns(10);
-		timKiemTonKhoTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
-		timKiemTonKhoTxt.setBackground(new Color(77, 77, 77));
-		timKiemTonKhoTxt.addKeyListener(new KeyListener() {
+		timKiemSanPhamTxt = new MyTextfield();
+		timKiemSanPhamTxt.setPreferredSize(new Dimension(180, 35));
+		timKiemSanPhamTxt.setColumns(10);
+		timKiemSanPhamTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
+		timKiemSanPhamTxt.setBackground(new Color(77, 77, 77));
+		timKiemSanPhamTxt.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    String searchText = timKiemTonKhoTxt.getText();
-                   BUS.QuanLyBanHang.ProductItemBUS.filterAndDisplayItems(true, searchText);
+                    String searchText = timKiemSanPhamTxt.getText();
+                   
                 }
-            }
-
-            @Override
-            public void keyTyped(KeyEvent e) {
-                // Không cần xử lý
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                // Không cần xử lý
             }
         });
 		
@@ -139,38 +175,23 @@ public class QuanLyBanHangFrm extends JPanel {
 		
 		//Edit sorting
 		 String[] sortOptions = { "Giá tăng dần", "Giá giảm dần"};
-	        JComboBox sortCmbx_1 = new JComboBox(sortOptions);
-	        sortCmbx_1.setForeground(Color.CYAN);
-	        sortCmbx_1.setBackground(new Color(102, 102, 102));
-	        sortCmbx_1.addItemListener(new ItemListener() {
-	            @Override
-	            public void itemStateChanged(ItemEvent e) {
-	                if (e.getStateChange() == ItemEvent.SELECTED) {
-	                    String selectedOption = (String) sortCmbx_1.getSelectedItem();
-	                    switch (selectedOption) {
-	                        case "Giá tăng dần":
-	                            // Gọi hàm sorting theo giá tăng dần
-	                        	BUS.QuanLyBanHang.ProductItemBUS.SortingPrice(0);
-	                            break;
-	                        case "Giá giảm dần":
-	                            // Gọi hàm sorting theo giá giảm dần
-	                        	BUS.QuanLyBanHang.ProductItemBUS.SortingPrice(1);
-	                            break;
-	                        default:
-	                            // Thêm xử lý cho các lựa chọn khác nếu cần
-	                            break;
-	                    }
-	                }
-	            }
-	        });
+        JComboBox sortCmbx_1 = new JComboBox(sortOptions);
+        sortCmbx_1.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		if(sortCmbx_1.getSelectedIndex() > -1)
+        			sapXepTheoGia(sortCmbx_1.getSelectedIndex());
+        	}
+        });
+        sortCmbx_1.setForeground(Color.CYAN);
+        sortCmbx_1.setBackground(new Color(102, 102, 102));
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1 = new JScrollPane();
 		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane_1.setBorder(new LineBorder(new Color(130, 135, 144)));
 		scrollPane_1.getVerticalScrollBar().setUnitIncrement(100);
 		
-		JPanel HangSXPanel = new JPanel();
+		HangSXPanel = new JPanel();
 		FlowLayout fl_HangSXPanel = (FlowLayout) HangSXPanel.getLayout();
 		fl_HangSXPanel.setAlignment(FlowLayout.LEFT);
 		HangSXPanel.setToolTipText("các hãng laptop");
@@ -178,82 +199,14 @@ public class QuanLyBanHangFrm extends JPanel {
 		HangSXPanel.setBackground(new Color(77, 77, 77));
 		
 		//Edit
-		chckbxNewCheckBox = new JRadioButton("ACER");
-		GroupModel.add(chckbxNewCheckBox);
-		chckbxNewCheckBox.setForeground(Color.CYAN);
-		chckbxNewCheckBox.setBackground(new Color(77, 77, 77));
-		HangSXPanel.add(chckbxNewCheckBox);
-		chckbxNewCheckBox.addActionListener(new ActionListener() {
-	            @Override
-	            public void actionPerformed(ActionEvent e) {
-	                BUS.QuanLyBanHang.ProductItemBUS.filterAndDisplayItems(chckbxNewCheckBox.isSelected(),
-	                		chckbxNewCheckBox.getText());
-	            }
-	        });
-		
-		//Edit
-		chckbxNewCheckBox_1 = new JRadioButton("ASUS");
-		GroupModel.add(chckbxNewCheckBox_1);
-		chckbxNewCheckBox_1.setForeground(Color.CYAN);
-		chckbxNewCheckBox_1.setBackground(new Color(77, 77, 77));
-		HangSXPanel.add(chckbxNewCheckBox_1);
-		chckbxNewCheckBox_1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	BUS.QuanLyBanHang.ProductItemBUS.filterAndDisplayItems(chckbxNewCheckBox_1.isSelected(),
-                		chckbxNewCheckBox_1.getText());            }
-        });
-		
-		//Edit
-		chckbxNewCheckBox_1_1 = new JRadioButton("HP");
-		GroupModel.add(chckbxNewCheckBox_1_1);
-		chckbxNewCheckBox_1_1.setForeground(Color.CYAN);
-		chckbxNewCheckBox_1_1.setBackground(new Color(77, 77, 77));
-		HangSXPanel.add(chckbxNewCheckBox_1_1);
-		chckbxNewCheckBox_1_1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	BUS.QuanLyBanHang.ProductItemBUS.filterAndDisplayItems(chckbxNewCheckBox_1_1.isSelected(),
-                		chckbxNewCheckBox_1_1.getText());            }
-        });
-		
-		//Edit
-		chckbxNewCheckBox_1_2 = new JRadioButton("Intel");
-		GroupModel.add(chckbxNewCheckBox_1_2);
-		chckbxNewCheckBox_1_2.setForeground(Color.CYAN);
-		chckbxNewCheckBox_1_2.setBackground(new Color(77, 77, 77));
-		HangSXPanel.add(chckbxNewCheckBox_1_2);
-		chckbxNewCheckBox_1_2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	BUS.QuanLyBanHang.ProductItemBUS.filterAndDisplayItems(chckbxNewCheckBox_1_2.isSelected(),
-                		"Itel");
-            }
-        });
-		
-		//Edit
-		chckbxNewCheckBox_1_3 = new JRadioButton("Lenovo");
-		GroupModel.add(chckbxNewCheckBox_1_3);
-		chckbxNewCheckBox_1_3.setForeground(Color.CYAN);
-		chckbxNewCheckBox_1_3.setBackground(new Color(77, 77, 77));
-		HangSXPanel.add(chckbxNewCheckBox_1_3);
-		chckbxNewCheckBox_1_3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	BUS.QuanLyBanHang.ProductItemBUS.filterAndDisplayItems(chckbxNewCheckBox_1_3.isSelected(),
-                		chckbxNewCheckBox_1_3.getText());            }
-        });
-		
-		//Edit
-		MyButton mbtnLmMi = new MyButton();
+		mbtnLmMi = new MyButton();
 		mbtnLmMi.setIcon(new ImageIcon(QuanLyBanHangFrm.class.getResource("/assets/reset.png")));
 		mbtnLmMi.setText("làm mới");
 		mbtnLmMi.setHorizontalTextPosition(SwingConstants.LEADING);
-		mbtnLmMi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				BUS.QuanLyBanHang.ProductItemBUS.clearProductItemPanel();
-			}
-		});
+		
+		MyButton timKiemBtn_1 = new MyButton();
+		timKiemBtn_1.setText("Lọc");
+		timKiemBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
 		
 		GroupLayout gl_banHangPanel = new GroupLayout(banHangPanel);
 		gl_banHangPanel.setHorizontalGroup(
@@ -263,8 +216,10 @@ public class QuanLyBanHangFrm extends JPanel {
 					.addGroup(gl_banHangPanel.createParallelGroup(Alignment.LEADING)
 						.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 814, Short.MAX_VALUE)
 						.addGroup(gl_banHangPanel.createSequentialGroup()
-							.addComponent(timKiemTonKhoTxt, GroupLayout.PREFERRED_SIZE, 243, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 358, Short.MAX_VALUE)
+							.addComponent(timKiemSanPhamTxt, GroupLayout.PREFERRED_SIZE, 243, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(timKiemBtn_1, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 297, Short.MAX_VALUE)
 							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(sortCmbx_1, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE))
@@ -286,13 +241,15 @@ public class QuanLyBanHangFrm extends JPanel {
 								.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)))
 						.addGroup(gl_banHangPanel.createSequentialGroup()
 							.addGap(13)
-							.addComponent(timKiemTonKhoTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addGroup(gl_banHangPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(timKiemBtn_1, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+								.addComponent(timKiemSanPhamTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_banHangPanel.createParallelGroup(Alignment.LEADING)
 						.addComponent(mbtnLmMi, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
 						.addComponent(HangSXPanel, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
+					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
 					.addGap(13))
 		);
 		
@@ -338,33 +295,28 @@ public class QuanLyBanHangFrm extends JPanel {
 		tabbedPane.addTab("Giỏ hàng", null, cartPanel, null);
 		
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.getViewport().setBackground(new Color(51,51,51));
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		
 		MyButton xacNhanHoaDonBtn = new MyButton();
+		xacNhanHoaDonBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				taoHoaDon();
+			}
+		});
 		xacNhanHoaDonBtn.setText("Xác nhận");
 		xacNhanHoaDonBtn.setHorizontalTextPosition(SwingConstants.LEADING);
-		xacNhanHoaDonBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	 boolean check = BUS.QuanLyBanHang.ThanhToan.checkCartItem();
-         	    if (check) {
-            	BUS.QuanLyBanHang.ThanhToan.XacNhan();
-            	BUS.QuanLyBanHang.CartItemBUS.cart.clear();
-            	GUI.QuanLyBanHang.QuanLyBanHangFrm.cartItemPanel.revalidate();
-        	    GUI.QuanLyBanHang.QuanLyBanHangFrm.cartItemPanel.repaint();
-         	    }
-            }
-        });
 		
 
-		JLabel maNhanVienThuNganLbl = new JLabel("mã nhân viên : << "+GUI.MainForm.manv+" >>" );
+		JLabel maNhanVienThuNganLbl = new JLabel("mã nhân viên : "+this.manv);
 		maNhanVienThuNganLbl.setForeground(Color.CYAN);
 		maNhanVienThuNganLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		//Edit tồng cộng label
 		
-		JLabel lblTngCng = new JLabel();
+		lblTngCng = new JLabel();
 		lblTngCng.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblTngCng.setForeground(Color.CYAN);
 		lblTngCng.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -376,6 +328,20 @@ public class QuanLyBanHangFrm extends JPanel {
 		
 		//Edit
 		soDienThoaiKHTxt = new MyTextfield();
+		soDienThoaiKHTxt.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyChar() == KeyEvent.VK_ENTER)
+					timKiemKhachHang();
+			}
+		});
+		soDienThoaiKHTxt.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				if(!soDienThoaiKHTxt.getText().equals(""))	
+					timKiemKhachHang();
+			}
+		});
 		soDienThoaiKHTxt.setBackground(new Color(77, 77, 77));
 		soDienThoaiKHTxt.setColumns(10);
 		soDienThoaiKHTxt.setBorder(null);
@@ -387,20 +353,12 @@ public class QuanLyBanHangFrm extends JPanel {
 		
 		
 		//Edit
-		teniKhachHangTxt = new MyTextfield();
-		teniKhachHangTxt.setText("");
-		teniKhachHangTxt.setBackground(new Color(77, 77, 77));
-		teniKhachHangTxt.setBorder(null);
-		teniKhachHangTxt.setVisible(true);
-		teniKhachHangTxt.setEditable(false);
-		teniKhachHangTxt.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		        GUI.QuanLyBanHang.QuanLyBanHangFrm.teniKhachHangTxt.setText("");
-		        CartItemBUS.ShowNameCustomerByPhone(); // test: 0242569874 , 0795897463
-		    }
-		});
-		
+		tenKhachHangTxt = new MyTextfield();
+		tenKhachHangTxt.setText("");
+		tenKhachHangTxt.setBackground(new Color(77, 77, 77));
+		tenKhachHangTxt.setBorder(null);
+		tenKhachHangTxt.setVisible(true);
+		tenKhachHangTxt.setEditable(false);
 				
 				giaoHangChck = new JCheckBox("giao hàng tại nhà");
 				giaoHangChck.setForeground(Color.CYAN);
@@ -417,71 +375,11 @@ public class QuanLyBanHangFrm extends JPanel {
 				
 				JLabel autoIncreaseSpaceLbl = new JLabel("");
 				
-				JLabel autoIncreaseSpaceLbl_1 = new JLabel("");
-				
 				cartItemPanel = new JPanel();
 				cartItemPanel.setBackground(new Color(51, 51, 51));
 				scrollPane.setViewportView(cartItemPanel);
 				cartItemPanel.setLayout(new GridLayout(0, 1, 0, 0));
 				
-				
-				 // Custom cell renderer để tự động xuống dòng cho cột Tên sản phẩm
-		       
-				model = new DefaultTableModel() {
-		            // Override isCellEditable method to make cells non-editable
-		            @Override
-		            public boolean isCellEditable(int row, int column) {
-		                return false;
-		            }
-		        };
-		        
-		        model.addColumn("Mã SP");
-		        model.addColumn("Tên SP");
-		        model.addColumn("Đơn giá");
-		        model.addColumn("Số lượng");
-		        model.addColumn("Thành tiền");
-
-		        
-
-		        table_1 = new JTable(model);
-		        cartItemPanel.add(table_1);
-
-		        // Thiết lập font cho toàn bộ JTable
-		        Font tableFont = new Font("Arial", Font.PLAIN, 16);
-		        table_1.setFont(tableFont);
-
-		        
-		        // Thiết lập kích thước cột theo tỉ lệ sau khi table đã hiển thị
-		        TableColumnModel columnModel = table_1.getColumnModel();
-		        int totalWidth = table_1.getWidth();
-
-		        columnModel.getColumn(0).setPreferredWidth((int) (totalWidth * 0.10));  // 10%
-		        columnModel.getColumn(1).setPreferredWidth((int) (totalWidth * 0.40));  // 40%
-		        columnModel.getColumn(2).setPreferredWidth((int) (totalWidth * 0.20));  // 20%
-		        columnModel.getColumn(3).setPreferredWidth((int) (totalWidth * 0.20));  // 20%
-		        columnModel.getColumn(4).setPreferredWidth((int) (totalWidth * 0.20));  // 20%
-		    
-		        
-		     // Lắng nghe sự kiện thay đổi trên JTable
-		        model.addTableModelListener( new TableModelListener() {
-		            @Override
-		            public void tableChanged(TableModelEvent e) {
-		                int row = e.getFirstRow();
-		                int column = e.getColumn();
-
-		                if (row != -1 && column != -1) {
-		                    // Lấy giá trị từ JTable và cập nhật vào ArrayList
-		                    String columnName = model.getColumnName(column);
-		                    Object value = model.getValueAt(row, column);
-
-		                    updateArrayList(row, columnName, value);
-		                }
-		            }
-
-					
-		        });
-
-		        
 				JPanel panel = new JPanel();
 				panel.setBackground(new Color(255, 255, 102));
 				
@@ -509,242 +407,99 @@ public class QuanLyBanHangFrm extends JPanel {
 				lblNewLabel_2_1_1_2.setHorizontalAlignment(SwingConstants.CENTER);
 				lblNewLabel_2_1_1_2.setForeground(new Color(0, 205, 205));
 				lblNewLabel_2_1_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-				
-				JPanel panel_1 = new JPanel();
-				panel_1.setLayout(null);
-				panel_1.setBackground(new Color(102, 102, 102));
-				
-				MyButton congBtn1 = new MyButton();
-				congBtn1.setIcon(new ImageIcon(CartItem.class.getResource("/assets/add.png")));
-				congBtn1.setHorizontalTextPosition(SwingConstants.CENTER);
-				congBtn1.setFont(new Font("Segoe UI", Font.BOLD, 16));
-				congBtn1.setBounds(5, 5, 30, 30);
-				panel_1.add(congBtn1);
-				congBtn1.addActionListener(new ActionListener() {
-		            @Override
-		            public void actionPerformed(ActionEvent e) {
-		                int selectedRow = table_1.getSelectedRow();
-		                if (selectedRow != -1) {
-		                    // Lấy số lượng từ cột "Số lượng" của dòng được chọn
-		                    int currentQuantity = (int) table_1.getValueAt(selectedRow, 3);
-
-		                    // Tăng số lượng lên 1 và cập nhật lại cột "Số lượng" trong JTable
-		                    if (currentQuantity <10)
-		                    {
-		                   table_1.setValueAt(currentQuantity + 1, selectedRow, 3);
-		                    }
-		                    else
-		                    {
-			           JOptionPane.showMessageDialog(null, "Để tránh tình trạng đầu cơ trục lợi. \n Vui lòng đặt tối đa 10 sản phẩm");
-	                   table_1.setValueAt(1, selectedRow, 3);
-		                    }
-		                    
-		                    
-		                } else {
-		                    JOptionPane.showMessageDialog(null, "Vui lòng chọn một dòng để tăng số lượng.");
-		                }
-		            }
-		        });
-				
-				MyButton truBtn1 = new MyButton();
-				truBtn1.setIcon(new ImageIcon(CartItem.class.getResource("/assets/remove.png")));
-				truBtn1.setHorizontalTextPosition(SwingConstants.CENTER);
-				truBtn1.setFont(new Font("Segoe UI", Font.BOLD, 16));
-				truBtn1.setBounds(40, 5, 30, 30);
-				panel_1.add(truBtn1);
-				truBtn1.addActionListener(new ActionListener() {
-		            @Override
-		            public void actionPerformed(ActionEvent e) {
-		                int selectedRow = table_1.getSelectedRow();
-		                if (selectedRow != -1) {
-		                    // Lấy số lượng từ cột "Số lượng" của dòng được chọn
-		                    int currentQuantity = (int) table_1.getValueAt(selectedRow, 3);
-
-		                    // Tăng số lượng lên 1 và cập nhật lại cột "Số lượng" trong JTable
-		                    if (currentQuantity >1)
-		                    {		                   
-		                    table_1.setValueAt(currentQuantity - 1, selectedRow, 3);
-		                    }
-		                    else
-		                    {
-			           JOptionPane.showMessageDialog(null, "Sản phẩm không được bằng 0");
-	                   table_1.setValueAt(1, selectedRow, 3);
-		                    }
-		                } else {
-		                    JOptionPane.showMessageDialog(null, "Vui lòng chọn một dòng để tăng số lượng.");
-		                }
-		            }
-		        });
-				
-				MyButton xoaBtn1 = new MyButton();
-				xoaBtn1.setIcon(new ImageIcon(CartItem.class.getResource("/assets/cancel.png")));
-				
-						xoaBtn1.setHorizontalTextPosition(SwingConstants.CENTER);
-						xoaBtn1.setFont(new Font("Segoe UI", Font.BOLD, 16));
-						xoaBtn1.setColorOver(new Color(255, 100, 100));
-						xoaBtn1.setColor(new Color(255, 128, 128));
-						xoaBtn1.setBackground(new Color(255, 128, 128));
-						xoaBtn1.setBounds(75, 5, 30, 30);
-						panel_1.add(xoaBtn1);
-						xoaBtn1.addActionListener(new ActionListener() {
-				            @Override
-				            public void actionPerformed(ActionEvent e) {
-				                int selectedRow = table_1.getSelectedRow();
-				                if (selectedRow != -1) {
-				                    // Lấy mã sản phẩm của dòng được chọn
-				                    String selectedMasp = (String) table_1.getValueAt(selectedRow, 0);
-
-				                    // Xóa object trong ArrayList có mã sản phẩm tương ứng
-				                    for (int i = 0; i < BUS.QuanLyBanHang.CartItemBUS.cart.size(); i++) {
-				                        Cart ct = BUS.QuanLyBanHang.CartItemBUS.cart.get(i);
-				                        if (ct.masp.equals(selectedMasp)) {
-				                            BUS.QuanLyBanHang.CartItemBUS.cart.remove(i);
-				                            break;
-				                        }
-				                    }
-
-				                    // Xóa dòng từ JTable
-				                    model.removeRow(selectedRow);
-				                } else {
-				                    JOptionPane.showMessageDialog(null, "Vui lòng chọn một dòng để xóa.");
-				                }
-				            }
-				        });
 						
-						MyButton InHoaDonBtn_2 = new MyButton();
-						InHoaDonBtn_2.setText("in hóa đơn");
-						InHoaDonBtn_2.setHorizontalTextPosition(SwingConstants.LEADING);
-						
+						JLabel lblNewLabel_3 = new JLabel("");
 						GroupLayout gl_cartPanel = new GroupLayout(cartPanel);
 						gl_cartPanel.setHorizontalGroup(
 							gl_cartPanel.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_cartPanel.createSequentialGroup()
 									.addGap(10)
 									.addGroup(gl_cartPanel.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_cartPanel.createSequentialGroup()
-											.addGap(28)
-											.addComponent(InHoaDonBtn_2, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
-											.addGap(248)
-											.addComponent(lblTngCng, GroupLayout.PREFERRED_SIZE, 226, GroupLayout.PREFERRED_SIZE)
-											.addGap(18)
+										.addGroup(gl_cartPanel.createParallelGroup(Alignment.LEADING, false)
+											.addGroup(gl_cartPanel.createSequentialGroup()
+												.addGap(122)
+												.addComponent(soDienThoaiKHTxt, GroupLayout.PREFERRED_SIZE, 240, GroupLayout.PREFERRED_SIZE))
+											.addComponent(lblTnKhchHng, GroupLayout.PREFERRED_SIZE, 124, GroupLayout.PREFERRED_SIZE)
+											.addComponent(maNhanVienThuNganLbl, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+										.addGroup(Alignment.TRAILING, gl_cartPanel.createSequentialGroup()
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(lblTngCng, GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
+											.addGap(10)
 											.addComponent(xacNhanHoaDonBtn, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE))
-										.addGroup(gl_cartPanel.createSequentialGroup()
-											.addGroup(gl_cartPanel.createParallelGroup(Alignment.TRAILING)
-												.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 796, Short.MAX_VALUE)
-												.addComponent(panel, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 796, Short.MAX_VALUE)
-												.addGroup(gl_cartPanel.createSequentialGroup()
-													.addGroup(gl_cartPanel.createParallelGroup(Alignment.LEADING)
-														.addGroup(gl_cartPanel.createSequentialGroup()
-															.addComponent(maNhanVienThuNganLbl, GroupLayout.PREFERRED_SIZE, 346, GroupLayout.PREFERRED_SIZE)
-															.addGap(69)
-															.addComponent(giaoHangChck, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE))
-														.addComponent(lblTnKhchHng, GroupLayout.PREFERRED_SIZE, 124, GroupLayout.PREFERRED_SIZE)
-														.addGroup(gl_cartPanel.createSequentialGroup()
-															.addGap(122)
-															.addComponent(soDienThoaiKHTxt, GroupLayout.PREFERRED_SIZE, 240, GroupLayout.PREFERRED_SIZE))
-														.addGroup(gl_cartPanel.createSequentialGroup()
-															.addComponent(lblSinThoi, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
-															.addGap(5)
-															.addComponent(teniKhachHangTxt, GroupLayout.PREFERRED_SIZE, 240, GroupLayout.PREFERRED_SIZE)))
-													.addPreferredGap(ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
-													.addGroup(gl_cartPanel.createParallelGroup(Alignment.LEADING)
-														.addGroup(gl_cartPanel.createSequentialGroup()
-															.addGap(85)
-															.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE))
-														.addComponent(diaChiTxt, GroupLayout.PREFERRED_SIZE, 240, GroupLayout.PREFERRED_SIZE))))
-											.addGap(0)
-											.addGroup(gl_cartPanel.createParallelGroup(Alignment.LEADING)
-												.addGroup(gl_cartPanel.createSequentialGroup()
-													.addGap(453)
-													.addComponent(autoIncreaseSpaceLbl, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-												.addGroup(gl_cartPanel.createSequentialGroup()
-													.addGap(244)
-													.addComponent(autoIncreaseSpaceLbl_1, GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)))))
-									.addGap(22))
+										.addGroup(Alignment.TRAILING, gl_cartPanel.createSequentialGroup()
+											.addComponent(lblSinThoi, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+											.addGap(5)
+											.addComponent(tenKhachHangTxt, GroupLayout.PREFERRED_SIZE, 240, GroupLayout.PREFERRED_SIZE)
+											.addGap(37)
+											.addComponent(giaoHangChck, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(diaChiTxt, GroupLayout.PREFERRED_SIZE, 240, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(lblNewLabel_3, 0, 0, Short.MAX_VALUE))
+										.addComponent(panel, 0, 0, Short.MAX_VALUE)
+										.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 826, Short.MAX_VALUE))
+									.addContainerGap())
 						);
 						gl_cartPanel.setVerticalGroup(
 							gl_cartPanel.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_cartPanel.createSequentialGroup()
+									.addGap(15)
+									.addComponent(maNhanVienThuNganLbl)
+									.addGap(5)
 									.addGroup(gl_cartPanel.createParallelGroup(Alignment.LEADING)
+										.addComponent(soDienThoaiKHTxt, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
 										.addGroup(gl_cartPanel.createSequentialGroup()
-											.addGap(3)
-											.addGroup(gl_cartPanel.createParallelGroup(Alignment.LEADING)
-												.addGroup(gl_cartPanel.createSequentialGroup()
-													.addGap(12)
-													.addComponent(maNhanVienThuNganLbl))
-												.addComponent(autoIncreaseSpaceLbl_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-											.addGap(5)
-											.addGroup(gl_cartPanel.createParallelGroup(Alignment.LEADING)
-												.addGroup(gl_cartPanel.createSequentialGroup()
-													.addGap(6)
-													.addComponent(lblTnKhchHng))
-												.addComponent(soDienThoaiKHTxt, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-												.addGroup(gl_cartPanel.createSequentialGroup()
-													.addGap(3)
-													.addComponent(autoIncreaseSpaceLbl, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))
-											.addGap(3)
-											.addGroup(gl_cartPanel.createParallelGroup(Alignment.LEADING)
-												.addGroup(gl_cartPanel.createSequentialGroup()
-													.addGap(7)
-													.addComponent(lblSinThoi))
-												.addGroup(gl_cartPanel.createSequentialGroup()
-													.addGap(9)
-													.addGroup(gl_cartPanel.createParallelGroup(Alignment.LEADING)
-														.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
-														.addComponent(teniKhachHangTxt, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))))
+											.addGap(6)
+											.addComponent(lblTnKhchHng)))
+									.addGap(13)
+									.addGroup(gl_cartPanel.createParallelGroup(Alignment.LEADING, false)
+										.addComponent(lblNewLabel_3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(lblSinThoi)
 										.addGroup(gl_cartPanel.createSequentialGroup()
-											.addContainerGap()
-											.addGroup(gl_cartPanel.createParallelGroup(Alignment.BASELINE)
-												.addComponent(giaoHangChck, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-												.addComponent(diaChiTxt, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))))
-									.addGap(21)
+											.addGap(2)
+											.addGroup(gl_cartPanel.createParallelGroup(Alignment.LEADING)
+												.addGroup(gl_cartPanel.createParallelGroup(Alignment.BASELINE)
+													.addComponent(giaoHangChck, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+													.addComponent(diaChiTxt, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+												.addComponent(tenKhachHangTxt, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))))
+									.addGap(31)
 									.addComponent(panel, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+									.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+									.addGap(17)
 									.addGroup(gl_cartPanel.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_cartPanel.createSequentialGroup()
-											.addGap(17)
-											.addGroup(gl_cartPanel.createParallelGroup(Alignment.BASELINE)
-												.addComponent(lblTngCng, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-												.addComponent(xacNhanHoaDonBtn, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)))
-										.addGroup(gl_cartPanel.createSequentialGroup()
-											.addPreferredGap(ComponentPlacement.UNRELATED)
-											.addComponent(InHoaDonBtn_2, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)))
+										.addComponent(xacNhanHoaDonBtn, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblTngCng, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
 									.addGap(12))
 						);
 						
-						JLabel lblNewLabel_2_1_1_2_1 = new JLabel("");
-						lblNewLabel_2_1_1_2_1.setHorizontalAlignment(SwingConstants.CENTER);
-						lblNewLabel_2_1_1_2_1.setForeground(new Color(0, 205, 205));
-						lblNewLabel_2_1_1_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+						JLabel lblNewLabel_4 = new JLabel("");
 						GroupLayout gl_panel = new GroupLayout(panel);
 						gl_panel.setHorizontalGroup(
 							gl_panel.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_panel.createSequentialGroup()
 									.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
-									.addComponent(lblNewLabel_2_1, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-									.addComponent(lblNewLabel_2_1_1, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE)
+									.addComponent(lblNewLabel_2_1, GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
+									.addGap(6)
+									.addComponent(lblNewLabel_2_1_1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+									.addGap(6)
+									.addComponent(lblNewLabel_2_1_1_1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(lblNewLabel_2_1_1_1, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-									.addGap(47)
 									.addComponent(lblNewLabel_2_1_1_2, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)
-									.addGap(18)
-									.addComponent(lblNewLabel_2_1_1_2_1, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-									.addGap(71))
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(lblNewLabel_4, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE))
 						);
 						gl_panel.setVerticalGroup(
 							gl_panel.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_panel.createSequentialGroup()
-									.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
-										.addComponent(lblNewLabel_2_1_1_2_1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(lblNewLabel_2, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-										.addComponent(lblNewLabel_2_1, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-										.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-											.addComponent(lblNewLabel_2_1_1_1, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-											.addComponent(lblNewLabel_2_1_1, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-											.addComponent(lblNewLabel_2_1_1_2, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)))
-									.addContainerGap())
+									.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
+										.addComponent(lblNewLabel_4, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(lblNewLabel_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+										.addComponent(lblNewLabel_2_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+										.addComponent(lblNewLabel_2_1_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+										.addComponent(lblNewLabel_2_1_1_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+										.addComponent(lblNewLabel_2_1_1_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
+									.addContainerGap(2, Short.MAX_VALUE))
 						);
 						panel.setLayout(gl_panel);
 						cartPanel.setLayout(gl_cartPanel);
@@ -832,11 +587,10 @@ public class QuanLyBanHangFrm extends JPanel {
 		InHoaDonBtn.addActionListener(new ActionListener() {
 		
 			public void actionPerformed(ActionEvent e) {
-							        if (GUI.QuanLyBanHang.QuanLyBanHangFrm.timKiemDonHangTxt != null) {
-			            String text1 = GUI.QuanLyBanHang.QuanLyBanHangFrm.timKiemDonHangTxt.getText();
-			            BUS.QuanLyBanHang.InHoaDonBUS.PrintHD(text1);
-			        } 
-			    
+					if(table.getSelectedRow() > 0) {
+						 String mahd = table.getValueAt(table.getSelectedRow(), 0).toString();
+						 qlbh_bus.inHoaDon(mahd);
+					}
 			}
 		});
 		
@@ -916,74 +670,182 @@ public class QuanLyBanHangFrm extends JPanel {
 		);
 		donHangPanel.setLayout(gl_donHangPanel);
 		setLayout(groupLayout);
-		demo1(); //Sản phẩm
-		
-		
-		//BUS.QuanLyBanHang.CartItemBUS.executeOK();
-		//demo2(); //Giỏ hàng
+//		demo1(); 
+		demo2();
+		hienThiSanPham();
+		hienThiHangSanPham();
 	}
 
 	
-	//Edit
+	//DEMON
 	public static void demo1() {
-        int itemsPerRow = 4;
-		ProductItemPanel.setLayout(new GridLayout(0, itemsPerRow + 1, 0, 0));
-
-        // Get the list of ProductItem objects from the database
-        ArrayList<ProductItem> productItems = ProductItemBUS.getProductItems();
-
-        for (int i = 0; i < productItems.size(); i++) {
-            ProductItem pi = productItems.get(i);
-            ProductItemPanel.add(pi);
-
-            if ((i + 1) % itemsPerRow == 0) {
-                ProductItemPanel.add(new JPanel());
-            }
+		ProductItemPanel.setLayout(new GridLayout(0, 4, 0, 0));
+        for (int i = 0; i < 10; i++) {
+//            ProductItem pi = new ProductItem();
+//            ProductItemPanel.add(pi);
         }
 	}
-	// Method to update the table with new data
-    public static void updateTable() {
-        // Clear the existing rows in the model
-        model.setRowCount(0);
-
-        DecimalFormat decimalFormat1 = new DecimalFormat("#");
-        
-        // Thêm hàng vào model với các giá trị truyền vào
-        for (int i = 0; i < BUS.QuanLyBanHang.CartItemBUS.cart.size(); i++) {
-            Cart ct = BUS.QuanLyBanHang.CartItemBUS.cart.get(i);
-            Object[] row = new Object[]{ct.masp, ct.tensp, decimalFormat1.format(ct.dongia),
-            		ct.soluong, decimalFormat1.format(ct.thanhtien)};
-            model.addRow(row);
-            DecimalFormat decimalFormat = new DecimalFormat("#");
-    		//lblTngCng.setText("Tổng cộng: "+decimalFormat.format(CartItemBUS.TongCong()));
-        }
-
-        // Revalidate and repaint the panel to update the displayed table
-        table_1.revalidate();
-        table_1.repaint();
-    }
 	
- // Phương thức cập nhật dữ liệu trong ArrayList dựa trên thay đổi từ JTable
-    private static void updateArrayList(int row, String columnName, Object value) {
-        Cart ct = BUS.QuanLyBanHang.CartItemBUS.cart.get(row);
-
-        switch (columnName) {
-            case "Mã SP":
-                ct.masp = (String) value;
-                break;
-            case "Tên SP":
-                ct.tensp = (String) value;
-                break;
-            case "Đơn giá":
-                ct.dongia = (Double) value;
-                break;
-            case "Số lượng":
-                ct.soluong = (Integer) value;
-                ct.thanhtien = ct.dongia * ct.soluong; // Cập nhật thành tiền khi số lượng thay đổi
-                break;
-            case "Thành tiền":
-                // Bạn có thể xử lý theo nhu cầu cụ thể
-                break;
+	public void demo2() {
+        for (int i = 0; i < 10; i++) {
+//           CartItem cartItem = new CartItem(qlbh_bus.ds_hienThi.get(i),1, banHangInter);
+//           cartItemPanel.add(cartItem);
         }
-    }
+	}
+	
+	public void hienThiSanPham() {
+		ProductItemPanel.removeAll();
+		ProductItemPanel.setLayout(new GridLayout(0, 4, 0, 0));
+		
+		for (int i = 0; i < qlbh_bus.ds_hienThi.size(); i++) {
+			ProductItem productItem = new ProductItem(qlbh_bus.ds_hienThi.get(i), banHangInter);
+			ProductItemPanel.add(productItem);
+		}
+		ProductItemPanel.revalidate();
+		ProductItemPanel.repaint();
+		
+	}
+	
+	public void hienThiHangSanPham() {
+		HangSXPanel.removeAll();
+		for(int i = 0; i<qlbh_bus.ds_hang.size(); i++) {
+			JCheckBox checkbox = new JCheckBox(qlbh_bus.ds_hang.get(i));
+			checkbox.setForeground(Color.CYAN);
+			checkbox.setBackground(new Color(77, 77, 77));
+			checkbox.setSelected(true);
+			HangSXPanel.add(checkbox);
+			ds_HangBtn.add(checkbox);
+			checkbox.addChangeListener(new ChangeListener() {			
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					filterByBrand();
+				}
+			});
+		}
+	}
+	
+	public void filterByBrand() {
+		ArrayList <String> hang = new ArrayList<String>();
+		for(int i = 0; i<ds_HangBtn.size(); i++) {
+			if(ds_HangBtn.get(i).isSelected()) {
+				hang.add(ds_HangBtn.get(i).getText());
+			}	
+		}
+		qlbh_bus.filterByBrand(hang, timKiemSanPhamTxt.getText());
+		hienThiSanPham();
+	}
+	
+	public void timKiemSanPham() {
+		String timKiemStr = timKiemSanPhamTxt.getText();
+		qlbh_bus.timKiem(timKiemStr);
+		hienThiSanPham();
+		HangSXPanel.revalidate();
+		HangSXPanel.repaint();
+		hienThiHangSanPham();
+	}
+	
+	public void sapXepTheoGia(int type) {
+		qlbh_bus.sapXepTheoGia(type);
+		hienThiSanPham();
+	}
+	
+	public void hienThiGioHang() {
+		cartItemPanel.removeAll();
+		
+		for(int i = 0; i<qlbh_bus.gioHang_sanpham.size(); i++) {
+			CartItem cartItem = new CartItem(qlbh_bus.gioHang_sanpham.get(i), qlbh_bus.gioHang_soluong.get(i), banHangInter);
+			cartItemPanel.add(cartItem);
+		}
+		
+		if(qlbh_bus.gioHang_sanpham.size()*40 < scrollPane_1.getHeight()) {
+			int count = qlbh_bus.gioHang_sanpham.size();
+			while(count * 40 < scrollPane_1.getHeight()) {
+				CartItem cartItem = new CartItem();
+				cartItemPanel.add(cartItem);
+				count++;
+			}
+		}
+		cartItemPanel.revalidate();
+		cartItemPanel.repaint();
+		
+		hienTongTien();
+	}
+	public void hienTongTien() {
+		DecimalFormat df = new DecimalFormat("#,###");
+		long tongTien = qlbh_bus.tinhTongTien();
+		lblTngCng.setText("Tổng tiền : " +df.format(tongTien)+"đ");
+	}
+	
+	public void timKiemKhachHang() {
+		String sdt = soDienThoaiKHTxt.getText();
+		if(sdt.matches("^0\\d{9}$")) {
+			String ten_kh_timKiem = qlbh_bus.timKiemKhachHang(sdt);
+			if(!ten_kh_timKiem.equalsIgnoreCase("")) {
+				tenKhachHangTxt.setText(ten_kh_timKiem);
+				tenKhachHangTxt.setEditable(false);
+			}else {
+				if(!tenKhachHangTxt.isEditable()) {
+					tenKhachHangTxt.setEditable(true);
+				}
+			}
+		}else {
+			JOptionPane.showMessageDialog(null, "Vui lòng nhập số điện thoại hợp lệ");
+		}
+	}
+	
+	public boolean kiemTraTenKhachHang() {
+		String tenkh = tenKhachHangTxt.getText();
+		for(int i = 0; i<10; i++) {
+			if(tenkh.contains(""+i)){
+				return false;
+			}
+		}
+		return true;
+	}
+	public void taoHoaDon() {
+		
+		//manv = this.manv
+		
+		String diaChiGiao=null;
+		String sdtKh= null;
+		String tenKh=null;
+		int xacNhan = JOptionPane.showConfirmDialog(null, "Tạo hóa đơn");
+		if(xacNhan == 0 && kiemTraHopLeHoaDon()) {
+			if(tenKhachHangTxt.isEditable()) {
+				sdtKh = soDienThoaiKHTxt.getText();
+				tenKh = tenKhachHangTxt.getText();			
+			}else {
+				
+			}
+			if(diaChiTxt.getText().length() > 0) {
+				diaChiGiao = diaChiTxt.getText();
+			}
+			if(tenKh != null)
+				qlbh_bus.taoHoaDon(manv, tenKh, sdtKh, diaChiGiao);
+			else
+				qlbh_bus.taoHoaDon(manv, diaChiGiao);
+		}
+	}
+	private boolean kiemTraHopLeHoaDon() {
+		if(!kiemTraTenKhachHang()) {
+			JOptionPane.showMessageDialog(null, "Tên khách hàng không được chứa kí tự là số");
+			tenKhachHangTxt.requestFocus();
+			return false;
+		}
+		
+		// kiểm tra địa chỉ nếu có
+		if(diaChiTxt.getText().equalsIgnoreCase("") && diaChiTxt.isEditable()) {
+			diaChiTxt.requestFocus();
+			return false;
+		}
+		
+		return true;
+	}
+	private void refresh() {
+		this.qlbh_bus = new QuanLyBanHangBUS();
+		hienThiSanPham();
+		hienThiHangSanPham();
+		hienThiGioHang();
+		hienTongTien();
+	}
 }
