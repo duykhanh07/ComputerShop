@@ -12,14 +12,18 @@ import DTO.DTO_SanPham;
 import GUI.LoginForm;
 
 import javax.swing.JTextArea;
+import javax.swing.LayoutStyle.ComponentPlacement;
+
 import MyDesign.MyComponents.MyButton;
 import javax.swing.ImageIcon;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Panel;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.awt.event.ActionEvent;
 
 public class ProductItem extends JPanel {

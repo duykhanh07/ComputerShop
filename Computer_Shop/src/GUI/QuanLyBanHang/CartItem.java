@@ -122,9 +122,6 @@ public class CartItem extends JPanel {
 		thanhTienlbl.setForeground(Color.CYAN);
 		thanhTienlbl.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
-		JPanel panel = new JPanel();
-		panel.setBackground(new Color(51, 51, 51));
-		
 		themBtn = new MyButton();
 		themBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

@@ -56,7 +56,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import BUS.SanPhamBUS;
 import DTO.DTO_SanPham;
 
-
 import javax.swing.JCheckBox;
 import java.awt.FlowLayout;
 import javax.swing.GroupLayout;
@@ -545,7 +544,7 @@ public class QuanLySanPhamFrm extends JPanel {
 				}
 				
 				newlistsp.add(newsp);
-				//sp_bus.addSP(newsp);
+				sp_bus.addSP(newsp);
 				}
 				
 				

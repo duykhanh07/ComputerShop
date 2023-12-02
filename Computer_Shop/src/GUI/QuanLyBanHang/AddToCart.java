@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.border.LineBorder;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
@@ -23,8 +24,11 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+
 import MyDesign.MyComponents.MyButton;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.awt.event.ActionEvent;
 import MyDesign.MyComponents.MyTextfield;
 import java.awt.Dimension;
@@ -36,14 +40,15 @@ import java.awt.Toolkit;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 public class AddToCart extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private static JLabel imageLbl1 ;
-	private static JLabel thanhTienLbl;
-	private static JTextArea tenLaptopLbl;
+	private JLabel imageLbl;
+	private JLabel thanhTienLbl;
+	private JTextArea tenLaptopLbl;
 	DecimalFormat df = new DecimalFormat("#,###");
 	
 	//Edit
@@ -82,7 +87,7 @@ public class AddToCart extends JFrame {
 
 		setContentPane(contentPane);
 		
-		JLabel imageLbl = new JLabel("hình ảnh");
+		imageLbl = new JLabel("hình ảnh");
 		imageLbl.setBounds(29, 6, 165, 112);
 		imageLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		imageLbl.setForeground(Color.CYAN);
@@ -313,19 +318,18 @@ public class AddToCart extends JFrame {
 		quantityTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
 		quantityTxt.setBackground(new Color(77, 77, 77));
 		contentPane.setLayout(null);
-		contentPane.add(imageLbl1);
+		contentPane.add(imageLbl);
 		contentPane.add(thanhTienLbl);
 		contentPane.add(congBtn);
 		contentPane.add(quantityTxt);
 		contentPane.add(truBtn);
-		contentPane.add(timKiemDonHangTxt);
 		contentPane.add(congBtn);
 		contentPane.add(panel);
 		contentPane.add(tenLaptopLbl);
 		hienThi();
 	}
 	public void hienThi() {
-		this.imageLbl1.setIcon(new ImageIcon(new ImageIcon(ProductItem.class.getResource(this.sp.getImage())).getImage().getScaledInstance(187, 112, Image.SCALE_SMOOTH)));
+		this.imageLbl.setIcon(new ImageIcon(new ImageIcon(ProductItem.class.getResource(this.sp.getImage())).getImage().getScaledInstance(187, 112, Image.SCALE_SMOOTH)));
 		tenLaptopLbl.setText(this.sp.getTensp());
 		quantityTxt.setText("1");
 		thanhTienLbl.setText(df.format(this.sp.getGia())+"đ");

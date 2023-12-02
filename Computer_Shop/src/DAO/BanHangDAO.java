@@ -206,10 +206,7 @@ public class BanHangDAO {
 			ResultSet rss = sta.executeQuery(query);
 			while(rss.next()) {
 				int trangthai = 0;
-				if(rss.getString("trangthai").equalsIgnoreCase("đã hoàn thành")) {
-					trangthai = 1;
-				}
-				hd = new DTO_HoaDon(mahd, rss.getString("makh"), rss.getString("manv"), rss.getDate("ngaylaphd"), rss.getString("diachigiao"), rss.getDouble("tongtien"), trangthai);
+				hd = new DTO_HoaDon(mahd, rss.getString("makh"), rss.getString("manv"), rss.getDate("ngaylaphd"), rss.getString("diachigiao"), rss.getDouble("tongtien"),rss.getString("trangthai"));
 				break;
 			}
 			conn.close();

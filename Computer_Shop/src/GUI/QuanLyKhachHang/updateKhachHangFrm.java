@@ -219,6 +219,9 @@ public class updateKhachHangFrm extends JFrame {
 		
 		// TODO : xác minh
 		String ten = tenKhachHangTxt.getText();
+		if(ten.equalsIgnoreCase("")) {
+			JOptionPane.showMessageDialog(null, "Tên không được rỗng");
+		}
 		for(int i =0; i<10; i++) {
 			if(ten.contains(i+"")) {
 				JOptionPane.showMessageDialog( null, "Tên không thể chứa kí tự số");
@@ -236,7 +239,7 @@ public class updateKhachHangFrm extends JFrame {
 		}
 		
 		for(int i = 0; i<qlkh.ds_khachHang.size(); i++) {
-			if(qlkh.ds_khachHang.get(i).getSdt().equalsIgnoreCase(sdt)) {
+			if(qlkh.ds_khachHang.get(i).getSdt().equalsIgnoreCase(sdt) && qlkh.ds_khachHang.get(i).getMakh()!= kh.getMakh()) {
 				JOptionPane.showMessageDialog( null, "Số điện thoại đã được sử dụng");
 				return;
 			}
