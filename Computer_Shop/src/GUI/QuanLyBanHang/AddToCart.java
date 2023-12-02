@@ -8,6 +8,15 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+
+import BUS.QuanLyBanHang.BanHangInterface;
+import BUS.QuanLyBanHang.QuanLyBanHangBUS;
+import DTO.DTO_SanPham;
+
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -20,6 +29,8 @@ import java.awt.event.ActionEvent;
 import MyDesign.MyComponents.MyTextfield;
 import java.awt.Dimension;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+
 import java.awt.Font;
 import java.awt.Toolkit;
 import javax.swing.GroupLayout;
@@ -29,28 +40,27 @@ import javax.swing.ImageIcon;
 public class AddToCart extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+
+	private static JLabel imageLbl1 ;
+	private static JLabel thanhTienLbl;
+	private static JTextArea tenLaptopLbl;
+	DecimalFormat df = new DecimalFormat("#,###");
+	
+	//Edit
+	private static JButton xoaBtn;
+	private static JButton congBtn;
+	private static JButton truBtn;
+	private static MyTextfield quantityTxt;
+	
 	private JPanel contentPane;
+	
+	private DTO_SanPham sp;
+	private BanHangInterface banHangInterface;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AddToCart frame = new AddToCart();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public AddToCart() {
+	public AddToCart(DTO_SanPham sp,BanHangInterface banHangInterface) {
+		this.sp = sp;
+		this.banHangInterface = banHangInterface;
+		
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
@@ -63,6 +73,7 @@ public class AddToCart extends JFrame {
 		setTitle("Add to Cart");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(239, 462);
+		setResizable(false);
 		setMinimumSize(new Dimension(239, 462));
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
@@ -89,6 +100,11 @@ public class AddToCart extends JFrame {
 		btn7.setText("7");
 		btn7.setHorizontalTextPosition(SwingConstants.LEADING);
 		panel.add(btn7);
+		btn7.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				inputNum(7);
+			}
+		});
 		
 		MyButton btn8 = new MyButton();
 		btn8.setColor(new Color(51, 51, 51));
@@ -97,6 +113,11 @@ public class AddToCart extends JFrame {
 		btn8.setText("8");
 		btn8.setHorizontalTextPosition(SwingConstants.LEADING);
 		panel.add(btn8);
+		btn8.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				inputNum(8);
+			}
+		});
 		
 		MyButton btn9 = new MyButton();
 		btn9.setColor(new Color(51, 51, 51));
@@ -105,6 +126,11 @@ public class AddToCart extends JFrame {
 		btn9.setText("9");
 		btn9.setHorizontalTextPosition(SwingConstants.LEADING);
 		panel.add(btn9);
+		btn9.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				inputNum(9);
+			}	
+		});
 		
 		MyButton btn4 = new MyButton();
 		btn4.setColor(new Color(51, 51, 51));
@@ -113,12 +139,18 @@ public class AddToCart extends JFrame {
 		btn4.setText("4");
 		btn4.setHorizontalTextPosition(SwingConstants.LEADING);
 		panel.add(btn4);
+		btn4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				inputNum(4);
+			}
+		});
 		
 		MyButton btn5 = new MyButton();
 		btn5.setColor(new Color(51, 51, 51));
 		btn5.setColorOver(new Color(77, 77, 77));
 		btn5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				inputNum(5);
 			}
 		});
 		btn5.setBackground(new Color(51, 51, 51));
@@ -133,6 +165,11 @@ public class AddToCart extends JFrame {
 		btn6.setText("6");
 		btn6.setHorizontalTextPosition(SwingConstants.LEADING);
 		panel.add(btn6);
+		btn6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				inputNum(6);
+			}
+		});
 		
 		MyButton btn1 = new MyButton();
 		btn1.setColor(new Color(51, 51, 51));
@@ -141,6 +178,11 @@ public class AddToCart extends JFrame {
 		btn1.setText("1");
 		btn1.setHorizontalTextPosition(SwingConstants.LEADING);
 		panel.add(btn1);
+		btn1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				inputNum(0);
+			}
+		});
 		
 		MyButton btn2 = new MyButton();
 		btn2.setColor(new Color(51, 51, 51));
@@ -149,6 +191,11 @@ public class AddToCart extends JFrame {
 		btn2.setText("2");
 		btn2.setHorizontalTextPosition(SwingConstants.LEADING);
 		panel.add(btn2);
+		btn2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				inputNum(2);
+			}
+		});
 		
 		MyButton btn3 = new MyButton();
 		btn3.setColor(new Color(51, 51, 51));
@@ -161,6 +208,11 @@ public class AddToCart extends JFrame {
 		btn3.setText("3");
 		btn3.setHorizontalTextPosition(SwingConstants.LEADING);
 		panel.add(btn3);
+		btn3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				inputNum(3);
+			}
+		});
 		
 		MyButton xoaBtn = new MyButton();
 		xoaBtn.setIcon(new ImageIcon(AddToCart.class.getResource("/assets/backspace.png")));
@@ -170,6 +222,12 @@ public class AddToCart extends JFrame {
 		xoaBtn.setBackground(new Color(255, 128, 128));
 		xoaBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		panel.add(xoaBtn);
+		xoaBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				backSpace();
+			}
+		});
+		
 		
 		MyButton btn0 = new MyButton();
 		btn0.setColor(new Color(51, 51, 51));
@@ -178,57 +236,138 @@ public class AddToCart extends JFrame {
 		btn0.setText("0");
 		btn0.setHorizontalTextPosition(SwingConstants.LEADING);
 		panel.add(btn0);
+		btn0.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				inputNum(0);
+			}
+		});
 		
 		MyButton xacNhanBtn = new MyButton();
 		xacNhanBtn.setText("OK");
 		xacNhanBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		panel.add(xacNhanBtn);
+		xacNhanBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				themVaoGioHang();
+			}
+		});
 		
-		MyButton truBtn = new MyButton();
-		truBtn.setIcon(new ImageIcon(AddToCart.class.getResource("/assets/add.png")));
-		truBtn.setBounds(10, 202, 66, 30);
+        
+		congBtn = new MyButton();
+		congBtn.setIcon(new ImageIcon(AddToCart.class.getResource("/assets/add.png")));
+		congBtn.setBounds(10, 202, 66, 30);
+		congBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
+		congBtn.setHorizontalTextPosition(SwingConstants.LEADING);
+		
+		//Edit
+		congBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				increase();
+			}
+		});
+		
+		
+		truBtn = new MyButton();
+		truBtn.setIcon(new ImageIcon(AddToCart.class.getResource("/assets/remove.png")));
+		truBtn.setBounds(144, 202, 66, 30);
 		truBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
 		truBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
-		MyButton congBtn = new MyButton();
-		congBtn.setIcon(new ImageIcon(AddToCart.class.getResource("/assets/remove.png")));
-		congBtn.setBounds(144, 202, 66, 30);
-		congBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
-		congBtn.setHorizontalTextPosition(SwingConstants.CENTER);
+		//Edit
+		truBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				decrease();
+			}
+		});
 		
-		JTextArea tenLaptopLbl = new JTextArea();
+		//Edit tên laptop
+		tenLaptopLbl = new JTextArea();
+		tenLaptopLbl.setLineWrap(true);
+		tenLaptopLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tenLaptopLbl.setText("Laptop 5");
 		tenLaptopLbl.setBounds(0, 120, 223, 41);
 		tenLaptopLbl.setBorder(null);
-		tenLaptopLbl.setText("Laptop Acer Gaming Nitro 5 AN515 57 53F9");
-		tenLaptopLbl.setLineWrap(true);
 		tenLaptopLbl.setForeground(Color.CYAN);
 		tenLaptopLbl.setEditable(false);
 		tenLaptopLbl.setBackground(new Color(102, 102, 102));
+
+		//Edit tổng tiền
+		thanhTienLbl = new JLabel();
+		thanhTienLbl.setBounds(10, 172, 200, 28);
+		thanhTienLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		thanhTienLbl.setForeground(new Color(255, 255, 102));
+		thanhTienLbl.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		
-		JLabel tongTienPanel = new JLabel("Tổng tiền : 100000000 đ");
-		tongTienPanel.setBounds(10, 172, 200, 28);
-		tongTienPanel.setHorizontalAlignment(SwingConstants.CENTER);
-		tongTienPanel.setForeground(new Color(255, 255, 102));
-		tongTienPanel.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		quantityTxt = new MyTextfield();
+		quantityTxt.setHorizontalAlignment(SwingConstants.CENTER);
+		quantityTxt.setText("1");
+		quantityTxt.setBounds(76, 202, 68, 30);
+		quantityTxt.setAlignmentY(0.0f);
+		quantityTxt.setAlignmentX(0.0f);
 		
-		MyTextfield timKiemDonHangTxt = new MyTextfield();
-		timKiemDonHangTxt.setHorizontalAlignment(SwingConstants.CENTER);
-		timKiemDonHangTxt.setText("1");
-		timKiemDonHangTxt.setBounds(76, 202, 68, 30);
-		timKiemDonHangTxt.setAlignmentY(0.0f);
-		timKiemDonHangTxt.setAlignmentX(0.0f);
-		timKiemDonHangTxt.setEditable(false);
-		timKiemDonHangTxt.setPreferredSize(new Dimension(180, 35));
-		timKiemDonHangTxt.setColumns(10);
-		timKiemDonHangTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
-		timKiemDonHangTxt.setBackground(new Color(77, 77, 77));
+		//Edit
+		quantityTxt.setEditable(false);
+		
+		quantityTxt.setPreferredSize(new Dimension(180, 35));
+		quantityTxt.setColumns(10);
+		quantityTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
+		quantityTxt.setBackground(new Color(77, 77, 77));
 		contentPane.setLayout(null);
-		contentPane.add(imageLbl);
-		contentPane.add(tongTienPanel);
+		contentPane.add(imageLbl1);
+		contentPane.add(thanhTienLbl);
+		contentPane.add(congBtn);
+		contentPane.add(quantityTxt);
 		contentPane.add(truBtn);
 		contentPane.add(timKiemDonHangTxt);
 		contentPane.add(congBtn);
 		contentPane.add(panel);
 		contentPane.add(tenLaptopLbl);
+		hienThi();
+	}
+	public void hienThi() {
+		this.imageLbl1.setIcon(new ImageIcon(new ImageIcon(ProductItem.class.getResource(this.sp.getImage())).getImage().getScaledInstance(187, 112, Image.SCALE_SMOOTH)));
+		tenLaptopLbl.setText(this.sp.getTensp());
+		quantityTxt.setText("1");
+		thanhTienLbl.setText(df.format(this.sp.getGia())+"đ");
+	}
+	public void inputNum(int num) {
+		quantityTxt.setText(quantityTxt.getText() + num);
+		tinhThanhTien();
+	}
+	public void backSpace() {
+		if(quantityTxt.getText().length()>0)
+			quantityTxt.setText(quantityTxt.getText().substring(0, quantityTxt.getText().length()-1));
+		if(!quantityTxt.getText().equalsIgnoreCase("")) {
+			tinhThanhTien();
+		}
+	}
+	public void increase() {
+		quantityTxt.setText((Integer.parseInt(quantityTxt.getText())+1)+"");
+		tinhThanhTien();
+	}
+	public void decrease() {
+		if(Integer.parseInt(quantityTxt.getText())>1) {
+			quantityTxt.setText((Integer.parseInt(quantityTxt.getText())-1)+"");
+			tinhThanhTien();
+		}
+	}
+	public void tinhThanhTien() {
+		int thanhTien = Integer.parseInt(quantityTxt.getText()) * sp.getGia();
+		thanhTienLbl.setText(df.format(thanhTien)+"đ");
+	}
+	public void themVaoGioHang() {
+		int soluong;
+		try {
+			soluong = Integer.parseInt(quantityTxt.getText());
+		} catch (Exception e) {
+			soluong = 1;
+			quantityTxt.setText("1");
+		}
+		
+		int xacNhan = JOptionPane.showConfirmDialog(null, "Thêm vào giỏ hàng");
+		if(xacNhan == 0) {
+			banHangInterface.capNhatGioHang(sp, soluong);
+			dispose();
+		}
 	}
 }

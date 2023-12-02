@@ -113,5 +113,6 @@
 	<classpathentry kind="lib" path="src/jfreechart/servlet.jar"/>
 	<classpathentry kind="lib" path="src/jfreechart/swtgraphics2d.jar"/>
 	<classpathentry kind="lib" path="src/log4j-core-2.20.0.jar"/>
+	<classpathentry kind="lib" path="src/jars/itextpdf-5.5.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

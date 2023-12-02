@@ -13,8 +13,6 @@ public class DTO_SanPham {
 	private String hang;
 	private int gia;
 	private int tinhtrang;
-	
-	public DTO_SanPham() {}
 
 	public DTO_SanPham(String masp, String tensp, String image, String cpu, String ram, String rom, String card,
 			String manhinh, String pin, String hang, int gia, int tinhtrang) {
