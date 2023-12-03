@@ -277,7 +277,7 @@ public class ThemTaiKhoanFrm extends JFrame {
 	
 	public void themTaiKhoanVaoBang() {
 		int tinhtrang = 0;
-		if(maNhanVienCmbx.getSelectedIndex()>=0) {
+		if(maNhanVienCmbx.getSelectedIndex()<=0) {
 			JOptionPane.showMessageDialog(null,"vui lòng chọn mã nhân viên muốn cấp tài khoản");
 			return;
 		}
