@@ -122,7 +122,7 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 		timKiemBtn_1_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(table.getSelectedRow() >= 0) {
-					new CapNhatTaiKhoanFrm(tk_bus.ds_hienThi.get(table.getSelectedRow()), tk_bus).setVisible(true);
+					new CapNhatTaiKhoanFrm(tk_bus.ds_hienThi.get(table.getSelectedRow()+1), tk_bus).setVisible(true);
 				}else {
 					JOptionPane.showMessageDialog(null, "Bạn phải chọn 1 tài khoản trong bảng");
 				}
