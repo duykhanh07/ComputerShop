@@ -87,11 +87,6 @@ public class QuanLyBanHangFrm extends JPanel {
 	public static MyTextfield timKiemSanPhamTxt;
 	public static MyTextfield diaChiTxt;
 	private JTable table;
-	public static JRadioButton chckbxNewCheckBox;
-	public static JRadioButton chckbxNewCheckBox_1;
-	public static JRadioButton chckbxNewCheckBox_1_1;
-	public static JRadioButton chckbxNewCheckBox_1_2;
-	public static JRadioButton chckbxNewCheckBox_1_3;
 	public static JPanel cartItemPanel;
 	public static JPanel ProductItemPanel;
 	public static JLabel lblTngCng;
@@ -137,11 +132,9 @@ public class QuanLyBanHangFrm extends JPanel {
 			
 			@Override
 			public void capNhatGioHang(DTO_SanPham sp, int soluong) {
-				int kq_them = qlbh_bus.themVaoGioHang(sp, soluong);	
+				int kq_them = qlbh_bus.capNhatGioHang(sp, soluong);	
 				if(kq_them<0) {
-					JOptionPane.showMessageDialog(null, "Cập nhật giỏ hàng thất bại");
-				}else {
-					JOptionPane.showMessageDialog(null, "Cập nhật giỏ hàng thành công");
+					JOptionPane.showMessageDialog(null, "Cập nhật giỏ hàng thất bại, quá số lượng");
 				}
 				hienThiGioHang();
 			}
@@ -149,6 +142,17 @@ public class QuanLyBanHangFrm extends JPanel {
 			@Override
 			public void boKhoiGioHang(String masp) {
 				qlbh_bus.boKhoiGioHang(masp);
+				hienThiGioHang();
+			}
+
+			@Override
+			public void themGioHang(DTO_SanPham sp, int soluong) {
+				int kq_them = qlbh_bus.themVaoGioHang(sp, soluong);
+				if(kq_them<0) {
+					JOptionPane.showMessageDialog(null, "Thêm vào giỏ hàng thất bại, quá số lượng");
+				}else {
+					JOptionPane.showMessageDialog(null, "Thêm vào giỏ hàng thành công");
+				}
 				hienThiGioHang();
 			}
 		};
@@ -170,8 +174,7 @@ public class QuanLyBanHangFrm extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    String searchText = timKiemSanPhamTxt.getText();
-                   
+                   timKiemSanPham();
                 }
             }
         });
@@ -208,11 +211,21 @@ public class QuanLyBanHangFrm extends JPanel {
 		
 		//Edit
 		mbtnLmMi = new MyButton();
+		mbtnLmMi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				refresh();
+			}
+		});
 		mbtnLmMi.setIcon(new ImageIcon(QuanLyBanHangFrm.class.getResource("/assets/reset.png")));
 		mbtnLmMi.setText("làm mới");
 		mbtnLmMi.setHorizontalTextPosition(SwingConstants.LEADING);
 		
 		MyButton timKiemBtn_1 = new MyButton();
+		timKiemBtn_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				timKiemSanPham();
+			}
+		});
 		timKiemBtn_1.setText("Lọc");
 		timKiemBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
 		
@@ -813,6 +826,12 @@ public class QuanLyBanHangFrm extends JPanel {
 			ProductItem productItem = new ProductItem(qlbh_bus.ds_hienThi.get(i), banHangInter);
 			ProductItemPanel.add(productItem);
 		}
+		int count = qlbh_bus.ds_hienThi.size();
+		while(count<12) {
+			ProductItem productItem = new ProductItem();
+			ProductItemPanel.add(productItem);
+			count++;
+		}
 		ProductItemPanel.revalidate();
 		ProductItemPanel.repaint();
 		
@@ -863,7 +882,6 @@ public class QuanLyBanHangFrm extends JPanel {
 	
 	public void hienThiGioHang() {
 		cartItemPanel.removeAll();
-		
 		for(int i = 0; i<qlbh_bus.gioHang_sanpham.size(); i++) {
 			CartItem cartItem = new CartItem(qlbh_bus.gioHang_sanpham.get(i), qlbh_bus.gioHang_soluong.get(i), banHangInter);
 			cartItemPanel.add(cartItem);

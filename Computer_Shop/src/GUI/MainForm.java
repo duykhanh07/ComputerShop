@@ -34,6 +34,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -44,6 +45,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import javax.swing.ImageIcon;
 
 public class MainForm extends JFrame {
 
@@ -125,8 +127,9 @@ public class MainForm extends JFrame {
 		menuPanel.setBackground(new Color(51, 51, 51));
 		splitPane.setLeftComponent(menuPanel);
 		
-		JLabel menuLabel = new JLabel("MAIN MENU");
-		menuLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
+		JLabel menuLabel = new JLabel("LAPTOP SHOP");
+		menuLabel.setIcon(new ImageIcon(new ImageIcon(MainForm.class.getResource("/assets/Laptop_Login.png")).getImage().getScaledInstance(32, 24, Image.SCALE_SMOOTH)));
+		menuLabel.setFont(new Font("Bangers", Font.PLAIN, 20));
 		menuLabel.setForeground(new Color(0, 204, 204));
 		menuLabel.setBackground(new Color(255, 255, 102));
 		menuLabel.setOpaque(true);
@@ -222,11 +225,11 @@ public class MainForm extends JFrame {
 			button.addActionListener(new ActionListener() {	@Override public void actionPerformed(ActionEvent e) {
 				changeButtonColor(button);
 			}});
-			button.setBounds(0, y_position, 174, 32);
+			button.setBounds(0, y_position, 174, 40);
 			menuPanel.add(button);
 			ds_menu.add(button);
 			
-			y_position += 32;
+			y_position += 40;
 		}
 		bindingButtonFeature();
 		

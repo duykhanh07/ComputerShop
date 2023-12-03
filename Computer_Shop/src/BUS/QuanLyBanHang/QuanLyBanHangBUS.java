@@ -91,15 +91,15 @@ public class QuanLyBanHangBUS {
 		if(type == 0) {
 			Collections.sort(ds_hienThi, (o1, o2) -> o1.getGia() - o2.getGia());
 		}else if(type == 1) {
-			Collections.sort(ds_hienThi, (o1, o2) -> o1.getGia() - o2.getGia());
+			Collections.sort(ds_hienThi, (o1, o2) -> o2.getGia() - o1.getGia());
 		}
 	}
 	
 	public int themVaoGioHang(DTO_SanPham sp, int soluong) {
 		for(int i = 0; i<gioHang_sanpham.size(); i++) {
 			if(gioHang_sanpham.get(i).getMasp().equals(sp.getMasp())) {
-				if(soluong <= ds_tonkho.get(sp.getMasp())) {	
-					gioHang_soluong.set(i, soluong);
+				if(gioHang_soluong.get(i)+soluong <= ds_tonkho.get(sp.getMasp())) {	
+					gioHang_soluong.set(i, gioHang_soluong.get(i)+soluong);
 					return 1;					
 				}else {
 					return -1;
@@ -110,6 +110,17 @@ public class QuanLyBanHangBUS {
 		gioHang_soluong.add(soluong);
 		tinhTongTien();
 		return 1;
+	}
+	public int capNhatGioHang(DTO_SanPham sp, int soluong) {
+		for(int i = 0; i<gioHang_sanpham.size(); i++) {
+			if(gioHang_sanpham.get(i).getMasp().equals(sp.getMasp())) {
+				if(soluong <= ds_tonkho.get(sp.getMasp())) {
+					gioHang_soluong.set(i, soluong);
+					return 1;
+				}
+			}
+		}	
+		return -1;
 	}
 	public void boKhoiGioHang(String  masp) {
 		for(int i = 0; i<gioHang_sanpham.size(); i++) {

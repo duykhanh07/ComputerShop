@@ -60,7 +60,7 @@ public class CartItem extends JPanel {
 		setSize(792,40);
 		
 		
-		JLabel maSanPhamLbl = new JLabel("1");
+		maSanPhamLbl = new JLabel("1");
 		maSanPhamLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		maSanPhamLbl.setForeground(new Color(0, 255, 255));
 		maSanPhamLbl.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -69,36 +69,7 @@ public class CartItem extends JPanel {
 		panel.setBackground(new Color(102, 102, 102));
 		panel.setLayout(null);
 		
-		MyButton congBtn = new MyButton();
-		congBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
-		congBtn.setIcon(new ImageIcon(CartItem.class.getResource("/assets/add.png")));
-		congBtn.setHorizontalTextPosition(SwingConstants.CENTER);
-		congBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
-		congBtn.setBounds(5, 5, 30, 30);
-		panel.add(congBtn);
-		
-		MyButton congBtn_1 = new MyButton();
-		congBtn_1.setIcon(new ImageIcon(CartItem.class.getResource("/assets/remove.png")));
-		congBtn_1.setHorizontalTextPosition(SwingConstants.CENTER);
-		congBtn_1.setFont(new Font("Segoe UI", Font.BOLD, 16));
-		congBtn_1.setBounds(40, 5, 30, 30);
-		panel.add(congBtn_1);
-		
-		MyButton congBtn_2 = new MyButton();
-		congBtn_2.setIcon(new ImageIcon(CartItem.class.getResource("/assets/cancel.png")));
-		congBtn_2.setHorizontalTextPosition(SwingConstants.CENTER);
-		congBtn_2.setFont(new Font("Segoe UI", Font.BOLD, 16));
-		congBtn_2.setColorOver(new Color(255, 100, 100));
-		congBtn_2.setColor(new Color(255, 128, 128));
-		congBtn_2.setBackground(new Color(255, 128, 128));
-		congBtn_2.setBounds(75, 5, 30, 30);
-		panel.add(congBtn_2);
-		
-		JTextArea tenLaptopLbl = new JTextArea();
+		tenLaptopLbl = new JTextArea();
 		tenLaptopLbl.setText("Laptop Acer Gaming Nitro 5 AN515 57 53F9");
 		tenLaptopLbl.setLineWrap(true);
 		tenLaptopLbl.setForeground(Color.CYAN);
@@ -106,7 +77,7 @@ public class CartItem extends JPanel {
 		tenLaptopLbl.setBorder(null);
 		tenLaptopLbl.setBackground(new Color(77, 77, 77));
 		
-		JLabel donGiaLbl = new JLabel("20000000");
+		donGiaLbl = new JLabel("20000000");
 		donGiaLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		donGiaLbl.setForeground(Color.CYAN);
 		donGiaLbl.setFont(new Font("Tahoma", Font.PLAIN, 12));

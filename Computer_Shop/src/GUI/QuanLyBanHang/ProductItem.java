@@ -39,7 +39,10 @@ public class ProductItem extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	
+	public ProductItem() {
+		setBackground(new Color(102, 102, 102));
+		setSize(237,207);
+	}
 	
 	public ProductItem(DTO_SanPham sp, BanHangInterface banHangInter) {
 		this.sp = sp;

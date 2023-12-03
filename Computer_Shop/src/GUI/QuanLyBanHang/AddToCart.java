@@ -370,7 +370,7 @@ public class AddToCart extends JFrame {
 		
 		int xacNhan = JOptionPane.showConfirmDialog(null, "Thêm vào giỏ hàng");
 		if(xacNhan == 0) {
-			banHangInterface.capNhatGioHang(sp, soluong);
+			banHangInterface.themGioHang(sp, soluong);
 			dispose();
 		}
 	}
