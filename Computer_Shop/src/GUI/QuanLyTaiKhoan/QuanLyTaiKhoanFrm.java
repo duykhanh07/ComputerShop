@@ -250,7 +250,7 @@ public class QuanLyTaiKhoanFrm extends JPanel {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setRowCount(0);
 		for(int i = 0; i<tk_bus.ds_hienThi.size(); i++) {
-			if(!tk_bus.ds_hienThi.get(i).getManv().contains("AD"))
+//			if(!tk_bus.ds_hienThi.get(i).getManv().contains("AD"))
 			model.addRow(new Object[]{tk_bus.ds_hienThi.get(i).getMatk(), tk_bus.ds_hienThi.get(i).getManv(), 
 					tk_bus.ds_hienThi.get(i).getUsername(),  tk_bus.taikhoan_status_map.get(tk_bus.ds_hienThi.get(i).getTinhtrang())});
 		}

@@ -35,7 +35,7 @@ public class DAO_TaiKhoan {
 		openData();
 		try {
 			Statement stmt = (Statement) conn.createStatement();
-			String sql = "select * from taikhoan";
+			String sql = "select * from taikhoan where taikhoan.MANV not like 'AD%'";
 			ResultSet rs  = stmt.executeQuery(sql);
 			while (rs.next()) {
 				DTO_TaiKhoan taikhoan = new DTO_TaiKhoan(rs.getString("matk"), rs.getString("manv"),
