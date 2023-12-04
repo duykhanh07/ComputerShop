@@ -91,7 +91,7 @@ public class QuanLyBanHangBUS {
 		if(type == 0) {
 			Collections.sort(ds_hienThi, (o1, o2) -> o1.getGia() - o2.getGia());
 		}else if(type == 1) {
-			Collections.sort(ds_hienThi, (o1, o2) -> o1.getGia() - o2.getGia());
+			Collections.sort(ds_hienThi, (o1, o2) -> o2.getGia() - o1.getGia());
 		}
 	}
 	
