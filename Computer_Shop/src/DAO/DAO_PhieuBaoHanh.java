@@ -79,4 +79,23 @@ public class DAO_PhieuBaoHanh {
         return danhSachThongTin;
     }
 
+    public static boolean capNhatNgayTra(String mapbh) {
+        boolean updated = false;
+
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(
+                        "UPDATE baohanh SET ngaytra = CURRENT_DATE() WHERE mapbh = ?")) {
+            ps.setString(1, mapbh);
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0) {
+                updated = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return updated;
+    }
+
 }

@@ -30,6 +30,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -734,53 +735,25 @@ public class QuanLyBaoHanhFrm extends JPanel {
         List<Object[]> phieuBaoHanh = BUS_PhieuBaoHanh.layDanhSachPhieuBaoHanh();
         hienThiPhieuBaoHanh(phieuBaoHanh);
 
+        // Thêm sự kiện cho nút timKiemBtn_1
         timKiemBtn_1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                FileDialog fileDialog = new FileDialog((Frame) null, "Chọn nơi lưu file", FileDialog.SAVE);
-                fileDialog.setVisible(true);
+                int selectedRow = table.getSelectedRow();
 
-                String directory = fileDialog.getDirectory();
-                String file = fileDialog.getFile();
+                if (selectedRow != -1) {
+                    String mapbh = table.getValueAt(selectedRow, 0).toString();
 
-                if (directory != null && file != null) {
-                    try {
-                        String filePath = directory + file;
+                    boolean isUpdated = BUS_PhieuBaoHanh.capNhatNgayTra(mapbh);
 
-                        XSSFWorkbook workbook = new XSSFWorkbook();
-                        XSSFSheet sheet = workbook.createSheet("Danh sách nhân viên");
+                    if (isUpdated) {
+                        JOptionPane.showMessageDialog(null, "Cập nhật ngày trả thành công.");
 
-                        DefaultTableModel model = (DefaultTableModel) table.getModel();
-                        int rowCount = model.getRowCount();
-                        int columnCount = model.getColumnCount();
-
-                        XSSFRow headerRow = sheet.createRow(0);
-                        for (int col = 0; col < columnCount; col++) {
-                            Cell cell = headerRow.createCell(col);
-                            cell.setCellValue(model.getColumnName(col));
-                        }
-
-                        for (int row = 0; row < rowCount; row++) {
-                            XSSFRow excelRow = sheet.createRow(row + 1);
-                            for (int col = 0; col < columnCount; col++) {
-                                Cell cell = excelRow.createCell(col);
-                                cell.setCellValue(model.getValueAt(row, col).toString());
-                            }
-                        }
-
-                        FileOutputStream fileOut = new FileOutputStream(filePath + ".xlsx");
-                        workbook.write(fileOut);
-                        fileOut.close();
-                        workbook.close();
-
-                        System.out.println("File Excel đã được tạo thành công!");
-
-                        // Hiển thị thông báo khi xuất file thành công
-                        JOptionPane.showMessageDialog(null, "File Excel đã được tạo thành công!");
-
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Cập nhật ngày trả không thành công.");
                     }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Chọn một hàng để cập nhật ngày trả.");
                 }
             }
         });
