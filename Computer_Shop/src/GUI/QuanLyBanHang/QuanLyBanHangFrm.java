@@ -104,6 +104,8 @@ public class QuanLyBanHangFrm extends JPanel {
 	private AddToCart cuaSoGioHang;
 	public String manv;
 	private BanHangInterface banHangInter;
+	private JComboBox timKiemTypeCmbx;
+	private JComboBox sortCmbx;
 	
 	public QuanLyBanHangFrm(String manv) {
 		
@@ -535,7 +537,6 @@ public class QuanLyBanHangFrm extends JPanel {
 								}else {
 									diaChiTxt.setText("");
 									diaChiTxt.setEditable(false);
-									diaChiTxt.setBackground(new Color(100,100,100));
 								}
 							}
 						});
@@ -569,7 +570,7 @@ public class QuanLyBanHangFrm extends JPanel {
 		timKiemDonHangTxt.setBorder(new EmptyBorder(0, 0, 0, 0));
 		timKiemDonHangTxt.setBackground(new Color(77, 77, 77));
 		
-		JComboBox timKiemTypeCmbx = new JComboBox();
+		timKiemTypeCmbx = new JComboBox();
 		timKiemTypeCmbx.setModel(new DefaultComboBoxModel(new String[] {"theo mã hóa đơn", "theo mã khách hàng", "theo mã nhân viên", "theo địa chỉ giao hàng", "theo trạng thái"}));
 		timKiemTypeCmbx.setForeground(Color.CYAN);
 		timKiemTypeCmbx.setBackground(new Color(102, 102, 102));
@@ -586,7 +587,7 @@ public class QuanLyBanHangFrm extends JPanel {
 		lblNewLabel.setForeground(Color.CYAN);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		JComboBox sortCmbx = new JComboBox();
+		sortCmbx = new JComboBox();
 		sortCmbx.setModel(new DefaultComboBoxModel(new String[] {"----------", "ngày lập hóa đơn tăng dần", "ngày lập hóa đơn giảm dần", "tổng tiền tăng dần", "tổng tiền giảm dần"}));
 		sortCmbx.setForeground(Color.CYAN);
 		sortCmbx.setBackground(new Color(102, 102, 102));
@@ -646,6 +647,17 @@ public class QuanLyBanHangFrm extends JPanel {
 		InHoaDonBtn_1.setToolTipText("cập nhật trạng thái hóa đơn");
 		InHoaDonBtn_1.setText("cập nhật");
 		InHoaDonBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
+		
+		MyButton refreshBtn = new MyButton();
+		refreshBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {		
+				refreshFormHoaDon();
+			}
+		});
+		refreshBtn.setIcon(new ImageIcon(QuanLyBanHangFrm.class.getResource("/assets/reset.png")));
+		refreshBtn.setToolTipText("cập nhật trạng thái hóa đơn");
+		refreshBtn.setText("làm mới");
+		refreshBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		GroupLayout gl_donHangPanel = new GroupLayout(donHangPanel);
 		gl_donHangPanel.setHorizontalGroup(
 			gl_donHangPanel.createParallelGroup(Alignment.LEADING)
@@ -659,7 +671,7 @@ public class QuanLyBanHangFrm extends JPanel {
 							.addGap(6)
 							.addComponent(timKiemBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addGap(10)
-							.addComponent(auto_increase_spaceLbl, GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+							.addComponent(auto_increase_spaceLbl, GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
 							.addGap(26)
 							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
 							.addGap(10)
@@ -671,8 +683,10 @@ public class QuanLyBanHangFrm extends JPanel {
 							.addGap(3)
 							.addComponent(lbln, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
 							.addGap(10)
-							.addComponent(toDateChooser, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE))
-						.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
+							.addComponent(toDateChooser, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 265, Short.MAX_VALUE)
+							.addComponent(refreshBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))
+						.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)
 						.addGroup(gl_donHangPanel.createSequentialGroup()
 							.addComponent(InHoaDonBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
 							.addGap(10)
@@ -705,7 +719,8 @@ public class QuanLyBanHangFrm extends JPanel {
 						.addGroup(gl_donHangPanel.createSequentialGroup()
 							.addGap(2)
 							.addComponent(lbln, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))
-						.addComponent(toDateChooser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(toDateChooser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(refreshBtn, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
 					.addGap(6)
 					.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
 					.addGap(11)
@@ -846,11 +861,14 @@ public class QuanLyBanHangFrm extends JPanel {
 			checkbox.setSelected(true);
 			HangSXPanel.add(checkbox);
 			ds_HangBtn.add(checkbox);
-			checkbox.addChangeListener(new ChangeListener() {			
+			checkbox.addActionListener(new ActionListener() {
+
 				@Override
-				public void stateChanged(ChangeEvent e) {
+				public void actionPerformed(ActionEvent e) {
 					filterByBrand();
-				}
+				}			
+				
+				
 			});
 		}
 	}
@@ -889,7 +907,7 @@ public class QuanLyBanHangFrm extends JPanel {
 		
 		if(qlbh_bus.gioHang_sanpham.size()*40 < scrollPane_1.getHeight()) {
 			int count = qlbh_bus.gioHang_sanpham.size();
-			while(count * 40 < scrollPane_1.getHeight()) {
+			while(count * 40 < scrollPane_1.getHeight() -40) {
 				CartItem cartItem = new CartItem();
 				cartItemPanel.add(cartItem);
 				count++;
@@ -955,6 +973,9 @@ public class QuanLyBanHangFrm extends JPanel {
 			else
 				qlbh_bus.taoHoaDon(manv, diaChiGiao);
 		}
+		qlbh_bus = new QuanLyBanHangBUS();
+		
+		refresh();
 	}
 	private boolean kiemTraHopLeHoaDon() {
 		if(!kiemTraTenKhachHang()) {
@@ -973,9 +994,20 @@ public class QuanLyBanHangFrm extends JPanel {
 	}
 	private void refresh() {
 		this.qlbh_bus = new QuanLyBanHangBUS();
+		soDienThoaiKHTxt.setText("");
+		diaChiTxt.setText("");
+		tenKhachHangTxt.setText("");
+		giaoHangChck.setSelected(false);
 		hienThiSanPham();
 		hienThiHangSanPham();
 		hienThiGioHang();
 		hienTongTien();
+	}
+	private void refreshFormHoaDon() {
+		arr_hoadon = hoadonbus.get_AllHoaDon();
+		timKiemTypeCmbx.setSelectedIndex(0);
+		timKiemDonHangTxt.setText("");
+		sortCmbx.setSelectedIndex(0);
+		loadHoaDon();
 	}
 }

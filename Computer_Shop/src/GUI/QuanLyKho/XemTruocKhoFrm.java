@@ -94,7 +94,7 @@ public class XemTruocKhoFrm extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public XemTruocKhoFrm(String madn, String manv, String mancc, Double tongTien, Date thoiGian, JTable jTable, JLabel jLabel, JComboBox<String> cb_nhacungcap, JComboBox<String> cb_masanpham, JTextField dongia, JTextField soluong) {
+	public XemTruocKhoFrm(String madn, String manv, String mancc, Long tongTien, Date thoiGian, JTable jTable, JLabel jLabel, JComboBox<String> cb_nhacungcap, JComboBox<String> cb_masanpham, JTextField dongia, JTextField soluong) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(XemTruocKhoFrm.class.getResource("/assets/Laptop_Login.png")));
 		setTitle("Xem trước");
 		try {

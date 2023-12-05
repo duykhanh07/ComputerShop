@@ -3,6 +3,7 @@ package BUS;
 import java.awt.Label;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -17,33 +18,45 @@ public class ThemDonNhapBUS {
 	
 	DAO_ThemDonNhap daoThemDonNhap;
 	
+	public HashMap<String,String> ds_nhaCungCap;
+	public HashMap<String,String> ds_sanPham;
+	
 	public ThemDonNhapBUS() {
 		daoThemDonNhap = new DAO_ThemDonNhap();
+		ds_nhaCungCap = daoThemDonNhap.layTenVaMaNcc();
+		ds_sanPham = daoThemDonNhap.layTenVaMaSp();
 	}
 	
 	public void hienThiComboBoxMaSanPham(JComboBox<String> jComboBox) {
 		
-		ArrayList<String> listMaSanPham = daoThemDonNhap.selectMaSanPham();
-		for (String maSanPham : listMaSanPham) {
-			jComboBox.addItem(maSanPham);
+//		ArrayList<String> listMaSanPham = daoThemDonNhap.selectMaSanPham();
+//		for (String maSanPham : listMaSanPham) {
+//			jComboBox.addItem(maSanPham);
+//		}
+		
+		for(int i = 0; i< ds_sanPham.size(); i++) {
+			jComboBox.addItem(ds_sanPham.keySet().toArray()[i].toString());
 		}
 	}
 	
 	public void layTenSanPham(JComboBox<String> jComboBox, JLabel jLabel) {
-		ArrayList<String> listTenSanPham = daoThemDonNhap.selectTenSanPham( jComboBox.getSelectedItem().toString());
-		if(listTenSanPham.size() > 1) {
-			jLabel.setText(null);
-		}
-		else {
-			jLabel.setText(listTenSanPham.get(0));
-		}
+//		ArrayList<String> listTenSanPham = daoThemDonNhap.selectTenSanPham( jComboBox.getSelectedItem().toString());
+//		if(listTenSanPham.size() > 1) {
+//			jLabel.setText(null);
+//		}
+//		else {
+//			jLabel.setText(listTenSanPham.get(0));
+//		}
 	}
 	
 	public void hienThiComboBoxMaNhaCungCap(JComboBox<String> jComboBox) {
 		
-		ArrayList<String> listMaNhaCungCap = daoThemDonNhap.selectMaNhaCungCap();
-		for (String maNhaCungCap : listMaNhaCungCap) {
-			jComboBox.addItem(maNhaCungCap);
+//		ArrayList<String> listMaNhaCungCap = daoThemDonNhap.selectMaNhaCungCap();
+//		for (String maNhaCungCap : listMaNhaCungCap) {
+//			jComboBox.addItem(maNhaCungCap);
+//		}
+		for(int i = 0; i< ds_nhaCungCap.size(); i++) {
+			jComboBox.addItem(ds_nhaCungCap.keySet().toArray()[i].toString());
 		}
 	}
 	

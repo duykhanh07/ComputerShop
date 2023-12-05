@@ -12,4 +12,7 @@ public class BUS_PhieuBaoHanh {
 	public static List<Object[]> layThongTinPhieuBaoHanh(String mapbh) {
 		return DAO_PhieuBaoHanh.layThongTinPhieuBaoHanh(mapbh);
 	}
+	public static boolean capNhatNgayTra(String mapbh) {
+		 return DAO_PhieuBaoHanh.capNhatNgayTra(mapbh);
+	 }
 }

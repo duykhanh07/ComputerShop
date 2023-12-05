@@ -1,5 +1,6 @@
 package BUS;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import javax.swing.JTable;
@@ -13,7 +14,8 @@ import DTO.DTO_CTDonNhap;
 
 public class ChiTietDonNhapBUS {
 	
-DAO_ChiTietDonNhap daoChiTietDonNhap;
+	DAO_ChiTietDonNhap daoChiTietDonNhap;
+	DecimalFormat df = new DecimalFormat("#,###");
 	
 	public ChiTietDonNhapBUS() {
 		daoChiTietDonNhap = new DAO_ChiTietDonNhap();
@@ -25,7 +27,7 @@ DAO_ChiTietDonNhap daoChiTietDonNhap;
 		//System.out.println(madn);
 		for (DTO_CTDonNhap dto_CTDonNhap : listChitietDonNhap) {
 			//System.out.println(dto_CTDonNhap);//test
-			Object[] rowData = {dto_CTDonNhap.getMasp(),dto_CTDonNhap.getTensp(),dto_CTDonNhap.getDongia(), dto_CTDonNhap.getSolg(), dto_CTDonNhap.getThanhtien()};
+			Object[] rowData = {dto_CTDonNhap.getMasp(),dto_CTDonNhap.getTensp(),df.format((long)dto_CTDonNhap.getDongia()), dto_CTDonNhap.getSolg(), df.format((long)dto_CTDonNhap.getThanhtien())};
 			DefaultTableModel  model_table = (DefaultTableModel) table.getModel();
 			model_table.addRow(rowData);
 		}

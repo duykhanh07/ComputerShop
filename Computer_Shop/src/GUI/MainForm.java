@@ -145,6 +145,7 @@ public class MainForm extends JFrame {
 		JLabel auto_agile = new JLabel("");
 		
 		JButton btnNewButton = new JButton("Đăng xuất");
+		btnNewButton.setIcon(new ImageIcon(MainForm.class.getResource("/assets/logout.png")));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
@@ -162,14 +163,14 @@ public class MainForm extends JFrame {
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		GroupLayout gl_menuPanel = new GroupLayout(menuPanel);
 		gl_menuPanel.setHorizontalGroup(
-			gl_menuPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_menuPanel.createSequentialGroup()
-					.addGroup(gl_menuPanel.createParallelGroup(Alignment.TRAILING)
-						.addComponent(bottomRect, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addGroup(Alignment.LEADING, gl_menuPanel.createParallelGroup(Alignment.TRAILING, false)
+			gl_menuPanel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_menuPanel.createSequentialGroup()
+					.addGroup(gl_menuPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(bottomRect, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+						.addGroup(gl_menuPanel.createParallelGroup(Alignment.TRAILING, false)
 							.addComponent(menuLabel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
 							.addComponent(auto_agile, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE))
-						.addComponent(btnNewButton, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		gl_menuPanel.setVerticalGroup(
@@ -177,10 +178,10 @@ public class MainForm extends JFrame {
 				.addGroup(gl_menuPanel.createSequentialGroup()
 					.addComponent(menuLabel, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
 					.addGap(538)
-					.addComponent(auto_agile, GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
+					.addComponent(auto_agile, GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
 					.addGap(35)
-					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+					.addGap(1)
 					.addComponent(bottomRect, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
 		);
 		menuPanel.setLayout(gl_menuPanel);

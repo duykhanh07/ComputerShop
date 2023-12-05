@@ -17,7 +17,7 @@ public class HoaDonDAO extends DAO_Connection {
 
 	// Lấy tất cả hóa đơn có trong database
 	public ArrayList<DTO_HoaDon> get_AllHoaDon() {
-		String sql = "select * from hoadon";
+		String sql = "select * from hoadon order by ngaylaphd desc";
 		ArrayList<DTO_HoaDon> arr = new ArrayList<DTO_HoaDon>();
 		try {
 			Statement stmt = conn.createStatement();

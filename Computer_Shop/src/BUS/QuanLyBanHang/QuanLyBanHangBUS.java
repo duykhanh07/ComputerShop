@@ -100,22 +100,28 @@ public class QuanLyBanHangBUS {
 			if(gioHang_sanpham.get(i).getMasp().equals(sp.getMasp())) {
 				if(gioHang_soluong.get(i)+soluong <= ds_tonkho.get(sp.getMasp())) {	
 					gioHang_soluong.set(i, gioHang_soluong.get(i)+soluong);
+					tinhTongTien();
 					return 1;					
 				}else {
 					return -1;
 				}
 			}
 		}
-		gioHang_sanpham.add(sp);
-		gioHang_soluong.add(soluong);
-		tinhTongTien();
-		return 1;
+		if(soluong <= ds_tonkho.get(sp.getMasp())) {	
+			gioHang_sanpham.add(sp);
+			gioHang_soluong.add(soluong);
+			tinhTongTien();
+			return 1;					
+		}else {
+			return -1;
+		}
 	}
 	public int capNhatGioHang(DTO_SanPham sp, int soluong) {
 		for(int i = 0; i<gioHang_sanpham.size(); i++) {
 			if(gioHang_sanpham.get(i).getMasp().equals(sp.getMasp())) {
 				if(soluong <= ds_tonkho.get(sp.getMasp())) {
 					gioHang_soluong.set(i, soluong);
+					tinhTongTien();
 					return 1;
 				}
 			}
@@ -155,20 +161,21 @@ public class QuanLyBanHangBUS {
 		
 		String trangThai;
 		if(diaChi!=null) {
-			trangThai = "Đang giao";
+			trangThai = "đang giao";
 		}else {
-			trangThai = "Đã thanh toán";
+			trangThai = "đã thanh toán";
 		}
 		
 		// Cập nhật điểm cho khách hàng
-		if((int)tongTien/100000 + diemTichLuyKhachHang > 100) {
-			int phanTramGiam = (int) ((tongTien/100000 + diemTichLuyKhachHang)/100);
-			int diemConLai = (int)(tongTien/100000 + diemTichLuyKhachHang)%100;
-			banHangDAO.congDiemTichLuy(makh, diemConLai);
-			tongTien = tongTien*(100 - phanTramGiam)/100;
-		}else {
-			banHangDAO.congDiemTichLuy(makh, (int)tongTien/100000 + diemTichLuyKhachHang);
-		}
+		banHangDAO.congDiemTichLuy(makh, (int)tongTien/100000 + diemTichLuyKhachHang);
+//		if((int)tongTien/100000 + diemTichLuyKhachHang > 100) {
+//			int phanTramGiam = (int) ((tongTien/100000 + diemTichLuyKhachHang)/100);
+//			int diemConLai = (int)(tongTien/100000 + diemTichLuyKhachHang)%100;
+//			banHangDAO.congDiemTichLuy(makh, diemConLai);
+//			tongTien = tongTien*(100 - phanTramGiam)/100;
+//		}else {
+//			banHangDAO.congDiemTichLuy(makh, (int)tongTien/100000 + diemTichLuyKhachHang);
+//		}
 		
 		
 		// Thêm hóa đơn
@@ -193,9 +200,9 @@ public class QuanLyBanHangBUS {
 		
 		String trangThai;
 		if(diaChi!=null) {
-			trangThai = "Đang giao";
+			trangThai = "đang giao";
 		}else {
-			trangThai = "Đã thanh toán";
+			trangThai = "đã thanh toán";
 		}
 		
 		// Thêm khách hàng

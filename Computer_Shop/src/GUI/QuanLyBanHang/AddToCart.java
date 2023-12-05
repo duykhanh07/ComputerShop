@@ -356,7 +356,7 @@ public class AddToCart extends JFrame {
 		}
 	}
 	public void tinhThanhTien() {
-		int thanhTien = Integer.parseInt(quantityTxt.getText()) * sp.getGia();
+		long thanhTien = Integer.parseInt(quantityTxt.getText()) *(long) sp.getGia();
 		thanhTienLbl.setText(df.format(thanhTien)+"đ");
 	}
 	public void themVaoGioHang() {

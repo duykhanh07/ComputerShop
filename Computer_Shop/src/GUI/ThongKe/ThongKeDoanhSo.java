@@ -514,7 +514,7 @@ public class ThongKeDoanhSo extends JPanel {
 				yearCmbx_1_1.setSelectedItem("---");
 			}
 		});
-
+		yearCmbx.setSelectedIndex(1);
 	}
 
 	private void hienThiSanPhamDaBanTheoNam(int selectedYear) {

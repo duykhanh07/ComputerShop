@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
@@ -124,5 +125,43 @@ private static Connection conn = null;
 			e.printStackTrace();
 		}
 		return ketqua;
+	}
+	public HashMap <String, String> layTenVaMaSp(){
+		HashMap <String, String> ds_tenMaSp = new HashMap<String, String>();
+		openData();
+		try {
+			Statement stmt = (Statement) conn.createStatement();
+			String sql = "select * from sanpham";
+			ResultSet rs  = stmt.executeQuery(sql);
+			while(rs.next()) {		
+				String maSanPham = rs.getString("masp");
+				String tenSanPham = rs.getString("tensp");
+				ds_tenMaSp.put(tenSanPham, maSanPham);
+			}
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ds_tenMaSp;
+	}
+	public HashMap<String, String>layTenVaMaNcc(){
+		HashMap <String, String> ds_tenMaSp = new HashMap<String, String>();
+		openData();
+		try {
+			Statement stmt = (Statement) conn.createStatement();
+			String sql = "select * from nhacungcap";
+			ResultSet rs  = stmt.executeQuery(sql);
+			while(rs.next()) {		
+				String maCungCap = rs.getString("mancc");
+				String tenNhaCungCap = rs.getString("tenncc");
+				ds_tenMaSp.put(tenNhaCungCap, maCungCap);
+			}
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ds_tenMaSp;
 	}
 }

@@ -329,8 +329,6 @@ public class QuanLyKhoFrm extends JPanel {
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.getViewport().setBackground(new Color(51,51,51));
-		
-		JLabel auto_increase_spaceLbl_1 = new JLabel("");
 		//thêm đơn nhập hàng
 		MyButton themDonNhapBtn = new MyButton();
 		themDonNhapBtn.addActionListener(new ActionListener() {
@@ -387,16 +385,6 @@ public class QuanLyKhoFrm extends JPanel {
 		});
 		chiTietBtn.setText("Chi tiết");
 		chiTietBtn.setHorizontalTextPosition(SwingConstants.LEADING);
-		
-		JLabel auto_increase_spaceLbl_2 = new JLabel("");
-		
-		MyButton importBtn = new MyButton();
-		importBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		importBtn.setText("Nhập Excel");
-		importBtn.setHorizontalTextPosition(SwingConstants.LEADING);
 		
 		donNhapTable = new JTable();
 		donNhapTable.setModel(new DefaultTableModel(
@@ -471,17 +459,11 @@ public class QuanLyKhoFrm extends JPanel {
 							.addComponent(mbtnLmMi, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE))
 						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
 						.addGroup(gl_donNhapPanel.createSequentialGroup()
-							.addComponent(auto_increase_spaceLbl_1, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-							.addGap(10)
 							.addComponent(themDonNhapBtn, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-							.addGap(10)
+							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(inBtn, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-							.addGap(6)
-							.addComponent(chiTietBtn, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
-							.addGap(159)
-							.addComponent(auto_increase_spaceLbl_2, GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
-							.addGap(113)
-							.addComponent(importBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(chiTietBtn, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)))
 					.addGap(40))
 		);
 		gl_donNhapPanel.setVerticalGroup(
@@ -508,24 +490,11 @@ public class QuanLyKhoFrm extends JPanel {
 						.addComponent(mbtnLmMi, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
 					.addGap(6)
 					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-					.addGap(11)
-					.addGroup(gl_donNhapPanel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_donNhapPanel.createSequentialGroup()
-							.addGap(7)
-							.addComponent(auto_increase_spaceLbl_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_donNhapPanel.createSequentialGroup()
-							.addGap(7)
-							.addComponent(themDonNhapBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_donNhapPanel.createSequentialGroup()
-							.addGap(7)
-							.addComponent(inBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_donNhapPanel.createSequentialGroup()
-							.addGap(7)
-							.addComponent(chiTietBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-						.addComponent(auto_increase_spaceLbl_2, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_donNhapPanel.createSequentialGroup()
-							.addGap(7)
-							.addComponent(importBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))
+					.addGap(18)
+					.addGroup(gl_donNhapPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(themDonNhapBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+						.addComponent(inBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+						.addComponent(chiTietBtn, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
 					.addGap(17))
 		);
 		donNhapPanel.setLayout(gl_donNhapPanel);
@@ -724,8 +693,6 @@ public class QuanLyKhoFrm extends JPanel {
 			}
 		});
 		
-		JLabel auto_increase_spaceLbl_1_1 = new JLabel("");
-		
 		MyButton themDonNhapBtn_1 = new MyButton();
 		themDonNhapBtn_1.setText("Thêm");
 		themDonNhapBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -753,80 +720,6 @@ public class QuanLyKhoFrm extends JPanel {
 		});
 		inBtn_1.setText("In");
 		inBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
-		
-		JLabel auto_increase_spaceLbl_2_1 = new JLabel("");
-		
-		MyButton importBtn_1 = new MyButton();
-		importBtn_1.setText("Nhập Excel");
-		importBtn_1.setHorizontalTextPosition(SwingConstants.LEADING);
-		//Nhập dữ liệu vào từ Excel
-		importBtn_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				//ArrayList lưu trữ các phần tử lấy từ Excel
-				ArrayList <DTO_NhaCungCap> arr_temp = new ArrayList<DTO_NhaCungCap>();
-				
-				//Arraylist chứa mã nhà cung cấp có trong Database
-				ArrayList <String> ds_mancc = nhacungcapbus.get_mancc();
-				
-				//Khởi tạo các instance để đọc dữ liệu từ file Excel
-				File excelFile;
-				Workbook wb;
-				Sheet sheet;
-				Row row;
-				Cell cell;
-				
-				//Khởi tạo instance xác định file Excel đầu vào
-				FileInputStream fis = null;
-				
-				//Khởi tạo instance cho phép chọn file
-				JFileChooser excelFileChooser = new JFileChooser("C:\\Users\\USER\\Desktop");
-				excelFileChooser.setDialogTitle("Chọn File Excel");
-				int excelChooser = excelFileChooser.showOpenDialog(null);
-				
-				if(excelChooser == JFileChooser.APPROVE_OPTION)
-				{
-					try {
-						excelFile = excelFileChooser.getSelectedFile();
-						fis = new FileInputStream(excelFile);
-						wb = WorkbookFactory.create(fis);
-						sheet = wb.getSheet("Sheet1");
-						
-						for(int i = 1; i <= sheet.getLastRowNum(); i++)
-						{
-							row = sheet.getRow(i);
-							cell = row.getCell(0);
-							String mancc = cell.getStringCellValue();
-							cell = row.getCell(1);
-							String tenncc = cell.getStringCellValue();
-							cell = row.getCell(2);
-							String sdt = cell.getStringCellValue();
-							cell = row.getCell(3);
-							String diachi = cell.getStringCellValue();
-							
-							if(ds_mancc.contains(mancc))
-							{
-								JOptionPane.showMessageDialog(null, "Nhập file Excel không thành công!!! Mã nhà cung cấp " + mancc + " ở dòng " + (i+1) + " đã tồn tại!!!");
-								return;
-							}
-							else
-								arr_temp.add(new DTO_NhaCungCap(mancc, tenncc, sdt, diachi));
-						}
-						
-						for(DTO_NhaCungCap x: arr_temp)
-							nhacungcapbus.insert_NhaCungCap(x);
-						
-						//Update dữ liệu từ Database cho biến arr_ncc sau khi nhập thêm nhà cung cấp
-						arr_ncc = nhacungcapbus.get_AllNhaCungCap();
-						loadNhaCungCap();
-						
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				;
-			}
-		});
 		
 		MyButton mbtnLmMi_2 = new MyButton();
 		mbtnLmMi_2.setIcon(new ImageIcon(QuanLyKhoFrm.class.getResource("/assets/reset.png")));
@@ -865,16 +758,10 @@ public class QuanLyKhoFrm extends JPanel {
 							.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
 							.addGap(10)
 							.addComponent(sortCmbx_2, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_donNhapPanel_1.createSequentialGroup()
-							.addComponent(auto_increase_spaceLbl_1_1, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-							.addGap(10)
+						.addGroup(Alignment.LEADING, gl_donNhapPanel_1.createSequentialGroup()
 							.addComponent(themDonNhapBtn_1, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-							.addGap(10)
-							.addComponent(inBtn_1, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-							.addGap(269)
-							.addComponent(auto_increase_spaceLbl_2_1, GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
-							.addGap(113)
-							.addComponent(importBtn_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(inBtn_1, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)))
 					.addGap(40))
 		);
 		gl_donNhapPanel_1.setVerticalGroup(
@@ -896,21 +783,10 @@ public class QuanLyKhoFrm extends JPanel {
 								.addComponent(timKiemBtn_2, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
-					.addGap(11)
-					.addGroup(gl_donNhapPanel_1.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_donNhapPanel_1.createSequentialGroup()
-							.addGap(7)
-							.addComponent(auto_increase_spaceLbl_1_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_donNhapPanel_1.createSequentialGroup()
-							.addGap(7)
-							.addComponent(themDonNhapBtn_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_donNhapPanel_1.createSequentialGroup()
-							.addGap(7)
-							.addComponent(inBtn_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-						.addComponent(auto_increase_spaceLbl_2_1, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_donNhapPanel_1.createSequentialGroup()
-							.addGap(7)
-							.addComponent(importBtn_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))
+					.addGap(18)
+					.addGroup(gl_donNhapPanel_1.createParallelGroup(Alignment.BASELINE)
+						.addComponent(themDonNhapBtn_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+						.addComponent(inBtn_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
 					.addGap(17))
 		);
 		

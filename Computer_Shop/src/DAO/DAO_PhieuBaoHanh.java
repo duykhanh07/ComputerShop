@@ -32,7 +32,7 @@ public class DAO_PhieuBaoHanh {
                 Object[] row = new Object[4];
                 row[0] = rs.getString("mapbh");
                 row[1] = rs.getDate("ngaynhan");
-                row[2] = rs.getDate("ngaytra");
+                row[2] = (rs.getTimestamp("ngaynhan").equals(rs.getTimestamp("ngaytra")))?"chưa hoàn thành":rs.getDate("ngaytra");
                 row[3] = rs.getString("manv");
 
                 danhSachPhieuBaoHanh.add(row);
@@ -77,6 +77,25 @@ public class DAO_PhieuBaoHanh {
         }
 
         return danhSachThongTin;
+    }
+ // cập nhật ngày trả vào csdl
+    public static boolean capNhatNgayTra(String mapbh) {
+        boolean updated = false;
+
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(
+                        "UPDATE baohanh SET ngaytra = NOW() WHERE mapbh = ?")) {
+            ps.setString(1, mapbh);
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0) {
+                updated = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return updated;
     }
 
 }

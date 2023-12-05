@@ -68,8 +68,7 @@ public class LoginForm extends JFrame {
 
 
 	public LoginForm() {
-		login_bus = new LoginBUS();
-		
+		login_bus = new LoginBUS();	
 		setTitle("Computer shop application");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginForm.class.getResource("/assets/Laptop_Login.png")));
 		setSize(440, 360);

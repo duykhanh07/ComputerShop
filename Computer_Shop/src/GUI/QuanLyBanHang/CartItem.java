@@ -38,7 +38,7 @@ public class CartItem extends JPanel {
 	private BanHangInterface banHangInter;
 	private DTO_SanPham sp;
 	private int soluong;
-	private int thanhTien;
+	private long thanhTien;
 	DecimalFormat df = new DecimalFormat("#,###");
 	/**
 	 * Create the panel.
