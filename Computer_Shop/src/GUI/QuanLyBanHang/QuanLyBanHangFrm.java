@@ -972,12 +972,31 @@ public class QuanLyBanHangFrm extends JPanel {
 				qlbh_bus.taoHoaDon(manv, tenKh, sdtKh, diaChiGiao);
 			else
 				qlbh_bus.taoHoaDon(manv, diaChiGiao);
+			refresh();
 		}
 		qlbh_bus = new QuanLyBanHangBUS();
 		
-		refresh();
+		
 	}
 	private boolean kiemTraHopLeHoaDon() {
+		
+		if(qlbh_bus.gioHang_sanpham.size() <= 0) {
+			JOptionPane.showMessageDialog(null, "Giỏ hàng không có bất kì sản phẩm nào");
+			return false;
+		}
+		
+		if(soDienThoaiKHTxt.getText().trim().equalsIgnoreCase("") ) {
+			JOptionPane.showMessageDialog(null, "Vui lòng nhập sdt hợp lệ");
+			soDienThoaiKHTxt.requestFocus();
+			return false;
+		}
+		
+		if(tenKhachHangTxt.getText().trim().equalsIgnoreCase("")){
+			JOptionPane.showMessageDialog(null, "Vui lòng nhập tên khách hàng");
+			tenKhachHangTxt.requestFocus();
+			return false;
+		}
+		
 		if(!kiemTraTenKhachHang()) {
 			JOptionPane.showMessageDialog(null, "Tên khách hàng không được chứa kí tự là số");
 			tenKhachHangTxt.requestFocus();
@@ -985,7 +1004,7 @@ public class QuanLyBanHangFrm extends JPanel {
 		}
 		
 		// kiểm tra địa chỉ nếu có
-		if(diaChiTxt.getText().equalsIgnoreCase("") && diaChiTxt.isEditable()) {
+		if(diaChiTxt.getText().trim().equalsIgnoreCase("") && diaChiTxt.isEditable()) {
 			diaChiTxt.requestFocus();
 			return false;
 		}
